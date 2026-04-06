@@ -50,9 +50,9 @@ export default function LandingPage() {
               Start for free <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
-          <Link href="/pricing">
-            <Button size="lg" variant="outline" className="border-slate-600 text-slate-300">
-              See pricing
+          <Link href="/login">
+            <Button size="lg" variant="outline" className="border-blue-500/50 bg-blue-600/10 text-blue-300 hover:bg-blue-600/20">
+              🚀 Live demo
             </Button>
           </Link>
         </div>

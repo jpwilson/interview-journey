@@ -93,6 +93,37 @@ function LoginForm() {
           </Button>
         </form>
 
+        {/* 1-click demo */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-slate-700" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-slate-800 px-2 text-slate-500">or try it instantly</span>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={async () => {
+            setLoading(true)
+            const { error } = await supabase.auth.signInWithPassword({
+              email: 'demo@interviewjourney.app',
+              password: 'demo1234!',
+            })
+            if (error) {
+              toast.error(error.message)
+              setLoading(false)
+            } else {
+              router.push('/dashboard')
+              router.refresh()
+            }
+          }}
+          disabled={loading}
+          className="w-full rounded-lg border border-blue-500/40 bg-blue-600/10 py-2.5 text-sm font-medium text-blue-300 transition-colors hover:bg-blue-600/20 disabled:opacity-50"
+        >
+          🚀 Demo login — see a live example
+        </button>
+
         <p className="text-center text-sm text-slate-400">
           No account?{' '}
           <Link href="/signup" className="text-blue-400 hover:text-blue-300">Sign up free</Link>
