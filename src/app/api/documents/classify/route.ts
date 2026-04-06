@@ -1,8 +1,19 @@
-import { createClient } from '@/lib/supabase/server'
-import { createServiceClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { classifyDocument, docTypeToEventType, inferStageAdvance } from '@/lib/ai/classify'
-import { Langfuse } from 'langfuse'
 import type { ClassificationResult } from '@/lib/ai/classify'
+
+// Langfuse is optional — only init if real keys are present
+function maybeGetLangfuse() {
+  const pk = process.env.LANGFUSE_PUBLIC_KEY
+  const sk = process.env.LANGFUSE_SECRET_KEY
+  if (!pk || !sk || pk.includes('placeholder')) return null
+  try {
+    const { Langfuse } = require('langfuse')
+    return new Langfuse({ publicKey: pk, secretKey: sk, baseUrl: process.env.LANGFUSE_BASE_URL ?? 'https://cloud.langfuse.com' })
+  } catch {
+    return null
+  }
+}
 
 export async function POST(request: Request) {
   const { documentId } = await request.json()
@@ -35,17 +46,8 @@ export async function POST(request: Request) {
 }
 
 async function processDocument(documentId: string, userId: string, service: ReturnType<typeof createServiceClient>) {
-  const langfuse = new Langfuse({
-    publicKey: process.env.LANGFUSE_PUBLIC_KEY!,
-    secretKey: process.env.LANGFUSE_SECRET_KEY!,
-    baseUrl: process.env.LANGFUSE_BASE_URL ?? 'https://cloud.langfuse.com',
-  })
-
-  const trace = langfuse.trace({
-    name: 'document-classification',
-    userId,
-    metadata: { documentId },
-  })
+  const langfuse = maybeGetLangfuse()
+  const trace = langfuse?.trace({ name: 'document-classification', userId, metadata: { documentId } })
 
   // Fetch document record
   const { data: doc } = await service
@@ -78,15 +80,15 @@ async function processDocument(documentId: string, userId: string, service: Retu
     content = await fileData.text()
   }
 
-  const span = trace.span({ name: 'classify', input: { documentId, mimeType: doc.file_type } })
+  const span = trace?.span({ name: 'classify', input: { documentId, mimeType: doc.file_type } })
 
   let result: ClassificationResult
   try {
     result = await classifyDocument(content, doc.file_type)
-    span.end({ output: result })
+    span?.end({ output: result })
   } catch (err) {
-    span.end({ level: 'ERROR', statusMessage: String(err) })
-    await langfuse.flushAsync()
+    span?.end({ level: 'ERROR', statusMessage: String(err) })
+    await langfuse?.flushAsync()
     throw err
   }
 
@@ -197,5 +199,5 @@ async function processDocument(documentId: string, userId: string, service: Retu
     needs_review: needsReview,
   }).eq('id', documentId)
 
-  await langfuse.flushAsync()
+  await langfuse?.flushAsync()
 }
