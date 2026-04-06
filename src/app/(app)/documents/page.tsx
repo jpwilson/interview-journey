@@ -1,0 +1,107 @@
+import { createClient } from '@/lib/supabase/server'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { FileText, AlertCircle, Clock } from 'lucide-react'
+import Link from 'next/link'
+import { formatDistanceToNow } from 'date-fns'
+import type { Document } from '@/lib/supabase/types'
+
+export default async function DocumentsPage() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('documents')
+    .select('*, application:applications(role_title, company:companies(name))')
+    .order('created_at', { ascending: false })
+
+  const documents = (data ?? []) as (Document & {
+    application: { role_title: string; company: { name: string } } | null
+  })[]
+
+  const needsReview = documents.filter((d) => d.needs_review || d.classification_status === 'failed')
+  const unlinked = documents.filter((d) => !d.application_id && d.classification_status === 'classified')
+
+  return (
+    <div className="p-8">
+      <h1 className="mb-8 text-2xl font-bold text-white">Documents</h1>
+
+      {/* Review queue */}
+      {needsReview.length > 0 && (
+        <div className="mb-8">
+          <div className="mb-4 flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-yellow-400" />
+            <h2 className="font-semibold text-yellow-400">Needs review ({needsReview.length})</h2>
+          </div>
+          <div className="space-y-2">
+            {needsReview.map((doc) => (
+              <Card key={doc.id} className="border-yellow-600/30 bg-yellow-600/10">
+                <CardContent className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-5 w-5 text-yellow-400" />
+                    <div>
+                      <p className="text-sm font-medium text-white">{doc.file_name}</p>
+                      {doc.extracted_summary && (
+                        <p className="text-xs text-slate-400">{doc.extracted_summary}</p>
+                      )}
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="border-yellow-600/50 text-yellow-400">
+                    {doc.classification_status === 'failed' ? 'Failed' : 'Review needed'}
+                  </Badge>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* All documents */}
+      <div className="space-y-3">
+        {documents.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <FileText className="mb-4 h-12 w-12 text-slate-600" />
+            <p className="mb-2 text-lg font-medium text-slate-400">No documents yet</p>
+            <p className="text-sm text-slate-500">Drop any file anywhere in the app to upload it</p>
+          </div>
+        ) : (
+          documents.map((doc) => (
+            <Card key={doc.id} className="border-slate-700 bg-slate-800">
+              <CardContent className="flex items-center justify-between py-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-700">
+                    <FileText className="h-5 w-5 text-slate-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-white">{doc.file_name}</p>
+                    {doc.application ? (
+                      <Link
+                        href={`/applications/${doc.application_id}`}
+                        className="text-xs text-blue-400 hover:text-blue-300"
+                      >
+                        {doc.application.role_title} @ {doc.application.company.name}
+                      </Link>
+                    ) : (
+                      <span className="text-xs text-slate-500">Not linked to an application</span>
+                    )}
+                    <p className="text-xs text-slate-500">
+                      {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {doc.doc_type && (
+                    <Badge variant="outline" className="border-slate-600 text-xs text-slate-400">
+                      {doc.doc_type.replace(/_/g, ' ')}
+                    </Badge>
+                  )}
+                  {doc.classification_status === 'pending' && (
+                    <Clock className="h-4 w-4 text-yellow-400" />
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+    </div>
+  )
+}
