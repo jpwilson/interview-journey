@@ -99,16 +99,16 @@ export function inferStageAdvance(
   currentStage: string,
   docType: string
 ): string | null {
-  const STAGES = ['applied', 'screening', 'interview', 'offer', 'hired', 'rejected', 'withdrawn']
+  const STAGES = ['exploring', 'applied', 'screening', 'interviewing', 'offer', 'negotiating', 'resolved']
   const currentIdx = STAGES.indexOf(currentStage)
 
   const docToStage: Record<string, string> = {
     application_confirmation: 'applied',
     screening_email: 'screening',
-    interview_confirmation: 'interview',
-    assessment: 'interview',
+    interview_confirmation: 'interviewing',
+    assessment: 'interviewing',
     offer_letter: 'offer',
-    rejection_email: 'rejected',
+    rejection_email: 'resolved',
   }
 
   const targetStage = docToStage[docType]

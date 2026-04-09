@@ -6,25 +6,24 @@ import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import type { Document } from '@/lib/supabase/types'
 
+type DocumentWithRole = Document & {
+  role: { role_title: string; company: { name: string } } | null
+}
+
 export default async function DocumentsPage() {
   const supabase = await createClient()
   const { data } = await supabase
     .from('documents')
-    .select('*, application:applications(role_title, company:companies(name))')
+    .select('*, role:roles(role_title, company:companies(name))')
     .order('created_at', { ascending: false })
 
-  const documents = (data ?? []) as (Document & {
-    application: { role_title: string; company: { name: string } } | null
-  })[]
-
+  const documents = (data ?? []) as DocumentWithRole[]
   const needsReview = documents.filter((d) => d.needs_review || d.classification_status === 'failed')
-  const unlinked = documents.filter((d) => !d.application_id && d.classification_status === 'classified')
 
   return (
     <div className="p-8">
       <h1 className="mb-8 text-2xl font-bold text-white">Documents</h1>
 
-      {/* Review queue */}
       {needsReview.length > 0 && (
         <div className="mb-8">
           <div className="mb-4 flex items-center gap-2">
@@ -54,7 +53,6 @@ export default async function DocumentsPage() {
         </div>
       )}
 
-      {/* All documents */}
       <div className="space-y-3">
         {documents.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -72,15 +70,15 @@ export default async function DocumentsPage() {
                   </div>
                   <div>
                     <p className="font-medium text-white">{doc.file_name}</p>
-                    {doc.application ? (
+                    {doc.role ? (
                       <Link
-                        href={`/applications/${doc.application_id}`}
+                        href={`/roles/${doc.role_id}`}
                         className="text-xs text-blue-400 hover:text-blue-300"
                       >
-                        {doc.application.role_title} @ {doc.application.company.name}
+                        {doc.role.role_title} @ {doc.role.company.name}
                       </Link>
                     ) : (
-                      <span className="text-xs text-slate-500">Not linked to an application</span>
+                      <span className="text-xs text-slate-500">Not linked to a role</span>
                     )}
                     <p className="text-xs text-slate-500">
                       {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}

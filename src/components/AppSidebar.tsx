@@ -15,7 +15,7 @@ import { toast } from 'sonner'
 const nav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/pipeline', label: 'Pipeline', icon: Kanban },
-  { href: '/applications', label: 'Applications', icon: Briefcase },
+  { href: '/roles', label: 'Roles', icon: Briefcase },
   { href: '/timeline', label: 'Career Timeline', icon: GitBranch },
   { href: '/documents', label: 'Documents', icon: FileText },
 ]

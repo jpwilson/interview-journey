@@ -5,20 +5,20 @@ import { createClient } from '@/lib/supabase/client'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
 interface Stats {
-  totalApps: number
+  totalRoles: number
   byStage: { stage: string; count: number }[]
   classified: number
   totalDocs: number
 }
 
 const STAGE_COLORS: Record<string, string> = {
+  exploring: '#94a3b8',
   applied: '#64748b',
   screening: '#eab308',
-  interview: '#3b82f6',
+  interviewing: '#3b82f6',
   offer: '#a855f7',
-  hired: '#22c55e',
-  rejected: '#ef4444',
-  withdrawn: '#6b7280',
+  negotiating: '#6366f1',
+  resolved: '#22c55e',
 }
 
 export function HubAnalytics() {
@@ -27,20 +27,20 @@ export function HubAnalytics() {
 
   useEffect(() => {
     async function load() {
-      const [{ data: apps }, { data: docs }] = await Promise.all([
-        supabase.from('applications').select('stage'),
+      const [{ data: roles }, { data: docs }] = await Promise.all([
+        supabase.from('roles').select('stage'),
         supabase.from('documents').select('classification_status'),
       ])
 
       const byStage = Object.entries(
-        (apps ?? []).reduce<Record<string, number>>((acc, a) => {
-          acc[a.stage] = (acc[a.stage] ?? 0) + 1
+        ((roles ?? []) as { stage: string }[]).reduce<Record<string, number>>((acc, r) => {
+          acc[r.stage] = (acc[r.stage] ?? 0) + 1
           return acc
         }, {})
       ).map(([stage, count]) => ({ stage, count }))
 
       setStats({
-        totalApps: apps?.length ?? 0,
+        totalRoles: roles?.length ?? 0,
         byStage,
         classified: docs?.filter((d) => d.classification_status === 'classified').length ?? 0,
         totalDocs: docs?.length ?? 0,
@@ -55,10 +55,10 @@ export function HubAnalytics() {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: 'Applications', value: stats.totalApps },
+          { label: 'Roles tracked', value: stats.totalRoles },
           { label: 'Documents', value: stats.totalDocs },
           { label: 'AI classified', value: stats.classified },
-          { label: 'Active', value: stats.byStage.filter(s => !['hired','rejected','withdrawn'].includes(s.stage)).reduce((a,b)=>a+b.count,0) },
+          { label: 'Active', value: stats.byStage.filter(s => s.stage !== 'resolved').reduce((a, b) => a + b.count, 0) },
         ].map(({ label, value }) => (
           <div key={label} className="rounded-lg bg-slate-700 p-3 text-center">
             <p className="text-2xl font-bold text-white">{value}</p>
@@ -72,7 +72,7 @@ export function HubAnalytics() {
           <p className="mb-2 text-xs text-slate-400">By stage</p>
           <ResponsiveContainer width="100%" height={120}>
             <BarChart data={stats.byStage} margin={{ top: 0, right: 0, left: -30, bottom: 0 }}>
-              <XAxis dataKey="stage" tick={{ fontSize: 10, fill: '#94a3b8' }} />
+              <XAxis dataKey="stage" tick={{ fontSize: 9, fill: '#94a3b8' }} />
               <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} allowDecimals={false} />
               <Tooltip
                 contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}

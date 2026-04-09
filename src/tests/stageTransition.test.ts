@@ -6,25 +6,24 @@ describe('inferStageAdvance', () => {
     expect(inferStageAdvance('applied', 'screening_email')).toBe('screening')
   })
 
-  it('advances from screening to interview on interview_confirmation', () => {
-    expect(inferStageAdvance('screening', 'interview_confirmation')).toBe('interview')
+  it('advances from screening to interviewing on interview_confirmation', () => {
+    expect(inferStageAdvance('screening', 'interview_confirmation')).toBe('interviewing')
   })
 
-  it('advances to offer on offer_letter', () => {
-    expect(inferStageAdvance('interview', 'offer_letter')).toBe('offer')
+  it('advances to offer on offer_letter from interviewing', () => {
+    expect(inferStageAdvance('interviewing', 'offer_letter')).toBe('offer')
   })
 
-  it('advances to rejected on rejection_email', () => {
-    expect(inferStageAdvance('interview', 'rejection_email')).toBe('rejected')
+  it('advances to resolved on rejection_email', () => {
+    expect(inferStageAdvance('interviewing', 'rejection_email')).toBe('resolved')
   })
 
-  it('does NOT move backward — applied stays applied on offer_letter from applied', () => {
-    // offer_letter from 'applied' stage should advance forward to 'offer'
+  it('advances to offer from applied on offer_letter', () => {
     expect(inferStageAdvance('applied', 'offer_letter')).toBe('offer')
   })
 
-  it('does NOT re-apply screening if already at interview', () => {
-    expect(inferStageAdvance('interview', 'screening_email')).toBeNull()
+  it('does NOT re-apply screening if already at interviewing', () => {
+    expect(inferStageAdvance('interviewing', 'screening_email')).toBeNull()
   })
 
   it('returns null for resume — not a stage-advancing doc', () => {
@@ -39,8 +38,8 @@ describe('inferStageAdvance', () => {
     expect(inferStageAdvance('applied', 'unknown')).toBeNull()
   })
 
-  it('does not advance past hired', () => {
-    expect(inferStageAdvance('hired', 'offer_letter')).toBeNull()
+  it('does not advance past resolved', () => {
+    expect(inferStageAdvance('resolved', 'offer_letter')).toBeNull()
   })
 })
 

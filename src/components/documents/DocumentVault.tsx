@@ -41,10 +41,10 @@ const DOC_TYPE_LABELS: Record<string, string> = {
 
 interface Props {
   documents: Document[]
-  applicationId: string
+  roleId: string
 }
 
-export function DocumentVault({ documents, applicationId }: Props) {
+export function DocumentVault({ documents, roleId }: Props) {
   const [docs, setDocs] = useState(documents)
   const supabase = createClient()
 

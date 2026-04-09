@@ -6,7 +6,7 @@ import {
   CheckCircle, XCircle, Calendar, FileText, MessageSquare,
   TrendingUp, ArrowRight, Clock, Star, AlertCircle
 } from 'lucide-react'
-import type { TimelineEvent } from '@/lib/supabase/types'
+import type { RoleEvent } from '@/lib/supabase/types'
 
 const EVENT_ICONS: Record<string, typeof CheckCircle> = {
   applied: FileText,
@@ -49,7 +49,7 @@ const EVENT_COLORS: Record<string, string> = {
 }
 
 interface Props {
-  events: TimelineEvent[]
+  events: RoleEvent[]
 }
 
 export function ApplicationTimeline({ events }: Props) {

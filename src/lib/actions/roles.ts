@@ -3,15 +3,15 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import type { ApplicationStage } from '@/lib/supabase/types'
+import type { RoleStage } from '@/lib/supabase/types'
 import { checkLimits } from '@/lib/limits'
 
-export async function createApplication(formData: FormData) {
+export async function createRole(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  await checkLimits(user.id, 'applications')
+  await checkLimits(user.id, 'roles')
 
   const companyName = formData.get('company_name') as string
   const roleTitle = formData.get('role_title') as string
@@ -40,8 +40,8 @@ export async function createApplication(formData: FormData) {
     companyId = newCompany.id
   }
 
-  const { data: app, error } = await supabase
-    .from('applications')
+  const { data: role, error } = await supabase
+    .from('roles')
     .insert({
       user_id: user.id,
       company_id: companyId,
@@ -54,57 +54,55 @@ export async function createApplication(formData: FormData) {
     .select()
     .single()
 
-  if (error || !app) throw new Error('Failed to create application')
+  if (error || !role) throw new Error('Failed to create role')
 
   // Create initial timeline event
-  await supabase.from('timeline_events').insert({
+  await supabase.from('role_events').insert({
     user_id: user.id,
-    application_id: app.id,
+    role_id: role.id,
     event_type: 'applied',
     title: `Applied to ${companyName}`,
     event_date: new Date().toISOString(),
     source: 'manual',
   })
 
-  revalidatePath('/applications')
+  revalidatePath('/roles')
   revalidatePath('/pipeline')
-  redirect(`/applications/${app.id}`)
+  redirect(`/roles/${role.id}`)
 }
 
-export async function updateApplicationStage(applicationId: string, stage: ApplicationStage) {
+export async function updateRoleStage(roleId: string, stage: RoleStage) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  const { data: app, error } = await supabase
-    .from('applications')
+  const { data: role, error } = await supabase
+    .from('roles')
     .update({ stage })
-    .eq('id', applicationId)
+    .eq('id', roleId)
     .eq('user_id', user.id)
     .select('*, company:companies(name)')
     .single()
 
-  if (error || !app) throw new Error('Failed to update stage')
-
-  const typedApp = app as unknown as { stage: ApplicationStage }
+  if (error || !role) throw new Error('Failed to update stage')
 
   // Create stage_changed timeline event
-  await supabase.from('timeline_events').insert({
+  await supabase.from('role_events').insert({
     user_id: user.id,
-    application_id: applicationId,
+    role_id: roleId,
     event_type: 'stage_changed',
     title: `Moved to ${stage}`,
     event_date: new Date().toISOString(),
-    metadata: { from_stage: typedApp.stage, to_stage: stage },
+    metadata: { to_stage: stage },
     source: 'manual',
   })
 
   revalidatePath('/pipeline')
-  revalidatePath(`/applications/${applicationId}`)
+  revalidatePath(`/roles/${roleId}`)
 }
 
 export async function updateKanbanOrder(
-  updates: { id: string; kanban_order: number; stage: ApplicationStage }[]
+  updates: { id: string; kanban_order: number; stage: RoleStage }[]
 ) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -113,7 +111,7 @@ export async function updateKanbanOrder(
   await Promise.all(
     updates.map(({ id, kanban_order, stage }) =>
       supabase
-        .from('applications')
+        .from('roles')
         .update({ kanban_order, stage })
         .eq('id', id)
         .eq('user_id', user.id)
@@ -123,20 +121,20 @@ export async function updateKanbanOrder(
   revalidatePath('/pipeline')
 }
 
-export async function addTimelineEvent(formData: FormData) {
+export async function addRoleEvent(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const applicationId = formData.get('application_id') as string
+  const roleId = formData.get('role_id') as string
   const eventType = formData.get('event_type') as string
   const title = formData.get('title') as string
   const description = formData.get('description') as string | null
   const eventDate = (formData.get('event_date') as string) || new Date().toISOString()
 
-  await supabase.from('timeline_events').insert({
+  await supabase.from('role_events').insert({
     user_id: user.id,
-    application_id: applicationId,
+    role_id: roleId,
     event_type: eventType as never,
     title,
     description: description || null,
@@ -144,21 +142,34 @@ export async function addTimelineEvent(formData: FormData) {
     source: 'manual',
   })
 
-  revalidatePath(`/applications/${applicationId}`)
+  revalidatePath(`/roles/${roleId}`)
 }
 
-export async function deleteApplication(applicationId: string) {
+export async function deleteRole(roleId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   await supabase
-    .from('applications')
+    .from('roles')
     .delete()
-    .eq('id', applicationId)
+    .eq('id', roleId)
     .eq('user_id', user.id)
 
-  revalidatePath('/applications')
+  revalidatePath('/roles')
   revalidatePath('/pipeline')
-  redirect('/applications')
+  redirect('/roles')
 }
+
+// ---------------------------------------------------------------------------
+// Legacy re-exports — keep old names working during migration
+// ---------------------------------------------------------------------------
+
+/** @deprecated Use createRole */
+export const createApplication = createRole
+/** @deprecated Use updateRoleStage */
+export const updateApplicationStage = updateRoleStage
+/** @deprecated Use addRoleEvent */
+export const addTimelineEvent = addRoleEvent
+/** @deprecated Use deleteRole */
+export const deleteApplication = deleteRole

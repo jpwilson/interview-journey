@@ -14,18 +14,18 @@ export default async function TimelinePage() {
   }
 
   const { data } = await supabase
-    .from('applications')
+    .from('roles')
     .select(`
       *,
       company:companies(*),
-      timeline_events(*)
+      role_events(*)
     `)
     .order('applied_at', { ascending: true })
 
   return (
     <div className="p-8">
       <h1 className="mb-8 text-2xl font-bold text-white">Career Timeline</h1>
-      <CareerTimeline applications={data ?? []} />
+      <CareerTimeline roles={data ?? []} />
     </div>
   )
 }

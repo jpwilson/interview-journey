@@ -109,7 +109,7 @@ async function processDocument(documentId: string, userId: string, service: Retu
     companyId = null
   }
 
-  let applicationId: string | null = doc.application_id
+  let roleId: string | null = doc.role_id
 
   if (result.company_name && !needsReview) {
     // Get or create company
@@ -122,36 +122,36 @@ async function processDocument(documentId: string, userId: string, service: Retu
       companyId = newCompany?.id ?? null
     }
 
-    if (companyId && !applicationId) {
-      // Find most recent open application for this company — try/catch for no-match
+    if (companyId && !roleId) {
+      // Find most recent open role for this company — try/catch for no-match
       try {
-        const { data: existingApp } = await service
-          .from('applications')
+        const { data: existingRole } = await service
+          .from('roles')
           .select('id, stage')
           .eq('user_id', userId)
           .eq('company_id', companyId)
-          .not('stage', 'in', '("hired","rejected","withdrawn")')
+          .not('stage', 'in', '("resolved")')
           .order('created_at', { ascending: false })
           .limit(1)
           .single()
 
-        if (existingApp) {
-          applicationId = existingApp.id
+        if (existingRole) {
+          roleId = existingRole.id
 
           // Advance stage if appropriate
-          const newStage = inferStageAdvance(existingApp.stage, result.doc_type)
+          const newStage = inferStageAdvance(existingRole.stage, result.doc_type)
           if (newStage) {
             await service
-              .from('applications')
-              .update({ stage: newStage as import('@/lib/supabase/types').ApplicationStage })
-              .eq('id', applicationId as string)
+              .from('roles')
+              .update({ stage: newStage as import('@/lib/supabase/types').RoleStage })
+              .eq('id', roleId as string)
           }
         }
       } catch {
-        // No existing application — create stub unless it's a resume/cover letter
+        // No existing role — create stub unless it's a resume/cover letter
         if (result.doc_type !== 'resume' && result.doc_type !== 'cover_letter') {
-          const { data: newApp } = await service
-            .from('applications')
+          const { data: newRole } = await service
+            .from('roles')
             .insert({
               user_id: userId,
               company_id: companyId,
@@ -160,16 +160,16 @@ async function processDocument(documentId: string, userId: string, service: Retu
             })
             .select()
             .single()
-          applicationId = newApp?.id ?? null
+          roleId = newRole?.id ?? null
         }
       }
     }
 
-    // Create timeline event
-    if (applicationId) {
-      await service.from('timeline_events').insert({
+    // Create role event
+    if (roleId) {
+      await service.from('role_events').insert({
         user_id: userId,
-        application_id: applicationId,
+        role_id: roleId,
         event_type: docTypeToEventType(result.doc_type) as import('@/lib/supabase/types').TimelineEventType,
         title: result.summary,
         event_date: result.event_date ?? new Date().toISOString(),
@@ -187,7 +187,7 @@ async function processDocument(documentId: string, userId: string, service: Retu
   // Update document record with classification results
   await service.from('documents').update({
     classification_status: 'classified',
-    application_id: applicationId,
+    role_id: roleId,
     doc_type: result.doc_type,
     ai_confidence: result.confidence,
     ai_raw_response: result as unknown as Record<string, unknown>,

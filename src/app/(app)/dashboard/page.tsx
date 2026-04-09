@@ -4,30 +4,30 @@ import { Badge } from '@/components/ui/badge'
 import { Briefcase, FileText, TrendingUp, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
-import type { ApplicationWithCompany } from '@/lib/supabase/types'
+import type { RoleWithCompany } from '@/lib/supabase/types'
 
 const STAGE_COLORS: Record<string, string> = {
+  exploring: 'bg-slate-500',
   applied: 'bg-slate-600',
   screening: 'bg-yellow-600',
-  interview: 'bg-blue-600',
+  interviewing: 'bg-blue-600',
   offer: 'bg-purple-600',
-  hired: 'bg-green-600',
-  rejected: 'bg-red-600',
-  withdrawn: 'bg-slate-500',
+  negotiating: 'bg-indigo-600',
+  resolved: 'bg-slate-400',
 }
 
 export default async function DashboardPage() {
   const supabase = await createClient()
 
-  const [{ data: applications }, { data: documents }, { data: recentEvents }] = await Promise.all([
+  const [{ data: roles }, { data: documents }, { data: recentEvents }] = await Promise.all([
     supabase
-      .from('applications')
+      .from('roles')
       .select('*, company:companies(*)')
       .order('updated_at', { ascending: false }),
     supabase.from('documents').select('id, classification_status').limit(1000),
     supabase
-      .from('timeline_events')
-      .select('*, application:applications(role_title, company:companies(name))')
+      .from('role_events')
+      .select('*, role:roles(role_title, company:companies(name))')
       .order('created_at', { ascending: false })
       .limit(5),
   ])
@@ -36,15 +36,15 @@ export default async function DashboardPage() {
     id: string
     title: string
     created_at: string
-    application: { role_title: string; company: { name: string } } | null
+    role: { role_title: string; company: { name: string } } | null
   }
 
-  const apps = (applications ?? []) as ApplicationWithCompany[]
+  const allRoles = (roles ?? []) as RoleWithCompany[]
   const docs = (documents ?? []) as { id: string; classification_status: string }[]
   const events = (recentEvents ?? []) as RecentEvent[]
 
-  const active = apps.filter((a) => !['hired', 'rejected', 'withdrawn'].includes(a.stage))
-  const offers = apps.filter((a) => a.stage === 'offer')
+  const active = allRoles.filter((r) => r.stage !== 'resolved')
+  const offers = allRoles.filter((r) => r.stage === 'offer' || r.stage === 'negotiating')
   const classified = docs.filter((d) => d.classification_status === 'classified').length
 
   return (
@@ -54,10 +54,10 @@ export default async function DashboardPage() {
       {/* Stats */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: 'Active applications', value: active.length, icon: Briefcase, color: 'text-blue-400' },
+          { label: 'Active roles', value: active.length, icon: Briefcase, color: 'text-blue-400' },
           { label: 'Pending offers', value: offers.length, icon: TrendingUp, color: 'text-purple-400' },
           { label: 'Documents classified', value: classified, icon: FileText, color: 'text-green-400' },
-          { label: 'Total tracked', value: apps.length, icon: Clock, color: 'text-slate-400' },
+          { label: 'Total tracked', value: allRoles.length, icon: Clock, color: 'text-slate-400' },
         ].map(({ label, value, icon: Icon, color }) => (
           <Card key={label} className="border-slate-700 bg-slate-800">
             <CardContent className="flex items-center gap-4 pt-6">
@@ -74,33 +74,33 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Active applications */}
+        {/* Active roles */}
         <Card className="border-slate-700 bg-slate-800">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-white">Active applications</CardTitle>
+            <CardTitle className="text-white">Active roles</CardTitle>
             <Link href="/pipeline" className="text-sm text-blue-400 hover:text-blue-300">
               View pipeline →
             </Link>
           </CardHeader>
           <CardContent className="space-y-3">
-            {active.slice(0, 6).map((app) => (
+            {active.slice(0, 6).map((role) => (
               <Link
-                key={app.id}
-                href={`/applications/${app.id}`}
+                key={role.id}
+                href={`/roles/${role.id}`}
                 className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-slate-700"
               >
                 <div>
-                  <p className="font-medium text-white">{app.role_title}</p>
-                  <p className="text-sm text-slate-400">{app.company.name}</p>
+                  <p className="font-medium text-white">{role.role_title}</p>
+                  <p className="text-sm text-slate-400">{role.company.name}</p>
                 </div>
-                <Badge className={cn('text-white text-xs', STAGE_COLORS[app.stage])}>
-                  {app.stage}
+                <Badge className={cn('text-white text-xs', STAGE_COLORS[role.stage] ?? 'bg-slate-600')}>
+                  {role.stage}
                 </Badge>
               </Link>
             ))}
             {active.length === 0 && (
               <p className="py-4 text-center text-sm text-slate-500">
-                No active applications.{' '}
+                No active roles.{' '}
                 <Link href="/pipeline" className="text-blue-400">
                   Add one →
                 </Link>
@@ -116,15 +116,15 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {events.map((event) => {
-              const app = event.application
+              const role = event.role
               return (
                 <div key={event.id} className="flex items-start gap-3">
                   <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-500" />
                   <div className="min-w-0">
                     <p className="truncate text-sm text-white">{event.title}</p>
-                    {app && (
+                    {role && (
                       <p className="text-xs text-slate-400">
-                        {app.role_title} @ {app.company.name}
+                        {role.role_title} @ {role.company.name}
                       </p>
                     )}
                     <p className="text-xs text-slate-500">

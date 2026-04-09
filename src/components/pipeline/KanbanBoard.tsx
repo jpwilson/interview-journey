@@ -15,42 +15,42 @@ import {
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { KanbanColumn } from './KanbanColumn'
 import { ApplicationCard } from './ApplicationCard'
-import { updateKanbanOrder } from '@/lib/actions/applications'
+import { updateKanbanOrder } from '@/lib/actions/roles'
 import { toast } from 'sonner'
-import type { ApplicationWithCompany, ApplicationStage } from '@/lib/supabase/types'
+import type { RoleWithCompany, RoleStage } from '@/lib/supabase/types'
 
-const STAGES: { id: ApplicationStage; label: string; color: string }[] = [
+const STAGES: { id: RoleStage; label: string; color: string }[] = [
+  { id: 'exploring', label: 'Exploring', color: 'border-slate-400' },
   { id: 'applied', label: 'Applied', color: 'border-slate-500' },
   { id: 'screening', label: 'Screening', color: 'border-yellow-500' },
-  { id: 'interview', label: 'Interview', color: 'border-blue-500' },
+  { id: 'interviewing', label: 'Interviewing', color: 'border-blue-500' },
   { id: 'offer', label: 'Offer', color: 'border-purple-500' },
-  { id: 'hired', label: 'Hired', color: 'border-green-500' },
-  { id: 'rejected', label: 'Rejected', color: 'border-red-500' },
+  { id: 'negotiating', label: 'Negotiating', color: 'border-indigo-500' },
 ]
 
 interface Props {
-  initialApplications: ApplicationWithCompany[]
+  initialRoles: RoleWithCompany[]
 }
 
-export function KanbanBoard({ initialApplications }: Props) {
-  const [applications, setApplications] = useState(initialApplications)
-  const [activeApp, setActiveApp] = useState<ApplicationWithCompany | null>(null)
+export function KanbanBoard({ initialRoles }: Props) {
+  const [roles, setRoles] = useState(initialRoles)
+  const [activeRole, setActiveRole] = useState<RoleWithCompany | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   )
 
-  const appsByStage = useCallback(
-    (stage: ApplicationStage) =>
-      applications
-        .filter((a) => a.stage === stage)
+  const rolesByStage = useCallback(
+    (stage: RoleStage) =>
+      roles
+        .filter((r) => r.stage === stage)
         .sort((a, b) => a.kanban_order - b.kanban_order),
-    [applications]
+    [roles]
   )
 
   function handleDragStart({ active }: DragStartEvent) {
-    const app = applications.find((a) => a.id === active.id)
-    setActiveApp(app ?? null)
+    const role = roles.find((r) => r.id === active.id)
+    setActiveRole(role ?? null)
   }
 
   function handleDragOver({ active, over }: DragOverEvent) {
@@ -58,38 +58,38 @@ export function KanbanBoard({ initialApplications }: Props) {
     const activeId = active.id as string
     const overId = over.id as string
 
-    const activeApp = applications.find((a) => a.id === activeId)
-    if (!activeApp) return
+    const activeRole = roles.find((r) => r.id === activeId)
+    if (!activeRole) return
 
-    // overId could be a stage column ID or an application ID
+    // overId could be a stage column ID or a role ID
     const targetStage = STAGES.find((s) => s.id === overId)?.id
-    const targetApp = applications.find((a) => a.id === overId)
-    const newStage = (targetStage ?? targetApp?.stage) as ApplicationStage | undefined
+    const targetRole = roles.find((r) => r.id === overId)
+    const newStage = (targetStage ?? targetRole?.stage) as RoleStage | undefined
 
-    if (!newStage || newStage === activeApp.stage) return
+    if (!newStage || newStage === activeRole.stage) return
 
-    setApplications((prev) =>
-      prev.map((a) => (a.id === activeId ? { ...a, stage: newStage } : a))
+    setRoles((prev) =>
+      prev.map((r) => (r.id === activeId ? { ...r, stage: newStage } : r))
     )
   }
 
   async function handleDragEnd({ active, over }: DragEndEvent) {
-    setActiveApp(null)
+    setActiveRole(null)
     if (!over) return
 
     const activeId = active.id as string
-    const app = applications.find((a) => a.id === activeId)
-    if (!app) return
+    const role = roles.find((r) => r.id === activeId)
+    if (!role) return
 
     // Recalculate kanban_order for the dropped column
-    const colApps = applications
-      .filter((a) => a.stage === app.stage)
+    const colRoles = roles
+      .filter((r) => r.stage === role.stage)
       .sort((a, b) => a.kanban_order - b.kanban_order)
 
-    const updates = colApps.map((a, i) => ({
-      id: a.id,
+    const updates = colRoles.map((r, i) => ({
+      id: r.id,
       kanban_order: i,
-      stage: a.stage,
+      stage: r.stage,
     }))
 
     try {
@@ -109,17 +109,17 @@ export function KanbanBoard({ initialApplications }: Props) {
     >
       <div className="flex h-full gap-4 overflow-x-auto pb-4">
         {STAGES.map((stage) => {
-          const stageApps = appsByStage(stage.id)
+          const stageRoles = rolesByStage(stage.id)
           return (
             <SortableContext
               key={stage.id}
               id={stage.id}
-              items={stageApps.map((a) => a.id)}
+              items={stageRoles.map((r) => r.id)}
               strategy={verticalListSortingStrategy}
             >
               <KanbanColumn
                 stage={stage}
-                applications={stageApps}
+                applications={stageRoles}
                 droppableId={stage.id}
               />
             </SortableContext>
@@ -128,7 +128,7 @@ export function KanbanBoard({ initialApplications }: Props) {
       </div>
 
       <DragOverlay>
-        {activeApp ? <ApplicationCard application={activeApp} isDragging /> : null}
+        {activeRole ? <ApplicationCard application={activeRole} isDragging /> : null}
       </DragOverlay>
     </DndContext>
   )

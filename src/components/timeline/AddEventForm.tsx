@@ -1,6 +1,6 @@
 'use client'
 
-import { addTimelineEvent } from '@/lib/actions/applications'
+import { addRoleEvent } from '@/lib/actions/roles'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,12 +24,12 @@ const EVENT_TYPES = [
   { value: 'note_added', label: 'Note' },
 ]
 
-export function AddEventForm({ applicationId }: { applicationId: string }) {
+export function AddEventForm({ roleId }: { roleId: string }) {
   const [eventType, setEventType] = useState('')
 
   return (
-    <form action={addTimelineEvent} className="space-y-4 rounded-lg border border-slate-700 bg-slate-800 p-6">
-      <input type="hidden" name="application_id" value={applicationId} />
+    <form action={addRoleEvent} className="space-y-4 rounded-lg border border-slate-700 bg-slate-800 p-6">
+      <input type="hidden" name="role_id" value={roleId} />
       <input type="hidden" name="event_type" value={eventType} />
 
       <div className="space-y-2">

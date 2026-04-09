@@ -1,14 +1,22 @@
 // Auto-generate with: npx supabase gen types typescript --local > src/lib/supabase/types.ts
 // Until then, this hand-crafted version mirrors the migrations.
 
-export type ApplicationStage =
+export type RoleStage =
+  | 'exploring'
   | 'applied'
   | 'screening'
-  | 'interview'
+  | 'interviewing'
   | 'offer'
+  | 'negotiating'
+  | 'resolved'
+
+export type RoleResolution =
   | 'hired'
   | 'rejected'
-  | 'withdrawn'
+  | 'withdrew'
+  | 'offer_declined'
+  | 'ghosted'
+  | 'on_hold'
 
 export type TimelineEventType =
   | 'applied'
@@ -129,13 +137,14 @@ export interface Database {
         }
         Relationships: []
       }
-      applications: {
+      roles: {
         Row: {
           id: string
           user_id: string
           company_id: string
           role_title: string
-          stage: ApplicationStage
+          stage: RoleStage
+          resolution: RoleResolution | null
           kanban_order: number
           job_url: string | null
           salary_min: number | null
@@ -147,6 +156,12 @@ export interface Database {
           notes: string | null
           applied_at: string | null
           offer_deadline: string | null
+          ghosted_at: string | null
+          engaged_at: string | null
+          resolved_at: string | null
+          excitement_score: number | null
+          last_contact_at: string | null
+          referrer_contact_id: string | null
           created_at: string
           updated_at: string
         }
@@ -154,7 +169,8 @@ export interface Database {
           user_id: string
           company_id: string
           role_title: string
-          stage?: ApplicationStage
+          stage?: RoleStage
+          resolution?: RoleResolution | null
           kanban_order?: number
           job_url?: string | null
           salary_min?: number | null
@@ -166,10 +182,17 @@ export interface Database {
           notes?: string | null
           applied_at?: string | null
           offer_deadline?: string | null
+          ghosted_at?: string | null
+          engaged_at?: string | null
+          resolved_at?: string | null
+          excitement_score?: number | null
+          last_contact_at?: string | null
+          referrer_contact_id?: string | null
         }
         Update: {
           role_title?: string
-          stage?: ApplicationStage
+          stage?: RoleStage
+          resolution?: RoleResolution | null
           kanban_order?: number
           job_url?: string | null
           salary_min?: number | null
@@ -181,14 +204,20 @@ export interface Database {
           notes?: string | null
           applied_at?: string | null
           offer_deadline?: string | null
+          ghosted_at?: string | null
+          engaged_at?: string | null
+          resolved_at?: string | null
+          excitement_score?: number | null
+          last_contact_at?: string | null
+          referrer_contact_id?: string | null
         }
         Relationships: []
       }
-      timeline_events: {
+      role_events: {
         Row: {
           id: string
           user_id: string
-          application_id: string
+          role_id: string
           event_type: TimelineEventType
           event_date: string
           title: string
@@ -199,7 +228,7 @@ export interface Database {
         }
         Insert: {
           user_id: string
-          application_id: string
+          role_id: string
           event_type: TimelineEventType
           event_date?: string
           title: string
@@ -219,7 +248,7 @@ export interface Database {
         Row: {
           id: string
           user_id: string
-          application_id: string | null
+          role_id: string | null
           timeline_event_id: string | null
           storage_path: string
           file_name: string
@@ -244,11 +273,11 @@ export interface Database {
           file_name: string
           file_type: string
           file_size_bytes?: number | null
-          application_id?: string | null
+          role_id?: string | null
           classification_status?: ClassificationStatus
         }
         Update: {
-          application_id?: string | null
+          role_id?: string | null
           timeline_event_id?: string | null
           doc_type?: DocumentType | null
           classification_status?: ClassificationStatus
@@ -261,6 +290,192 @@ export interface Database {
           extracted_summary?: string | null
           needs_review?: boolean
         }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          email: string | null
+          phone: string | null
+          linkedin_url: string | null
+          title: string | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          name: string
+          email?: string | null
+          phone?: string | null
+          linkedin_url?: string | null
+          title?: string | null
+          notes?: string | null
+        }
+        Update: {
+          name?: string
+          email?: string | null
+          phone?: string | null
+          linkedin_url?: string | null
+          title?: string | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      role_contacts: {
+        Row: {
+          id: string
+          role_id: string
+          contact_id: string
+          relationship: string | null
+          created_at: string
+        }
+        Insert: {
+          role_id: string
+          contact_id: string
+          relationship?: string | null
+        }
+        Update: {
+          relationship?: string | null
+        }
+        Relationships: []
+      }
+      meetings: {
+        Row: {
+          id: string
+          user_id: string
+          role_id: string
+          title: string
+          scheduled_at: string | null
+          duration_minutes: number | null
+          meeting_type: string | null
+          platform: string | null
+          notes: string | null
+          outcome: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          role_id: string
+          title: string
+          scheduled_at?: string | null
+          duration_minutes?: number | null
+          meeting_type?: string | null
+          platform?: string | null
+          notes?: string | null
+          outcome?: string | null
+        }
+        Update: {
+          title?: string
+          scheduled_at?: string | null
+          duration_minutes?: number | null
+          meeting_type?: string | null
+          platform?: string | null
+          notes?: string | null
+          outcome?: string | null
+        }
+        Relationships: []
+      }
+      meeting_contacts: {
+        Row: {
+          id: string
+          meeting_id: string
+          contact_id: string
+          created_at: string
+        }
+        Insert: {
+          meeting_id: string
+          contact_id: string
+        }
+        Update: Record<string, never>
+        Relationships: []
+      }
+      offers: {
+        Row: {
+          id: string
+          user_id: string
+          role_id: string
+          base_salary: number | null
+          currency: string
+          equity: string | null
+          signing_bonus: number | null
+          total_comp: number | null
+          start_date: string | null
+          deadline: string | null
+          received_at: string
+          status: 'pending' | 'accepted' | 'declined' | 'rescinded'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          role_id: string
+          base_salary?: number | null
+          currency?: string
+          equity?: string | null
+          signing_bonus?: number | null
+          total_comp?: number | null
+          start_date?: string | null
+          deadline?: string | null
+          received_at?: string
+          status?: 'pending' | 'accepted' | 'declined' | 'rescinded'
+          notes?: string | null
+        }
+        Update: {
+          base_salary?: number | null
+          currency?: string
+          equity?: string | null
+          signing_bonus?: number | null
+          total_comp?: number | null
+          start_date?: string | null
+          deadline?: string | null
+          status?: 'pending' | 'accepted' | 'declined' | 'rescinded'
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      resumes: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          storage_path: string
+          file_name: string
+          file_type: string
+          is_default: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          name: string
+          storage_path: string
+          file_name: string
+          file_type: string
+          is_default?: boolean
+        }
+        Update: {
+          name?: string
+          is_default?: boolean
+        }
+        Relationships: []
+      }
+      role_resumes: {
+        Row: {
+          id: string
+          role_id: string
+          resume_id: string
+          created_at: string
+        }
+        Insert: {
+          role_id: string
+          resume_id: string
+        }
+        Update: Record<string, never>
         Relationships: []
       }
       analytics_events: {
@@ -291,10 +506,24 @@ export interface Database {
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Subscription = Database['public']['Tables']['subscriptions']['Row']
 export type Company = Database['public']['Tables']['companies']['Row']
-export type Application = Database['public']['Tables']['applications']['Row']
-export type TimelineEvent = Database['public']['Tables']['timeline_events']['Row']
+export type Role = Database['public']['Tables']['roles']['Row']
+export type RoleEvent = Database['public']['Tables']['role_events']['Row']
 export type Document = Database['public']['Tables']['documents']['Row']
+export type Contact = Database['public']['Tables']['contacts']['Row']
+export type Meeting = Database['public']['Tables']['meetings']['Row']
+export type Offer = Database['public']['Tables']['offers']['Row']
+export type Resume = Database['public']['Tables']['resumes']['Row']
 export type AnalyticsEvent = Database['public']['Tables']['analytics_events']['Row']
 
 // Joined types used in UI
-export type ApplicationWithCompany = Application & { company: Company }
+export type RoleWithCompany = Role & { company: Company }
+
+// Legacy aliases — keep for gradual migration
+/** @deprecated Use Role instead */
+export type Application = Role
+/** @deprecated Use RoleStage instead */
+export type ApplicationStage = RoleStage
+/** @deprecated Use RoleWithCompany instead */
+export type ApplicationWithCompany = RoleWithCompany
+/** @deprecated Use RoleEvent instead */
+export type TimelineEvent = RoleEvent

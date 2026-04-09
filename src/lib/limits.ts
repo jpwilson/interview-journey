@@ -1,11 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 
 const LIMITS = {
-  free: { applications: 10, documents_total: 25, ai_per_month: 20 },
-  pro: { applications: Infinity, documents_total: Infinity, ai_per_month: Infinity },
+  free: { roles: 10, documents_total: 25, ai_per_month: 20 },
+  pro: { roles: Infinity, documents_total: Infinity, ai_per_month: Infinity },
 } as const
 
-type LimitKey = 'applications' | 'documents_total' | 'ai_per_month'
+type LimitKey = 'roles' | 'documents_total' | 'ai_per_month'
 
 export async function checkLimits(userId: string, key: LimitKey): Promise<void> {
   const supabase = await createClient()
@@ -22,12 +22,12 @@ export async function checkLimits(userId: string, key: LimitKey): Promise<void> 
 
   let count = 0
 
-  if (key === 'applications') {
+  if (key === 'roles') {
     const { count: c } = await supabase
-      .from('applications')
+      .from('roles')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', userId)
-      .not('stage', 'in', '("hired","rejected","withdrawn")')
+      .not('stage', 'in', '("resolved")')
     count = c ?? 0
   } else if (key === 'documents_total') {
     const { count: c } = await supabase
