@@ -6,8 +6,9 @@ import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import {
-  Briefcase, LayoutDashboard, Kanban, Clock,
-  FileText, Settings, LogOut, GitBranch
+  Briefcase, LayoutDashboard, Kanban,
+  FileText, Settings, LogOut, GitBranch,
+  Building2, TrendingUp, BarChart3,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
@@ -16,7 +17,10 @@ const nav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/pipeline', label: 'Pipeline', icon: Kanban },
   { href: '/roles', label: 'Roles', icon: Briefcase },
+  { href: '/companies', label: 'Companies', icon: Building2 },
   { href: '/timeline', label: 'Career Timeline', icon: GitBranch },
+  { href: '/offers', label: 'Offers', icon: TrendingUp },
+  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/documents', label: 'Documents', icon: FileText },
 ]
 

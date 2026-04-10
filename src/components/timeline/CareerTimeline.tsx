@@ -34,15 +34,15 @@ export function CareerTimeline({ roles }: Props) {
     )
   }
 
-  // Group by company, then sort by date
-  const byCompany = roles.reduce<Record<string, RoleWithRelations[]>>((acc, role) => {
-    const key = role.company.name
-    if (!acc[key]) acc[key] = []
-    acc[key].push(role)
+  // Group by company id, then sort by date
+  const byCompany = roles.reduce<Record<string, { name: string; id: string; roles: RoleWithRelations[] }>>((acc, role) => {
+    const key = role.company.id
+    if (!acc[key]) acc[key] = { name: role.company.name, id: role.company.id, roles: [] }
+    acc[key].roles.push(role)
     return acc
   }, {})
 
-  const companies = Object.entries(byCompany)
+  const companies = Object.values(byCompany)
 
   // Find overall date range for axis positioning
   const allDates = roles.flatMap((r) => [
@@ -69,11 +69,13 @@ export function CareerTimeline({ roles }: Props) {
 
       {/* Rows */}
       <div className="space-y-6">
-        {companies.map(([companyName, companyRoles]) => (
-          <div key={companyName} className="flex items-start gap-4">
+        {companies.map(({ name: companyName, id: companyId, roles: companyRoles }) => (
+          <div key={companyId} className="flex items-start gap-4">
             {/* Company label */}
             <div className="w-36 shrink-0 pt-1 text-right">
-              <p className="truncate text-sm font-medium text-white">{companyName}</p>
+              <Link href={`/companies/${companyId}`} className="truncate text-sm font-medium text-white hover:text-blue-400 transition-colors block">
+                {companyName}
+              </Link>
             </div>
 
             {/* Timeline row */}

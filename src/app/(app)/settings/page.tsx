@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { UpgradeButton } from '@/components/settings/UpgradeButton'
-import { CheckCircle, Crown } from 'lucide-react'
+import { CopyButton } from '@/components/settings/CopyButton'
+import { CheckCircle, Crown, Mail } from 'lucide-react'
 
 export default async function SettingsPage({
   searchParams,
@@ -55,6 +56,29 @@ export default async function SettingsPage({
             <p className="text-sm text-slate-400">Name</p>
             <p className="text-white">{profile?.display_name ?? '—'}</p>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Email forwarding */}
+      <Card className="mb-6 border-slate-700 bg-slate-800">
+        <CardHeader className="flex flex-row items-center gap-2">
+          <Mail className="h-5 w-5 text-blue-400" />
+          <CardTitle className="text-white">Email forwarding</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <p className="mb-2 text-sm text-slate-400">Your personal forwarding address</p>
+            <div className="flex items-center gap-3 rounded-lg bg-slate-900 px-4 py-3">
+              <code className="flex-1 select-all text-sm text-blue-300">
+                parse+{user.id}@interviewjourney.app
+              </code>
+              <CopyButton text={`parse+${user.id}@interviewjourney.app`} />
+            </div>
+          </div>
+          <p className="text-sm text-slate-500">
+            Forward any email from recruiters, interview invitations, or offer letters to this
+            address. We&apos;ll automatically classify and update your roles.
+          </p>
         </CardContent>
       </Card>
 

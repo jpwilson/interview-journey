@@ -5,6 +5,7 @@ import { Briefcase, FileText, TrendingUp, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import type { RoleWithCompany } from '@/lib/supabase/types'
+import { GhostingAlerts, computeAlertRoles } from '@/components/dashboard/GhostingAlerts'
 
 const STAGE_COLORS: Record<string, string> = {
   exploring: 'bg-slate-500',
@@ -19,18 +20,21 @@ const STAGE_COLORS: Record<string, string> = {
 export default async function DashboardPage() {
   const supabase = await createClient()
 
-  const [{ data: roles }, { data: documents }, { data: recentEvents }] = await Promise.all([
-    supabase
-      .from('roles')
-      .select('*, company:companies(*)')
-      .order('updated_at', { ascending: false }),
-    supabase.from('documents').select('id, classification_status').limit(1000),
-    supabase
-      .from('role_events')
-      .select('*, role:roles(role_title, company:companies(name))')
-      .order('created_at', { ascending: false })
-      .limit(5),
-  ])
+  const [{ data: roles }, { data: documents }, { data: recentEvents }, { data: alertEvents }] =
+    await Promise.all([
+      supabase.from('roles').select('*, company:companies(*)').order('updated_at', { ascending: false }),
+      supabase.from('documents').select('id, classification_status').limit(1000),
+      supabase
+        .from('role_events')
+        .select('*, role:roles(role_title, company:companies(name))')
+        .order('created_at', { ascending: false })
+        .limit(5),
+      // Fetch events for non-resolved roles to detect ghosting
+      supabase
+        .from('role_events')
+        .select('role_id, event_date')
+        .order('event_date', { ascending: false }),
+    ])
 
   type RecentEvent = {
     id: string
@@ -47,9 +51,22 @@ export default async function DashboardPage() {
   const offers = allRoles.filter((r) => r.stage === 'offer' || r.stage === 'negotiating')
   const classified = docs.filter((d) => d.classification_status === 'classified').length
 
+  // Build a map of role_id → events for ghosting detection
+  const roleEventsByRoleId: Record<string, { event_date: string }[]> = {}
+  for (const ev of alertEvents ?? []) {
+    const e = ev as { role_id: string; event_date: string }
+    if (!roleEventsByRoleId[e.role_id]) roleEventsByRoleId[e.role_id] = []
+    roleEventsByRoleId[e.role_id].push({ event_date: e.event_date })
+  }
+
+  const alertRoles = computeAlertRoles(allRoles, roleEventsByRoleId)
+
   return (
     <div className="p-8">
       <h1 className="mb-8 text-2xl font-bold text-white">Dashboard</h1>
+
+      {/* Ghosting / deadline alerts */}
+      <GhostingAlerts roles={alertRoles} />
 
       {/* Stats */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ApplicationTimeline } from '@/components/timeline/ApplicationTimeline'
 import { DocumentVault } from '@/components/documents/DocumentVault'
 import { AddEventForm } from '@/components/timeline/AddEventForm'
+import { MeetingsList } from '@/components/meetings/MeetingsList'
 import { deleteRole } from '@/lib/actions/roles'
 import { ExternalLink, Trash2, Building2 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -28,7 +29,7 @@ export default async function RoleDetailPage({
   const { id } = await params
   const supabase = await createClient()
 
-  const [{ data: roleData }, { data: events }, { data: documents }] = await Promise.all([
+  const [{ data: roleData }, { data: events }, { data: documents }, { data: meetings }] = await Promise.all([
     supabase
       .from('roles')
       .select('*, company:companies(*)')
@@ -44,6 +45,11 @@ export default async function RoleDetailPage({
       .select('*')
       .eq('role_id', id)
       .order('created_at', { ascending: false }),
+    supabase
+      .from('meetings')
+      .select('*')
+      .eq('role_id', id)
+      .order('scheduled_at', { ascending: true }),
   ])
 
   if (!roleData) notFound()
@@ -112,6 +118,9 @@ export default async function RoleDetailPage({
           <TabsTrigger value="timeline" className="data-[state=active]:bg-slate-700">
             Timeline ({events?.length ?? 0})
           </TabsTrigger>
+          <TabsTrigger value="meetings" className="data-[state=active]:bg-slate-700">
+            Meetings ({meetings?.length ?? 0})
+          </TabsTrigger>
           <TabsTrigger value="documents" className="data-[state=active]:bg-slate-700">
             Documents ({documents?.length ?? 0})
           </TabsTrigger>
@@ -122,6 +131,10 @@ export default async function RoleDetailPage({
 
         <TabsContent value="timeline">
           <ApplicationTimeline events={events ?? []} />
+        </TabsContent>
+
+        <TabsContent value="meetings">
+          <MeetingsList meetings={meetings ?? []} roleId={role.id} />
         </TabsContent>
 
         <TabsContent value="documents">

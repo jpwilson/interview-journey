@@ -55,6 +55,35 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
     [supabase]
   )
 
+  async function compressImage(file: File): Promise<File> {
+    return new Promise((resolve) => {
+      const img = new Image()
+      const url = URL.createObjectURL(file)
+      img.onload = () => {
+        URL.revokeObjectURL(url)
+        const MAX_WIDTH = 800
+        const scale = Math.min(1, MAX_WIDTH / img.width)
+        const canvas = document.createElement('canvas')
+        canvas.width = img.width * scale
+        canvas.height = img.height * scale
+        const ctx = canvas.getContext('2d')!
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) { resolve(file); return }
+            const compressed = new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' })
+            console.log(`Compressed ${file.name}: ${(file.size / 1024).toFixed(0)}KB → ${(compressed.size / 1024).toFixed(0)}KB`)
+            resolve(compressed)
+          },
+          'image/jpeg',
+          0.6
+        )
+      }
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(file) }
+      img.src = url
+    })
+  }
+
   async function uploadFile(file: File) {
     const ACCEPTED = [
       'application/pdf',
@@ -73,7 +102,10 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
-    const toastId = toast.loading(`Uploading ${file.name}…`)
+    // Compress images before uploading
+    const fileToUpload = file.type.startsWith('image/') ? await compressImage(file) : file
+
+    const toastId = toast.loading(`Uploading ${fileToUpload.name}…`)
     try {
       const { data: userData } = await supabase.auth.getUser()
       if (!userData.user) {
@@ -82,11 +114,11 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
       }
 
       const docId = crypto.randomUUID()
-      const storagePath = `${userData.user.id}/${docId}/${file.name}`
+      const storagePath = `${userData.user.id}/${docId}/${fileToUpload.name}`
 
       const { error: uploadError } = await supabase.storage
         .from('documents')
-        .upload(storagePath, file)
+        .upload(storagePath, fileToUpload)
 
       if (uploadError) throw uploadError
 
@@ -95,9 +127,9 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
         .insert({
           user_id: userData.user.id,
           storage_path: storagePath,
-          file_name: file.name,
-          file_type: file.type,
-          file_size_bytes: file.size,
+          file_name: fileToUpload.name,
+          file_type: fileToUpload.type,
+          file_size_bytes: fileToUpload.size,
           classification_status: 'pending',
         })
         .select()
@@ -105,7 +137,7 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
 
       if (dbError) throw dbError
 
-      toast.loading(`Classifying ${file.name}…`, { id: toastId })
+      toast.loading(`Classifying ${fileToUpload.name}…`, { id: toastId })
 
       // Fire-and-forget: trigger Edge Function
       fetch('/api/documents/classify', {
@@ -132,12 +164,12 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
               toast.success(
                 updated.extracted_summary
                   ? `${updated.extracted_summary}${company}`
-                  : `${file.name} classified`,
+                  : `${fileToUpload.name} classified`,
                 { id: toastId }
               )
               supabase.removeChannel(channel)
             } else if (updated.classification_status === 'failed') {
-              toast.error(`Could not classify ${file.name}`, { id: toastId })
+              toast.error(`Could not classify ${fileToUpload.name}`, { id: toastId })
               supabase.removeChannel(channel)
             }
           }
@@ -151,7 +183,7 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
       }, 60_000)
     } catch (err) {
       console.error(err)
-      toast.error(`Upload failed: ${file instanceof File ? file.name : 'unknown'}`, { id: toastId })
+      toast.error(`Upload failed: ${file.name}`, { id: toastId })
     }
   }
 
