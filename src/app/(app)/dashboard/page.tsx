@@ -5,7 +5,8 @@ import { Briefcase, FileText, TrendingUp, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import type { RoleWithCompany } from '@/lib/supabase/types'
-import { GhostingAlerts, computeAlertRoles } from '@/components/dashboard/GhostingAlerts'
+import { GhostingAlerts } from '@/components/dashboard/GhostingAlerts'
+import { computeAlertRoles } from '@/lib/alerts'
 
 const STAGE_COLORS: Record<string, string> = {
   exploring: 'bg-slate-500',

@@ -4,14 +4,10 @@ import { useTransition } from 'react'
 import { markFollowUpSent } from '@/lib/actions/followUp'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { differenceInDays, format } from 'date-fns'
-import type { RoleWithCompany } from '@/lib/supabase/types'
+import { format } from 'date-fns'
+import type { AlertRole } from '@/lib/alerts'
 
-export type AlertRole = RoleWithCompany & {
-  _alertType: 'ghosted' | 'deadline'
-  _daysSinceContact?: number
-  _daysUntilDeadline?: number
-}
+export type { AlertRole }
 
 function GhostingAlertRow({ role }: { role: AlertRole }) {
   const [isPending, startTransition] = useTransition()
@@ -96,55 +92,3 @@ export function GhostingAlerts({ roles }: GhostingAlertsProps) {
   )
 }
 
-// Pure helper used by the server page to compute alert roles
-export function computeAlertRoles(
-  roles: RoleWithCompany[],
-  roleEventsByRoleId: Record<string, { event_date: string }[]>
-): AlertRole[] {
-  const now = new Date()
-  const alerts: AlertRole[] = []
-
-  for (const role of roles) {
-    if (role.stage === 'resolved') continue
-
-    // Deadline alert — offer deadline within 3 days
-    if (role.offer_deadline) {
-      const deadlineDate = new Date(role.offer_deadline)
-      const daysUntil = differenceInDays(deadlineDate, now)
-      if (daysUntil >= 0 && daysUntil <= 3) {
-        alerts.push({
-          ...role,
-          _alertType: 'deadline',
-          _daysUntilDeadline: daysUntil,
-        })
-        continue // don't double-alert
-      }
-    }
-
-    // Ghosting alert — no contact in 14 days
-    if (role.last_contact_at) {
-      const daysSince = differenceInDays(now, new Date(role.last_contact_at))
-      if (daysSince > 14) {
-        alerts.push({ ...role, _alertType: 'ghosted', _daysSinceContact: daysSince })
-        continue
-      }
-    }
-
-    // Ghosting alert — applied 21+ days ago with no events since
-    if (role.applied_at) {
-      const daysSinceApplied = differenceInDays(now, new Date(role.applied_at))
-      if (daysSinceApplied > 21) {
-        const events = roleEventsByRoleId[role.id] ?? []
-        if (events.length === 0) {
-          alerts.push({
-            ...role,
-            _alertType: 'ghosted',
-            _daysSinceContact: daysSinceApplied,
-          })
-        }
-      }
-    }
-  }
-
-  return alerts
-}
