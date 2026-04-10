@@ -26,7 +26,7 @@ export default async function AnalyticsPage() {
   const roles = (rolesData ?? []) as RoleWithCompany[]
   const events = (eventsData ?? []) as RoleEvent[]
 
-  if (roles.length < 5) {
+  if (roles.length < 2) {
     return (
       <div className="flex h-full items-center justify-center p-8">
         <div className="text-center">

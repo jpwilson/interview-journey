@@ -347,35 +347,50 @@ export interface Database {
           id: string
           user_id: string
           role_id: string
-          title: string
-          scheduled_at: string | null
+          type: string
+          round_number: number | null
+          scheduled_at: string
           duration_minutes: number | null
-          meeting_type: string | null
+          format: string | null
           platform: string | null
-          notes: string | null
+          location: string | null
+          prep_notes: string | null
+          questions_to_ask: string | null
           outcome: string | null
+          outcome_notes: string | null
+          follow_up_sent_at: string | null
+          calendar_event_id: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           user_id: string
           role_id: string
-          title: string
-          scheduled_at?: string | null
+          type: string
+          scheduled_at: string
+          round_number?: number | null
           duration_minutes?: number | null
-          meeting_type?: string | null
+          format?: string | null
           platform?: string | null
-          notes?: string | null
+          location?: string | null
+          prep_notes?: string | null
+          questions_to_ask?: string | null
           outcome?: string | null
+          outcome_notes?: string | null
         }
         Update: {
-          title?: string
-          scheduled_at?: string | null
+          type?: string
+          scheduled_at?: string
+          round_number?: number | null
           duration_minutes?: number | null
-          meeting_type?: string | null
+          format?: string | null
           platform?: string | null
-          notes?: string | null
+          location?: string | null
+          prep_notes?: string | null
+          questions_to_ask?: string | null
           outcome?: string | null
+          outcome_notes?: string | null
+          follow_up_sent_at?: string | null
         }
         Relationships: []
       }

@@ -85,14 +85,14 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
   const [updating, setUpdating] = useState(false)
 
   const badge = OUTCOME_BADGE[meeting.outcome ?? 'pending'] ?? OUTCOME_BADGE.pending
-  const label = TYPE_LABELS[meeting.meeting_type ?? ''] ?? 'Interview'
+  const label = TYPE_LABELS[meeting.type ?? ''] ?? 'Interview'
   const upcoming = isUpcoming(meeting.scheduled_at)
 
   async function handleOutcome(outcome: string) {
     setUpdating(true)
     setShowOutcomeMenu(false)
     try {
-      await updateMeetingOutcome(meeting.id, outcome, roleId)
+      await updateMeetingOutcome(meeting.id, outcome, '', roleId)
     } finally {
       setUpdating(false)
     }
@@ -103,12 +103,12 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${upcoming ? 'bg-blue-600/20 text-blue-400' : 'bg-slate-700 text-slate-400'}`}>
-            <TypeIcon type={meeting.meeting_type} />
+            <TypeIcon type={meeting.type} />
           </div>
           <div>
             <p className="text-sm font-semibold text-white">{label}</p>
-            {meeting.title && meeting.title !== label && (
-              <p className="text-xs text-slate-500">{meeting.title}</p>
+            {meeting.round_number && (
+              <p className="text-xs text-slate-500">Round {meeting.round_number}</p>
             )}
           </div>
         </div>
@@ -162,9 +162,9 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
         )}
       </div>
 
-      {meeting.notes && (
+      {meeting.prep_notes && (
         <p className="text-xs text-slate-400 line-clamp-2 border-t border-slate-700/50 pt-2">
-          {meeting.notes}
+          {meeting.prep_notes}
         </p>
       )}
     </div>

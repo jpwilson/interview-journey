@@ -52,7 +52,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
         <div className="flex flex-col gap-1">
           <label className="text-xs text-slate-400">Type</label>
           <select
-            name="meeting_type"
+            name="type"
             required
             className="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
@@ -97,13 +97,13 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
         </div>
       </div>
 
-      {/* Notes */}
+      {/* Prep notes */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-slate-400">Prep notes / questions to ask</label>
+        <label className="text-xs text-slate-400">Prep notes</label>
         <textarea
-          name="notes"
-          rows={3}
-          placeholder="What to prepare, questions to ask…"
+          name="prep_notes"
+          rows={2}
+          placeholder="What to research, how to prepare…"
           className="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
         />
       </div>
