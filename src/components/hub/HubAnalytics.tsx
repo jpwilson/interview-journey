@@ -14,8 +14,8 @@ interface Stats {
 const STAGE_COLORS: Record<string, string> = {
   exploring: '#94a3b8',
   applied: '#64748b',
-  screening: '#eab308',
-  interviewing: '#3b82f6',
+  screening: '#f59e0b',
+  interviewing: '#0284c7',
   offer: '#a855f7',
   negotiating: '#6366f1',
   resolved: '#22c55e',
@@ -49,7 +49,7 @@ export function HubAnalytics() {
     load()
   }, [])
 
-  if (!stats) return <p className="text-center text-sm text-slate-500 py-8">Loading stats…</p>
+  if (!stats) return <p className="text-center text-sm text-slate-400 py-8">Loading stats…</p>
 
   return (
     <div className="space-y-4">
@@ -60,28 +60,28 @@ export function HubAnalytics() {
           { label: 'AI classified', value: stats.classified },
           { label: 'Active', value: stats.byStage.filter(s => s.stage !== 'resolved').reduce((a, b) => a + b.count, 0) },
         ].map(({ label, value }) => (
-          <div key={label} className="rounded-lg bg-slate-700 p-3 text-center">
-            <p className="text-2xl font-bold text-white">{value}</p>
-            <p className="text-xs text-slate-400">{label}</p>
+          <div key={label} className="rounded-lg bg-[#f8f9fa] border border-slate-100 p-3 text-center">
+            <p className="text-2xl font-bold text-slate-900">{value}</p>
+            <p className="text-xs text-slate-500">{label}</p>
           </div>
         ))}
       </div>
 
       {stats.byStage.length > 0 && (
         <div>
-          <p className="mb-2 text-xs text-slate-400">By stage</p>
+          <p className="mb-2 text-xs font-medium text-slate-500">By stage</p>
           <ResponsiveContainer width="100%" height={120}>
             <BarChart data={stats.byStage} margin={{ top: 0, right: 0, left: -30, bottom: 0 }}>
               <XAxis dataKey="stage" tick={{ fontSize: 9, fill: '#94a3b8' }} />
               <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} allowDecimals={false} />
               <Tooltip
-                contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
-                labelStyle={{ color: '#fff' }}
-                itemStyle={{ color: '#94a3b8' }}
+                contentStyle={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+                labelStyle={{ color: '#0f172a' }}
+                itemStyle={{ color: '#64748b' }}
               />
               <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                 {stats.byStage.map((entry) => (
-                  <Cell key={entry.stage} fill={STAGE_COLORS[entry.stage] ?? '#64748b'} />
+                  <Cell key={entry.stage} fill={STAGE_COLORS[entry.stage] ?? '#0284c7'} />
                 ))}
               </Bar>
             </BarChart>

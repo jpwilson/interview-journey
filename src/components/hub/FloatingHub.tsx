@@ -38,7 +38,7 @@ export function FloatingHub() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-lg ring-2 ring-blue-500/30 transition-transform hover:scale-110 hover:bg-blue-500"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00658f] to-[#4ea5d9] shadow-lg ring-2 ring-sky-300/30 transition-transform hover:scale-110"
         aria-label="Open hub"
       >
         <Briefcase className="h-6 w-6 text-white" />
@@ -49,25 +49,25 @@ export function FloatingHub() {
   return (
     <div
       className={cn(
-        'fixed z-50 w-96 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl',
+        'fixed z-50 w-96 rounded-xl border border-slate-200 bg-white shadow-xl',
         isMinimised ? 'h-12' : 'h-[520px]'
       )}
       style={{ bottom: position.y, right: position.x }}
     >
       {/* Header / drag handle */}
       <div
-        className="flex cursor-move items-center justify-between rounded-t-xl border-b border-slate-700 bg-slate-800 px-4 py-3"
+        className="flex cursor-move items-center justify-between rounded-t-xl border-b border-slate-100 bg-white px-4 py-3"
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center gap-2">
-          <Briefcase className="h-4 w-4 text-blue-400" />
-          <span className="text-sm font-medium text-white">Interview Journey Hub</span>
+          <Briefcase className="h-4 w-4 text-sky-600" />
+          <span className="text-sm font-semibold text-slate-900">Interview Journey Hub</span>
         </div>
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 w-6 p-0 text-slate-400 hover:text-white"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-700"
             onClick={() => setIsMinimised((m) => !m)}
           >
             <Minus className="h-3 w-3" />
@@ -75,7 +75,7 @@ export function FloatingHub() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 w-6 p-0 text-slate-400 hover:text-white"
+            className="h-6 w-6 p-0 text-slate-400 hover:text-slate-700"
             onClick={() => setIsOpen(false)}
           >
             <X className="h-3 w-3" />
@@ -85,14 +85,23 @@ export function FloatingHub() {
 
       {!isMinimised && (
         <Tabs defaultValue="chat" className="flex h-[calc(100%-48px)] flex-col">
-          <TabsList className="mx-3 mt-3 bg-slate-800">
-            <TabsTrigger value="chat" className="flex-1 gap-1 data-[state=active]:bg-slate-700">
+          <TabsList className="mx-3 mt-3 bg-slate-100 border border-slate-200">
+            <TabsTrigger
+              value="chat"
+              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-sky-600 data-[state=active]:text-white"
+            >
               <MessageSquare className="h-3 w-3" /> Chat
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex-1 gap-1 data-[state=active]:bg-slate-700">
+            <TabsTrigger
+              value="analytics"
+              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-sky-600 data-[state=active]:text-white"
+            >
               <BarChart3 className="h-3 w-3" /> Stats
             </TabsTrigger>
-            <TabsTrigger value="changelog" className="flex-1 gap-1 data-[state=active]:bg-slate-700">
+            <TabsTrigger
+              value="changelog"
+              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-sky-600 data-[state=active]:text-white"
+            >
               <Clock className="h-3 w-3" /> Changelog
             </TabsTrigger>
           </TabsList>

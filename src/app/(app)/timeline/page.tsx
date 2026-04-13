@@ -1,6 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import { CareerTimeline } from '@/components/timeline/CareerTimeline'
-import { ChronicleTimeline } from '@/components/timeline/ChronicleTimeline'
 import { TimelineTabs } from '@/components/timeline/TimelineTabs'
 import { getUserTier } from '@/lib/limits'
 import { redirect } from 'next/navigation'
