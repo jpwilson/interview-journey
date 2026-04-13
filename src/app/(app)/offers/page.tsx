@@ -58,37 +58,37 @@ function OfferColumn({ offer }: OfferColumnProps) {
   return (
     <div className="flex flex-col min-w-[240px] max-w-xs flex-1">
       {/* Header */}
-      <div className="rounded-t-xl border border-slate-700 bg-slate-800 px-4 py-3">
+      <div className="rounded-t-xl border border-slate-100 bg-gradient-to-br from-[#00658f] to-[#4ea5d9] px-4 py-4">
         <p className="font-bold text-white truncate">{company}</p>
-        <p className="text-sm text-slate-400 truncate">{role}</p>
+        <p className="text-sm text-sky-100 truncate">{role}</p>
       </div>
 
       {/* Rows */}
-      <div className="border-x border-slate-700 flex-1 divide-y divide-slate-800">
+      <div className="border-x border-slate-100 flex-1 divide-y divide-slate-50 bg-white">
         {rows.map(({ label, value }) => (
           <div key={label} className="px-4 py-3">
-            <p className="text-xs text-slate-500 mb-0.5">{label}</p>
-            <p className="text-sm text-white">{value}</p>
+            <p className="text-xs text-slate-400 mb-0.5">{label}</p>
+            <p className="text-sm text-slate-900">{value}</p>
           </div>
         ))}
       </div>
 
-      {/* Year 1 cash comp total */}
-      <div className="border-x border-t border-slate-700 bg-slate-800/60 px-4 py-3">
-        <p className="text-xs text-slate-500 mb-0.5">Year 1 Cash (base + signing)</p>
-        <p className="text-lg font-bold text-white">{fmt(cashComp, offer.currency)}</p>
+      {/* Year 1 cash comp total — highlighted in green */}
+      <div className="border-x border-t border-slate-100 bg-green-50 px-4 py-4">
+        <p className="text-xs text-green-700 font-medium mb-0.5">Total Year 1</p>
+        <p className="text-lg font-bold text-green-800">{fmt(cashComp, offer.currency)}</p>
         {offer.equity && (
-          <p className="text-xs text-slate-500 mt-1">+ equity: {offer.equity}</p>
+          <p className="text-xs text-green-600 mt-1">+ equity: {offer.equity}</p>
         )}
       </div>
 
       {/* Actions */}
-      <div className="rounded-b-xl border border-t-0 border-slate-700 bg-slate-900 px-4 py-3 flex gap-2">
+      <div className="rounded-b-xl border border-t-0 border-slate-100 bg-[#f8f9fa] px-4 py-3 flex gap-2">
         <form action={acceptOffer.bind(null, offer.id)} className="flex-1">
           <Button
             type="submit"
             size="sm"
-            className="w-full bg-green-600 hover:bg-green-500 text-white"
+            className="w-full bg-gradient-to-r from-[#00658f] to-[#4ea5d9] hover:from-[#005578] hover:to-[#3a8fbf] text-white border-0"
           >
             Accept
           </Button>
@@ -98,7 +98,7 @@ function OfferColumn({ offer }: OfferColumnProps) {
             type="submit"
             size="sm"
             variant="outline"
-            className="w-full border-red-700 text-red-400 hover:bg-red-900/30 hover:text-red-300"
+            className="w-full border-slate-300 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
           >
             Decline
           </Button>
@@ -120,18 +120,23 @@ export default async function OffersPage() {
   const pendingOffers = (offers ?? []) as OfferWithRole[]
 
   return (
-    <div className="p-8">
+    <div className="min-h-full bg-[#f8f9fa] p-8">
       {/* Header */}
       <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600/20">
-          <TrendingUp className="h-5 w-5 text-purple-400" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#00658f] to-[#4ea5d9]">
+          <TrendingUp className="h-5 w-5 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Offer Comparison</h1>
-          <p className="text-sm text-slate-400">Compare pending offers side by side</p>
+          <h1
+            className="text-3xl font-extrabold text-slate-900"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            Offer Comparison
+          </h1>
+          <p className="text-sm text-slate-500">Compare pending offers side by side</p>
         </div>
         {pendingOffers.length > 0 && (
-          <Badge className="ml-auto bg-purple-600/20 text-purple-400 border border-purple-600/30">
+          <Badge className="ml-auto bg-sky-100 text-sky-700 border-0">
             {pendingOffers.length} pending
           </Badge>
         )}
@@ -139,10 +144,10 @@ export default async function OffersPage() {
 
       {/* Empty state */}
       {pendingOffers.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-700 py-24 text-center">
-          <TrendingUp className="mb-4 h-12 w-12 text-slate-600" />
-          <p className="text-lg font-semibold text-slate-400">No pending offers to compare</p>
-          <p className="mt-1 text-sm text-slate-600">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-white py-24 text-center shadow-sm">
+          <TrendingUp className="mb-4 h-12 w-12 text-slate-300" />
+          <p className="text-lg font-semibold text-slate-500">No pending offers to compare</p>
+          <p className="mt-1 text-sm text-slate-400">
             Offers you receive will appear here once their status is set to pending.
           </p>
         </div>

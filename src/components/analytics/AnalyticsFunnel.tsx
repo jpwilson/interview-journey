@@ -19,9 +19,9 @@ interface FunnelCounts {
 }
 
 const STAGE_COLORS: Record<string, string> = {
-  Applied: '#475569',
-  Screening: '#ca8a04',
-  Interviewing: '#2563eb',
+  Applied: '#0284c7',
+  Screening: '#0ea5e9',
+  Interviewing: '#38bdf8',
   Offer: '#7c3aed',
   Hired: '#16a34a',
 }
@@ -42,7 +42,7 @@ export function AnalyticsFunnel({ counts }: AnalyticsFunnelProps) {
   return (
     <div className="space-y-4">
       {/* Conversion rates between stages */}
-      <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-400">
+      <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-500">
         {data.map((d, i) => {
           if (i === 0) return null
           const prev = data[i - 1].count
@@ -66,20 +66,20 @@ export function AnalyticsFunnel({ counts }: AnalyticsFunnelProps) {
           <YAxis
             type="category"
             dataKey="stage"
-            tick={{ fill: '#cbd5e1', fontSize: 13 }}
+            tick={{ fill: '#475569', fontSize: 13 }}
             axisLine={false}
             tickLine={false}
             width={80}
           />
           <Tooltip
-            cursor={{ fill: 'rgba(255,255,255,0.04)' }}
-            contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
-            labelStyle={{ color: '#f1f5f9', fontWeight: 600 }}
-            itemStyle={{ color: '#94a3b8' }}
+            cursor={{ fill: 'rgba(0,101,143,0.05)' }}
+            contentStyle={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+            labelStyle={{ color: '#0f172a', fontWeight: 600 }}
+            itemStyle={{ color: '#64748b' }}
           />
           <Bar dataKey="count" radius={[0, 4, 4, 0]}>
             {data.map((entry) => (
-              <Cell key={entry.stage} fill={STAGE_COLORS[entry.stage] ?? '#475569'} />
+              <Cell key={entry.stage} fill={STAGE_COLORS[entry.stage] ?? '#0284c7'} />
             ))}
           </Bar>
         </BarChart>
