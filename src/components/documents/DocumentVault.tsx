@@ -18,10 +18,10 @@ const STATUS_ICONS = {
 }
 
 const STATUS_COLORS = {
-  pending: 'text-yellow-400',
-  processing: 'text-blue-400',
-  classified: 'text-green-400',
-  failed: 'text-red-400',
+  pending: 'text-yellow-500',
+  processing: 'text-sky-600',
+  classified: 'text-green-600',
+  failed: 'text-red-500',
 }
 
 const DOC_TYPE_LABELS: Record<string, string> = {
@@ -96,9 +96,11 @@ export function DocumentVault({ documents, roleId }: Props) {
   if (docs.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <FileText className="mb-4 h-10 w-10 text-slate-600" />
-        <p className="text-slate-400">No documents yet.</p>
-        <p className="mt-1 text-sm text-slate-500">Drop any file onto the page to attach it.</p>
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+          <FileText className="h-7 w-7 text-slate-400" />
+        </div>
+        <p className="text-slate-500">No documents yet.</p>
+        <p className="mt-1 text-sm text-slate-400">Drop any file onto the page to attach it.</p>
       </div>
     )
   }
@@ -110,34 +112,34 @@ export function DocumentVault({ documents, roleId }: Props) {
         const statusColor = STATUS_COLORS[doc.classification_status]
 
         return (
-          <Card key={doc.id} className="border-slate-700 bg-slate-800">
+          <Card key={doc.id} className="bg-white rounded-xl border border-slate-100 shadow-sm">
             <CardContent className="flex items-center justify-between py-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50">
                   <FileText className="h-5 w-5 text-slate-400" />
                 </div>
                 <div>
-                  <p className="font-medium text-white">{doc.file_name}</p>
+                  <p className="font-medium text-slate-900">{doc.file_name}</p>
                   <div className="mt-1 flex items-center gap-2">
                     <StatusIcon className={`h-3 w-3 ${statusColor}`} />
                     <span className={`text-xs ${statusColor}`}>
                       {doc.classification_status}
                     </span>
                     {doc.doc_type && (
-                      <Badge variant="outline" className="border-slate-600 text-xs text-slate-400">
+                      <Badge variant="outline" className="border-slate-200 text-xs text-slate-500">
                         {DOC_TYPE_LABELS[doc.doc_type]}
                       </Badge>
                     )}
                     {doc.ai_confidence && (
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         {Math.round(doc.ai_confidence * 100)}% confident
                       </span>
                     )}
                   </div>
                   {doc.extracted_summary && (
-                    <p className="mt-1 text-xs text-slate-400">{doc.extracted_summary}</p>
+                    <p className="mt-1 text-xs text-slate-500">{doc.extracted_summary}</p>
                   )}
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
                   </p>
                 </div>
@@ -148,7 +150,7 @@ export function DocumentVault({ documents, roleId }: Props) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-yellow-400 hover:text-yellow-300"
+                    className="text-amber-500 hover:text-amber-600 hover:bg-amber-50"
                     onClick={() => handleRetry(doc)}
                   >
                     <RefreshCw className="h-4 w-4" />
@@ -157,7 +159,7 @@ export function DocumentVault({ documents, roleId }: Props) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-slate-400 hover:text-white"
+                  className="text-sky-600 hover:text-sky-700 hover:bg-sky-50"
                   onClick={() => handleDownload(doc)}
                 >
                   <Download className="h-4 w-4" />

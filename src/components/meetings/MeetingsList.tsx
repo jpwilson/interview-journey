@@ -52,10 +52,10 @@ function TypeIcon({ type }: { type: string | null }) {
 }
 
 const OUTCOME_BADGE: Record<string, { label: string; className: string }> = {
-  pending: { label: 'Pending', className: 'bg-yellow-600/20 text-yellow-400 border-yellow-600/30' },
-  passed: { label: 'Passed', className: 'bg-green-600/20 text-green-400 border-green-600/30' },
-  failed: { label: 'Failed', className: 'bg-red-600/20 text-red-400 border-red-600/30' },
-  cancelled: { label: 'Cancelled', className: 'bg-slate-600/20 text-slate-400 border-slate-600/30' },
+  pending: { label: 'Pending', className: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
+  passed: { label: 'Passed', className: 'bg-green-50 text-green-700 border-green-200' },
+  failed: { label: 'Failed', className: 'bg-red-50 text-red-600 border-red-200' },
+  cancelled: { label: 'Cancelled', className: 'bg-slate-100 text-slate-500 border-slate-200' },
 }
 
 function formatDateTime(iso: string | null) {
@@ -99,16 +99,16 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
   }
 
   return (
-    <div className={`rounded-xl border p-4 space-y-3 ${upcoming ? 'border-blue-700/40 bg-blue-950/20' : 'border-slate-700 bg-slate-800/40'}`}>
+    <div className={`rounded-xl border p-4 space-y-3 bg-white shadow-sm ${upcoming ? 'border-sky-100' : 'border-slate-100'}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${upcoming ? 'bg-blue-600/20 text-blue-400' : 'bg-slate-700 text-slate-400'}`}>
+          <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${upcoming ? 'bg-sky-50 text-sky-600' : 'bg-slate-100 text-slate-500'}`}>
             <TypeIcon type={meeting.type} />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white">{label}</p>
+            <p className="text-sm font-semibold text-slate-900">{label}</p>
             {meeting.round_number && (
-              <p className="text-xs text-slate-500">Round {meeting.round_number}</p>
+              <p className="text-xs text-slate-400">Round {meeting.round_number}</p>
             )}
           </div>
         </div>
@@ -121,19 +121,19 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
             type="button"
             onClick={() => setShowOutcomeMenu((v) => !v)}
             disabled={updating}
-            className="text-slate-500 hover:text-slate-300 transition-colors"
+            className="text-slate-400 hover:text-slate-600 transition-colors"
             title="Update outcome"
           >
             <ChevronDown className="h-4 w-4" />
           </button>
           {showOutcomeMenu && (
-            <div className="absolute right-0 top-7 z-10 min-w-[130px] rounded-lg border border-slate-700 bg-slate-900 py-1 shadow-xl">
+            <div className="absolute right-0 top-7 z-10 min-w-[130px] rounded-xl border border-slate-100 bg-white py-1 shadow-lg">
               {Object.entries(OUTCOME_BADGE).map(([key, { label: l }]) => (
                 <button
                   key={key}
                   type="button"
                   onClick={() => handleOutcome(key)}
-                  className="w-full px-3 py-1.5 text-left text-sm text-slate-300 hover:bg-slate-800 hover:text-white"
+                  className="w-full px-3 py-1.5 text-left text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 >
                   {l}
                 </button>
@@ -143,7 +143,7 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
         <span className="flex items-center gap-1">
           <Calendar className="h-3 w-3" />
           {formatDateTime(meeting.scheduled_at)}
@@ -163,7 +163,7 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
       </div>
 
       {meeting.prep_notes && (
-        <p className="text-xs text-slate-400 line-clamp-2 border-t border-slate-700/50 pt-2">
+        <p className="text-xs text-slate-500 line-clamp-2 border-t border-slate-100 pt-2">
           {meeting.prep_notes}
         </p>
       )}
@@ -190,14 +190,14 @@ export function MeetingsList({ meetings, roleId }: MeetingsListProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           {meetings.length === 0 ? 'No meetings yet' : `${meetings.length} meeting${meetings.length !== 1 ? 's' : ''}`}
         </p>
         {!showForm && (
           <Button
             size="sm"
             onClick={() => setShowForm(true)}
-            className="bg-blue-600 hover:bg-blue-500 text-white"
+            className="bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white rounded-full px-4 font-semibold shadow-md shadow-sky-200 border-0 hover:opacity-90 transition-opacity"
           >
             <Plus className="mr-1.5 h-4 w-4" />
             Add meeting
@@ -210,14 +210,16 @@ export function MeetingsList({ meetings, roleId }: MeetingsListProps) {
       )}
 
       {sorted.length === 0 && !showForm && (
-        <div className="rounded-xl border border-dashed border-slate-700 py-12 text-center">
-          <Calendar className="mx-auto mb-3 h-8 w-8 text-slate-600" />
+        <div className="rounded-xl border border-dashed border-slate-200 py-12 text-center bg-white">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-50">
+            <Calendar className="h-6 w-6 text-slate-400" />
+          </div>
           <p className="text-sm text-slate-500">No meetings scheduled yet</p>
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setShowForm(true)}
-            className="mt-3 text-blue-400 hover:text-blue-300"
+            className="mt-3 text-sky-700 hover:text-sky-600 hover:bg-sky-50"
           >
             Schedule your first meeting
           </Button>

@@ -41,20 +41,20 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
     <form
       ref={formRef}
       action={handleSubmit}
-      className="rounded-xl border border-slate-700 bg-slate-800/60 p-5 space-y-4"
+      className="rounded-xl border border-slate-100 bg-white p-5 space-y-4 shadow-sm"
     >
       <input type="hidden" name="role_id" value={roleId} />
 
-      <h3 className="text-sm font-semibold text-white">Add Meeting</h3>
+      <h3 className="text-sm font-semibold text-slate-900">Add Meeting</h3>
 
       <div className="grid grid-cols-2 gap-4">
         {/* Meeting type */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-slate-400">Type</label>
+          <label className="text-xs font-medium text-slate-500">Type</label>
           <select
             name="type"
             required
-            className="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
           >
             <option value="">Select type…</option>
             {MEETING_TYPES.map((t) => (
@@ -65,46 +65,46 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
 
         {/* Platform */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-slate-400">Platform</label>
+          <label className="text-xs font-medium text-slate-500">Platform</label>
           <input
             type="text"
             name="platform"
             placeholder="Zoom, Teams, phone…"
-            className="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
 
         {/* Scheduled at */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-slate-400">Date & Time</label>
+          <label className="text-xs font-medium text-slate-500">Date & Time</label>
           <input
             type="datetime-local"
             name="scheduled_at"
-            className="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:dark]"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
 
         {/* Duration */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-slate-400">Duration (minutes)</label>
+          <label className="text-xs font-medium text-slate-500">Duration (minutes)</label>
           <input
             type="number"
             name="duration_minutes"
             placeholder="60"
             min={1}
-            className="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
           />
         </div>
       </div>
 
       {/* Prep notes */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-slate-400">Prep notes</label>
+        <label className="text-xs font-medium text-slate-500">Prep notes</label>
         <textarea
           name="prep_notes"
           rows={2}
           placeholder="What to research, how to prepare…"
-          className="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 resize-none"
         />
       </div>
 
@@ -114,7 +114,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           variant="ghost"
           size="sm"
           onClick={onCancel}
-          className="text-slate-400 hover:text-white"
+          className="text-slate-500 hover:text-slate-900 hover:bg-slate-50"
         >
           Cancel
         </Button>
@@ -122,7 +122,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           type="submit"
           size="sm"
           disabled={isPending}
-          className="bg-blue-600 hover:bg-blue-500 text-white"
+          className="bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white rounded-full px-5 font-semibold shadow-md shadow-sky-200 border-0 hover:opacity-90 transition-opacity"
         >
           {isPending ? 'Saving…' : 'Save meeting'}
         </Button>
