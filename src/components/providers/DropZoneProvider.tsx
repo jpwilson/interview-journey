@@ -200,11 +200,11 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
 
         {/* Full-screen drop overlay */}
         {isDragging && (
-          <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-blue-600/20 backdrop-blur-sm">
-            <div className="flex flex-col items-center gap-4 rounded-2xl border-2 border-dashed border-blue-400 bg-slate-900/80 px-16 py-12">
-              <Upload className="h-12 w-12 text-blue-400" />
-              <p className="text-xl font-semibold text-blue-300">Drop to classify</p>
-              <p className="text-sm text-slate-400">PDF, image, or text — AI will figure it out</p>
+          <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-sky-600/10 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-4 rounded-2xl border-2 border-dashed border-sky-400 bg-white/90 px-16 py-12">
+              <Upload className="h-12 w-12 text-sky-500" />
+              <p className="text-xl font-semibold text-sky-700">Drop to classify</p>
+              <p className="text-sm text-slate-500">PDF, image, or text — AI will figure it out</p>
             </div>
           </div>
         )}

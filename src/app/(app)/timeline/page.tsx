@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { CareerTimeline } from '@/components/timeline/CareerTimeline'
+import { ChronicleTimeline } from '@/components/timeline/ChronicleTimeline'
+import { TimelineTabs } from '@/components/timeline/TimelineTabs'
 import { getUserTier } from '@/lib/limits'
 import { redirect } from 'next/navigation'
 
@@ -22,10 +24,22 @@ export default async function TimelinePage() {
     `)
     .order('applied_at', { ascending: true })
 
+  const roles = data ?? []
+
+  // Flatten all events sorted most recent first for Chronicle tab
+  const allEvents = roles
+    .flatMap((r: any) => r.role_events ?? [])
+    .sort((a: any, b: any) => new Date(b.event_date).getTime() - new Date(a.event_date).getTime())
+
   return (
-    <div className="p-8">
-      <h1 className="mb-8 text-2xl font-bold text-white">Career Timeline</h1>
-      <CareerTimeline roles={data ?? []} />
+    <div className="min-h-full bg-[#f8f9fa] p-8">
+      <h1
+        className="mb-8 text-3xl font-extrabold text-slate-900"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      >
+        Career Timeline
+      </h1>
+      <TimelineTabs roles={roles} allEvents={allEvents} />
     </div>
   )
 }

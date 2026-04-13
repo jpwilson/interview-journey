@@ -19,21 +19,21 @@ function GhostingAlertRow({ role }: { role: AlertRole }) {
     const days = role._daysUntilDeadline ?? 0
 
     return (
-      <div className="flex items-start justify-between gap-4 rounded-lg border border-amber-700/40 bg-amber-900/20 p-4">
+      <div className="flex items-start justify-between gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
         <div className="flex items-start gap-3">
           <span className="mt-0.5 text-lg" aria-hidden="true">⏰</span>
           <div>
-            <p className="font-medium text-white">
+            <p className="font-medium text-slate-900">
               {role.company.name} — {role.role_title}
             </p>
-            <p className="mt-0.5 text-sm text-amber-300">
+            <p className="mt-0.5 text-sm text-amber-600">
               Offer expires in {days} {days === 1 ? 'day' : 'days'} — {deadlineDate}
             </p>
           </div>
         </div>
         <Link
           href={`/roles/${role.id}`}
-          className="shrink-0 rounded-md bg-amber-700/30 px-3 py-1.5 text-xs font-medium text-amber-300 transition-colors hover:bg-amber-700/50"
+          className="shrink-0 rounded-md bg-amber-100 px-3 py-1.5 text-xs font-medium text-amber-700 transition-colors hover:bg-amber-200"
         >
           View offer
         </Link>
@@ -44,14 +44,14 @@ function GhostingAlertRow({ role }: { role: AlertRole }) {
   const days = role._daysSinceContact ?? 0
 
   return (
-    <div className="flex items-start justify-between gap-4 rounded-lg border border-slate-600/40 bg-slate-800/60 p-4">
+    <div className="flex items-start justify-between gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
       <div className="flex items-start gap-3">
         <span className="mt-0.5 text-lg" aria-hidden="true">👻</span>
         <div>
-          <p className="font-medium text-white">
+          <p className="font-medium text-slate-900">
             {role.company.name} — {role.role_title}
           </p>
-          <p className="mt-0.5 text-sm text-slate-400">
+          <p className="mt-0.5 text-sm text-slate-500">
             No contact in {days} {days === 1 ? 'day' : 'days'} — consider following up
           </p>
         </div>
@@ -60,7 +60,7 @@ function GhostingAlertRow({ role }: { role: AlertRole }) {
         size="sm"
         variant="ghost"
         disabled={isPending}
-        className="shrink-0 border border-slate-600 text-xs text-slate-300 hover:bg-slate-700 hover:text-white"
+        className="shrink-0 border border-slate-200 text-xs text-slate-600 hover:bg-slate-100 hover:text-slate-900"
         onClick={() => {
           startTransition(() => markFollowUpSent(role.id))
         }}
@@ -80,7 +80,7 @@ export function GhostingAlerts({ roles }: GhostingAlertsProps) {
 
   return (
     <div className="mb-8">
-      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-amber-400">
+      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-amber-600">
         <span aria-hidden="true">⚠️</span> Needs attention ({roles.length})
       </h2>
       <div className="space-y-2">
@@ -91,4 +91,3 @@ export function GhostingAlerts({ roles }: GhostingAlertsProps) {
     </div>
   )
 }
-

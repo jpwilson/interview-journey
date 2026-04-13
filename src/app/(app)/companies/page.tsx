@@ -10,12 +10,12 @@ type CompanyWithRoles = Company & { roles: Role[] }
 
 function getCompanyStatus(roles: Role[]): { label: string; color: string } {
   if (roles.some((r) => r.resolution === 'hired')) {
-    return { label: 'Alumni', color: 'bg-green-600' }
+    return { label: 'Alumni', color: 'bg-green-100 text-green-700' }
   }
   if (roles.some((r) => r.stage !== 'resolved')) {
-    return { label: 'Active pursuit', color: 'bg-blue-600' }
+    return { label: 'Active pursuit', color: 'bg-sky-100 text-sky-700' }
   }
-  return { label: 'Previously applied', color: 'bg-slate-600' }
+  return { label: 'Previously applied', color: 'bg-slate-100 text-slate-600' }
 }
 
 export default async function CompaniesPage() {
@@ -29,16 +29,23 @@ export default async function CompaniesPage() {
   const companies = (data ?? []) as CompanyWithRoles[]
 
   return (
-    <div className="p-8">
+    <div className="min-h-full bg-[#f8f9fa] p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Companies</h1>
-        <p className="mt-1 text-sm text-slate-400">All companies you have interacted with.</p>
+        <h1
+          className="text-3xl font-extrabold text-slate-900"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
+          Companies
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">All companies you have interacted with.</p>
       </div>
 
       {companies.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <Building2 className="mb-4 h-12 w-12 text-slate-600" />
-          <p className="mb-2 text-lg font-medium text-slate-400">No companies yet</p>
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white border border-slate-100 shadow-sm">
+            <Building2 className="h-8 w-8 text-slate-400" />
+          </div>
+          <p className="mb-2 text-lg font-semibold text-slate-700">No companies yet</p>
           <p className="text-sm text-slate-500">
             Companies are created automatically when you add a role.
           </p>
@@ -56,26 +63,26 @@ export default async function CompaniesPage() {
 
             return (
               <Link key={company.id} href={`/companies/${company.id}`}>
-                <Card className="border-slate-700 bg-slate-800 transition-colors hover:border-slate-600 hover:bg-slate-750">
+                <Card className="border-slate-100 bg-white shadow-sm transition-shadow hover:shadow-md">
                   <CardContent className="flex items-center justify-between py-4">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-700">
-                        <Building2 className="h-5 w-5 text-slate-400" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#00658f] to-[#4ea5d9]">
+                        <Building2 className="h-5 w-5 text-white" />
                       </div>
                       <div>
-                        <p className="font-medium text-white">{company.name}</p>
-                        <p className="text-sm text-slate-400">
+                        <p className="font-semibold text-slate-900">{company.name}</p>
+                        <p className="text-sm text-slate-500">
                           {roles.length} {roles.length === 1 ? 'role' : 'roles'}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       {lastApplied && (
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-slate-400">
                           {formatDistanceToNow(new Date(lastApplied), { addSuffix: true })}
                         </span>
                       )}
-                      <Badge className={`${status.color} text-white text-xs`}>
+                      <Badge className={`${status.color} text-xs border-0`}>
                         {status.label}
                       </Badge>
                     </div>

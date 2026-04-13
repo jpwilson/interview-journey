@@ -1,10 +1,21 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
 import { QueryProvider } from '@/components/providers/QueryProvider'
+import { cn } from '@/lib/utils'
 
-const geist = Geist({ subsets: ['latin'] })
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-headline',
+  weight: ['400', '500', '600', '700', '800'],
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-body',
+  weight: ['300', '400', '500', '600'],
+})
 
 export const metadata: Metadata = {
   title: 'Interview Journey',
@@ -14,8 +25,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark h-full">
-      <body className={`${geist.className} min-h-full bg-slate-900 text-white antialiased`}>
+    <html lang="en" className="h-full">
+      <body className={cn(plusJakarta.variable, inter.variable, 'font-body bg-background text-on-surface antialiased min-h-full')}>
         <QueryProvider>
           {children}
           <Toaster richColors position="bottom-right" />
