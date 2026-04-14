@@ -116,6 +116,9 @@ export interface Database {
           domain: string | null
           logo_url: string | null
           website: string | null
+          industry: string | null
+          size: string | null
+          times_applied: number
           notes: string | null
           created_at: string
           updated_at: string
@@ -126,6 +129,8 @@ export interface Database {
           domain?: string | null
           logo_url?: string | null
           website?: string | null
+          industry?: string | null
+          size?: string | null
           notes?: string | null
         }
         Update: {
