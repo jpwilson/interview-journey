@@ -2,10 +2,6 @@
 
 > Your employment lifetime, organised. Track every application, interview, and career milestone.
 
-**Live demo:** [interview.46-225-235-124.sslip.io](https://interview.46-225-235-124.sslip.io)
-
-> _Hosted on [Hetzner Cloud](https://www.hetzner.com/cloud) (ARM CAX21, Nuremberg) via [Coolify](https://coolify.io), with self-hosted Supabase on the same box. Migrated off Vercel + Supabase Cloud (prior URL: `interview-journey.vercel.app`) to cut demo hosting costs._
-
 ---
 
 ## Quick Start
