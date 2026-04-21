@@ -7,9 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans-src), "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif-src), "Iowan Old Style", Georgia, serif;
+  --font-mono: var(--font-mono-src), "JetBrains Mono Fallback", ui-monospace, Menlo, monospace;
+  --font-heading: var(--font-serif);
   --font-headline: var(--font-headline, "Plus Jakarta Sans", sans-serif);
   --font-body: var(--font-body, "Inter", sans-serif);
   --font-label: var(--font-body, "Inter", sans-serif);
@@ -173,6 +174,112 @@
 .editorial-gradient {
   background: linear-gradient(135deg, #00658f 0%, #4ea5d9 100%);
 }
+
+/* ─── Interview Journey v2 editorial design system ─────────────────────────
+   Warm paper surfaces, deep inks, moss-green accent, lowercase status chips.
+   Used on the marketing site and any component opting into the editorial
+   look (Wordmark, Chip, landing sections). Coexists with shadcn tokens.
+*/
+:root {
+  /* Warm off-whites */
+  --paper:        oklch(98.2% 0.008 80);
+  --paper-2:      oklch(96.4% 0.010 78);
+  --paper-3:      oklch(93.8% 0.012 76);
+  --paper-ink:    oklch(88% 0.014 74);
+
+  /* Deep inks */
+  --ink:          oklch(22% 0.015 60);
+  --ink-2:        oklch(36% 0.014 62);
+  --ink-3:        oklch(52% 0.012 64);
+  --ink-4:        oklch(68% 0.010 66);
+  --ink-5:        oklch(82% 0.008 70);
+
+  /* Accent — moss green (v2 default) */
+  --accent-ij:       oklch(48% 0.14 145);
+  --accent-ij-ink:   oklch(40% 0.13 148);
+  --accent-ij-wash:  oklch(93% 0.05 140);
+  --accent-ij-glow-a: oklch(68% 0.16 145 / 0.30);
+  --accent-ij-glow-b: oklch(62% 0.14 170 / 0.26);
+  --accent-ij-glow-c: oklch(76% 0.12 120 / 0.24);
+
+  /* Status palette — sunset muted */
+  --s-exploring:  oklch(68% 0.04 250);
+  --s-applied:    oklch(62% 0.07 230);
+  --s-screening:  oklch(72% 0.12 85);
+  --s-interview:  oklch(60% 0.13 60);
+  --s-offer:      oklch(62% 0.11 150);
+  --s-negotiate:  oklch(58% 0.14 180);
+  --s-hired:      oklch(55% 0.13 155);
+  --s-rejected:   oklch(58% 0.12 35);
+  --s-withdrew:   oklch(62% 0.03 70);
+  --s-ghosted:    oklch(68% 0.025 300);
+  --s-declined:   oklch(58% 0.10 15);
+}
+
+/* Placeholder striped bg — for image slots */
+.ph-image {
+  background:
+    repeating-linear-gradient(135deg,
+      oklch(92% 0.012 74) 0 10px,
+      oklch(95% 0.010 76) 10px 20px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+/* Status chip */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .02em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  text-transform: lowercase;
+}
+.chip::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+}
+.chip-exploring { color: var(--s-exploring); background: color-mix(in oklch, var(--s-exploring) 14%, var(--paper)); }
+.chip-applied   { color: var(--s-applied);   background: color-mix(in oklch, var(--s-applied) 14%, var(--paper)); }
+.chip-screening { color: var(--s-screening); background: color-mix(in oklch, var(--s-screening) 16%, var(--paper)); }
+.chip-interview { color: var(--s-interview); background: color-mix(in oklch, var(--s-interview) 16%, var(--paper)); }
+.chip-offer     { color: var(--s-offer);     background: color-mix(in oklch, var(--s-offer) 16%, var(--paper)); }
+.chip-negotiate { color: var(--s-negotiate); background: color-mix(in oklch, var(--s-negotiate) 16%, var(--paper)); }
+.chip-hired     { color: var(--s-hired);     background: color-mix(in oklch, var(--s-hired) 16%, var(--paper)); }
+.chip-rejected  { color: var(--s-rejected);  background: color-mix(in oklch, var(--s-rejected) 14%, var(--paper)); }
+.chip-withdrew  { color: var(--s-withdrew);  background: color-mix(in oklch, var(--s-withdrew) 18%, var(--paper)); }
+.chip-ghosted   { color: var(--s-ghosted);   background: color-mix(in oklch, var(--s-ghosted) 18%, var(--paper)); }
+.chip-declined  { color: var(--s-declined);  background: color-mix(in oklch, var(--s-declined) 14%, var(--paper)); }
+
+/* Hairlines */
+.hairline { border: none; height: 1px; background: var(--paper-ink); margin: 0; }
+
+/* Landing ambient blob drift */
+@keyframes ij-drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px,-40px) scale(1.1); } }
+@keyframes ij-drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-80px,60px) scale(.95); } }
+@keyframes ij-drift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-80px) scale(1.08); } }
+@keyframes ij-pulse  { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
+@keyframes ij-marquee { from { transform: translateX(0); } to { transform: translateX(-33.333%); } }
+@keyframes ij-drop-in {
+  0%   { transform: translate(-180px, -140px) rotate(-14deg) scale(1.1); opacity: 0; }
+  18%  { opacity: 1; }
+  50%  { transform: translate(0,0) rotate(0) scale(1); opacity: 1; }
+  72%  { transform: translate(0,0) rotate(0) scale(1); opacity: 1; }
+  100% { transform: translate(0, 28px) rotate(0) scale(.4); opacity: 0; }
+}
+@keyframes ij-ping { 0% { r: 0; opacity: 0; } 30% { r: 0; opacity: 0; } 55% { r: 14; opacity: .5; } 100% { r: 5; opacity: 1; } }
+@keyframes ij-drop0 { 0% { transform: translate(-170%, -200%) rotate(-18deg); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-50%, -50%) rotate(-6deg); } 80% { opacity: 1; } 100% { transform: translate(-50%, -50%) rotate(-6deg); opacity: 0; } }
+@keyframes ij-drop1 { 0% { transform: translate(80%, -220%) rotate(24deg); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-50%, -50%) rotate(2deg); } 80% { opacity: 1; } 100% { transform: translate(-50%, -50%) rotate(2deg); opacity: 0; } }
+@keyframes ij-drop2 { 0% { transform: translate(-50%, -240%) rotate(-4deg); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-50%, -50%) rotate(10deg); } 80% { opacity: 1; } 100% { transform: translate(-50%, -50%) rotate(10deg); opacity: 0; } }
+@keyframes ij-draw { to { stroke-dashoffset: 0; } }
+@keyframes ij-fade-in { to { opacity: 1; } }
+@keyframes ij-blink { 50% { opacity: 0; } }
 
 /* Editorial scrollbar */
 ::-webkit-scrollbar {

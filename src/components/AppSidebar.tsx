@@ -65,11 +65,18 @@ export function AppSidebar() {
     <aside className="flex h-full w-64 flex-col bg-white border-r border-slate-200/60">
       {/* Logo area */}
       <div className="px-8 pt-8 pb-10">
-        <p className="font-headline font-extrabold text-slate-900 text-lg leading-tight">
-          Interview Journey
+        <p
+          className="text-lg leading-tight"
+          style={{ fontFamily: 'var(--font-serif)', fontWeight: 500, letterSpacing: -0.3, color: 'var(--ink)' }}
+        >
+          Interview{' '}
+          <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em>
         </p>
-        <p className="text-[10px] uppercase tracking-widest text-slate-400 mt-0.5">
-          Curated Career Journey
+        <p
+          className="mt-0.5 text-[10px] uppercase tracking-widest text-slate-400"
+          style={{ fontFamily: 'var(--font-mono)' }}
+        >
+          Curated career journey
         </p>
       </div>
 
