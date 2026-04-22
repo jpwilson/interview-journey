@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
-import { ExternalLink, Building2, FileText, Users, StickyNote, Briefcase, Download } from 'lucide-react'
+import { ExternalLink, Building2, FileText, Users, StickyNote, Briefcase } from 'lucide-react'
 import { format, formatDistanceToNow } from 'date-fns'
 import { saveCompanyNotes } from '@/lib/actions/companies'
 import type { Company, Role, RoleEvent, Document, Contact } from '@/lib/supabase/types'
@@ -70,30 +70,13 @@ export default async function CompanyDetailPage({
   const { id } = await params
   const supabase = await createClient()
 
-  const [
-    { data: companyData },
-    { data: rolesData },
-    { data: documentsData },
-    { data: roleContactsData },
-  ] = await Promise.all([
+  const [{ data: companyData }, { data: rolesData }] = await Promise.all([
     supabase.from('companies').select('*').eq('id', id).single(),
     supabase
       .from('roles')
       .select('*, role_events(*)')
       .eq('company_id', id)
       .order('applied_at', { ascending: false }),
-    supabase
-      .from('documents')
-      .select('*')
-      .in(
-        'role_id',
-        ['__placeholder__']
-      )
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('role_contacts')
-      .select('*, contact:contacts(*)')
-      .in('role_id', ['__placeholder__']),
   ])
 
   if (!companyData) notFound()
@@ -102,21 +85,19 @@ export default async function CompanyDetailPage({
   const roles = (rolesData ?? []) as RoleWithEvents[]
   const roleIds = roles.map((r) => r.id)
 
-  const [{ data: docs }, { data: roleContacts }] = await Promise.all([
-    roleIds.length > 0
-      ? supabase
+  const [{ data: docs }, { data: roleContacts }] = roleIds.length > 0
+    ? await Promise.all([
+        supabase
           .from('documents')
           .select('*')
           .in('role_id', roleIds)
-          .order('created_at', { ascending: false })
-      : Promise.resolve({ data: [] as Document[] }),
-    roleIds.length > 0
-      ? supabase
+          .order('created_at', { ascending: false }),
+        supabase
           .from('role_contacts')
           .select('*, contact:contacts(*)')
-          .in('role_id', roleIds)
-      : Promise.resolve({ data: [] as RoleContact[] }),
-  ])
+          .in('role_id', roleIds),
+      ])
+    : [{ data: [] as Document[] }, { data: [] as RoleContact[] }]
 
   const documents = (docs ?? []) as Document[]
   const contacts = (roleContacts ?? []) as RoleContact[]
@@ -166,10 +147,7 @@ export default async function CompanyDetailPage({
               <Building2 className="h-7 w-7 text-white" />
             </div>
             <div>
-              <h1
-                className="text-2xl font-extrabold text-slate-900"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-              >
+              <h1 className="font-headline text-2xl font-extrabold text-slate-900">
                 {company.name}
               </h1>
               <div className="mt-1 flex flex-wrap items-center gap-2">

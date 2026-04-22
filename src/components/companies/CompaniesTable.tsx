@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
-import { Search, ArrowUpDown, ArrowUp, ArrowDown, Building2, ExternalLink } from 'lucide-react'
+import { Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import type { CompanyRow } from '@/app/(app)/companies/page'
 
 type SortKey = 'name' | 'rolesCount' | 'activeCount' | 'status' | 'lastActivity'
@@ -22,6 +22,23 @@ const FILTER_PILLS: { key: FilterStatus; label: string }[] = [
   { key: 'alumni', label: 'Alumni' },
   { key: 'past', label: 'Previous' },
 ]
+
+function SortIcon({
+  col,
+  activeKey,
+  dir,
+}: {
+  col: SortKey
+  activeKey: SortKey
+  dir: SortDir
+}) {
+  if (activeKey !== col) return <ArrowUpDown className="h-3 w-3 text-slate-300" />
+  return dir === 'asc' ? (
+    <ArrowUp className="h-3 w-3 text-sky-600" />
+  ) : (
+    <ArrowDown className="h-3 w-3 text-sky-600" />
+  )
+}
 
 export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
   const [search, setSearch] = useState('')
@@ -85,15 +102,6 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
     return result
   }, [rows, search, sortKey, sortDir, filter])
 
-  function SortIcon({ col }: { col: SortKey }) {
-    if (sortKey !== col) return <ArrowUpDown className="h-3 w-3 text-slate-300" />
-    return sortDir === 'asc' ? (
-      <ArrowUp className="h-3 w-3 text-sky-600" />
-    ) : (
-      <ArrowDown className="h-3 w-3 text-sky-600" />
-    )
-  }
-
   return (
     <div className="space-y-4">
       {/* Controls */}
@@ -116,7 +124,7 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-1 ${
                 filter === key
                   ? 'bg-sky-600 text-white shadow-sm'
                   : 'bg-white border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700'
@@ -140,7 +148,7 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
             <tr className="border-b border-slate-100 bg-slate-50/50">
               <th className="text-left py-3 px-4">
                 <button onClick={() => toggleSort('name')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900">
-                  Company <SortIcon col="name" />
+                  Company <SortIcon col="name" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
               <th className="text-left py-3 px-4 hidden md:table-cell">
@@ -148,22 +156,22 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
               </th>
               <th className="text-center py-3 px-4">
                 <button onClick={() => toggleSort('rolesCount')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 mx-auto">
-                  Roles <SortIcon col="rolesCount" />
+                  Roles <SortIcon col="rolesCount" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
               <th className="text-center py-3 px-4">
                 <button onClick={() => toggleSort('activeCount')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 mx-auto">
-                  Active <SortIcon col="activeCount" />
+                  Active <SortIcon col="activeCount" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
               <th className="text-center py-3 px-4">
                 <button onClick={() => toggleSort('status')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 mx-auto">
-                  Status <SortIcon col="status" />
+                  Status <SortIcon col="status" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
               <th className="text-right py-3 px-4">
                 <button onClick={() => toggleSort('lastActivity')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 ml-auto">
-                  Last Activity <SortIcon col="lastActivity" />
+                  Last Activity <SortIcon col="lastActivity" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
             </tr>
@@ -182,7 +190,10 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
                   className={`group transition-colors hover:bg-sky-50/40 ${i !== filtered.length - 1 ? 'border-b border-slate-100' : ''}`}
                 >
                   <td className="py-3.5 px-4">
-                    <Link href={`/companies/${row.id}`} className="flex items-center gap-3">
+                    <Link
+                      href={`/companies/${row.id}`}
+                      className="flex items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                    >
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white text-xs font-bold">
                         {row.name.charAt(0)}
                       </div>
