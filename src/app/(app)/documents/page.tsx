@@ -22,7 +22,7 @@ export default async function DocumentsPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] p-8">
-      <h1 className="mb-8 font-['Plus_Jakarta_Sans'] text-2xl font-extrabold text-slate-900">Documents</h1>
+      <h1 className="mb-8 font-headline text-2xl font-extrabold text-slate-900">Documents</h1>
 
       {needsReview.length > 0 && (
         <div className="mb-8">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { MessageSquare, BarChart3, Clock, X, Minus, Briefcase } from 'lucide-react'
@@ -13,9 +13,19 @@ export function FloatingHub() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimised, setIsMinimised] = useState(false)
   const [position, setPosition] = useState({ x: 24, y: 24 })
+  const [isDesktop, setIsDesktop] = useState(false)
   const dragStart = useRef<{ mx: number; my: number; px: number; py: number } | null>(null)
 
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 640px)')
+    const update = () => setIsDesktop(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
   function handleMouseDown(e: React.MouseEvent) {
+    if (!isDesktop) return
     dragStart.current = { mx: e.clientX, my: e.clientY, px: position.x, py: position.y }
 
     function onMove(ev: MouseEvent) {
@@ -38,7 +48,7 @@ export function FloatingHub() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00658f] to-[#4ea5d9] shadow-lg ring-2 ring-sky-300/30 transition-transform hover:scale-110"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00658f] to-[#4ea5d9] shadow-lg ring-2 ring-sky-300/30 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-300/60"
         aria-label="Open hub"
       >
         <Briefcase className="h-6 w-6 text-white" />
@@ -49,14 +59,18 @@ export function FloatingHub() {
   return (
     <div
       className={cn(
-        'fixed z-50 w-96 rounded-xl border border-slate-200 bg-white shadow-xl',
-        isMinimised ? 'h-12' : 'h-[520px]'
+        'fixed z-50 rounded-xl border border-slate-200 bg-white shadow-xl',
+        'inset-x-4 bottom-4 sm:inset-x-auto sm:w-96',
+        isMinimised ? 'h-12' : 'h-[min(520px,calc(100vh-2rem))] sm:h-[520px]',
       )}
-      style={{ bottom: position.y, right: position.x }}
+      style={isDesktop ? { bottom: position.y, right: position.x } : undefined}
     >
       {/* Header / drag handle */}
       <div
-        className="flex cursor-move items-center justify-between rounded-t-xl border-b border-slate-100 bg-white px-4 py-3"
+        className={cn(
+          'flex items-center justify-between rounded-t-xl border-b border-slate-100 bg-white px-4 py-3',
+          isDesktop && 'cursor-move',
+        )}
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center gap-2">

@@ -3,11 +3,11 @@
 import { useDroppable } from '@dnd-kit/core'
 import { ApplicationCard } from './ApplicationCard'
 import { cn } from '@/lib/utils'
-import type { ApplicationWithCompany, ApplicationStage } from '@/lib/supabase/types'
+import type { RoleWithCompany, RoleStage } from '@/lib/supabase/types'
 
 interface Props {
-  stage: { id: ApplicationStage; label: string; color: string }
-  applications: ApplicationWithCompany[]
+  stage: { id: RoleStage; label: string; color: string }
+  applications: RoleWithCompany[]
   droppableId: string
 }
 
@@ -15,7 +15,7 @@ export function KanbanColumn({ stage, applications, droppableId }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: droppableId })
 
   return (
-    <div className="flex w-72 shrink-0 flex-col">
+    <div className="flex w-[85vw] max-w-[320px] shrink-0 snap-start flex-col sm:w-72">
       {/* Column header */}
       <div className={cn('mb-3 flex items-center gap-2 rounded-t-xl bg-white border-l-4 px-4 py-3 shadow-sm', stage.color)}>
         <h3 className="font-semibold text-slate-900">{stage.label}</h3>
@@ -29,7 +29,7 @@ export function KanbanColumn({ stage, applications, droppableId }: Props) {
         ref={setNodeRef}
         className={cn(
           'flex min-h-24 flex-1 flex-col gap-3 rounded-b-xl p-2 transition-colors',
-          isOver ? 'bg-sky-50' : 'bg-slate-50'
+          isOver ? 'bg-sky-50' : 'bg-slate-50',
         )}
       >
         {applications.map((app) => (

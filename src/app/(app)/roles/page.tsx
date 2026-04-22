@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createRole } from '@/lib/actions/roles'
+import { getUserTier } from '@/lib/limits'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -8,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog'
-import { Plus, Briefcase, MapPin, DollarSign } from 'lucide-react'
+import { Plus, Briefcase, MapPin, DollarSign, Download, Lock } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import type { RoleWithCompany } from '@/lib/supabase/types'
@@ -25,6 +26,9 @@ const STAGE_COLORS: Record<string, string> = {
 
 export default async function RolesPage() {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const tier = user ? await getUserTier(user.id) : 'free'
+
   const { data } = await supabase
     .from('roles')
     .select('*, company:companies(*)')
@@ -34,9 +38,23 @@ export default async function RolesPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] p-8">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="font-['Plus_Jakarta_Sans'] text-2xl font-extrabold text-slate-900">Roles</h1>
-        <Dialog>
+      <div className="mb-8 flex items-center justify-between gap-3">
+        <h1 className="font-headline text-2xl font-extrabold text-slate-900">Roles</h1>
+        <div className="flex items-center gap-2">
+          {tier === 'pro' ? (
+            <a href="/api/export/roles" download>
+              <Button variant="outline" className="border-slate-200 text-slate-600 hover:bg-slate-50">
+                <Download className="mr-2 h-4 w-4" /> Export CSV
+              </Button>
+            </a>
+          ) : (
+            <Link href="/settings?upgrade=export" title="CSV export is a Pro feature">
+              <Button variant="outline" className="border-slate-200 text-slate-500 hover:bg-slate-50">
+                <Lock className="mr-2 h-4 w-4" /> Export CSV
+              </Button>
+            </Link>
+          )}
+          <Dialog>
           <DialogTrigger render={
             <Button className="bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white rounded-full px-6 py-2.5 font-semibold shadow-lg shadow-sky-200 border-0 hover:opacity-90 transition-opacity" />
           }>
@@ -44,7 +62,7 @@ export default async function RolesPage() {
           </DialogTrigger>
           <DialogContent className="border-slate-100 bg-white text-slate-900 shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-slate-900 font-['Plus_Jakarta_Sans'] font-extrabold">Add new role</DialogTitle>
+              <DialogTitle className="text-slate-900 font-headline font-extrabold">Add new role</DialogTitle>
             </DialogHeader>
             <form action={createRole} className="space-y-4 pt-2">
               <div className="space-y-2">
@@ -73,6 +91,7 @@ export default async function RolesPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {roles.length === 0 ? (

@@ -63,7 +63,10 @@ export function ApplicationCard({ application: app, isDragging }: Props) {
         <GripVertical className="h-4 w-4 text-slate-400" />
       </div>
 
-      <Link href={`/roles/${app.id}`} className="block">
+      <Link
+        href={`/roles/${app.id}`}
+        className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+      >
         <div className="flex items-start gap-2 pr-6">
           <div className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-xs font-bold', companyColorClass(app.company.name))}>
             {getInitials(app.company.name)}

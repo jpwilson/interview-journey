@@ -44,15 +44,14 @@ function getInitials(name: string | undefined, email: string | undefined): strin
   return 'IJ'
 }
 
-export function AppSidebar({
-  pipelineCount,
-  documentsCount,
-  hasActiveOffer = false,
-}: {
+type SidebarProps = {
   pipelineCount?: number
   documentsCount?: number
   hasActiveOffer?: boolean
-}) {
+  onNavigate?: () => void
+}
+
+export function SidebarBody({ pipelineCount, documentsCount, hasActiveOffer = false, onNavigate }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -81,10 +80,7 @@ export function AppSidebar({
   )
 
   return (
-    <aside
-      className="flex h-full w-[200px] flex-col"
-      style={{ background: 'var(--card)', borderRight: '1px solid var(--paper-ink)' }}
-    >
+    <>
       {/* Wordmark */}
       <div className="px-5 pt-6 pb-5">
         <p
@@ -115,6 +111,7 @@ export function AppSidebar({
             key={item.href}
             item={item}
             active={pathname === item.href || pathname.startsWith(item.href + '/')}
+            onNavigate={onNavigate}
             badge={
               item.href === '/pipeline'
                 ? pipelineCount
@@ -130,6 +127,7 @@ export function AppSidebar({
       <div className="px-2 mt-2">
         <Link
           href="/documents/drop"
+          onClick={onNavigate}
           className="flex flex-col items-center justify-center transition-colors"
           style={{
             marginLeft: 26,
@@ -147,7 +145,7 @@ export function AppSidebar({
         </Link>
       </div>
 
-      {/* Spacer between primary and Archive / Settings */}
+      {/* Spacer */}
       <div style={{ marginTop: 12 }} />
 
       {/* Secondary nav */}
@@ -157,6 +155,7 @@ export function AppSidebar({
             key={item.href}
             item={item}
             active={pathname === item.href || pathname.startsWith(item.href + '/')}
+            onNavigate={onNavigate}
             muted
           />
         ))}
@@ -180,10 +179,7 @@ export function AppSidebar({
             {userDisplay?.initials ?? 'IJ'}
           </div>
           <div className="min-w-0 flex-1">
-            <p
-              className="truncate leading-tight"
-              style={{ fontSize: 12, color: 'var(--ink)', fontWeight: 500 }}
-            >
+            <p className="truncate leading-tight" style={{ fontSize: 12, color: 'var(--ink)', fontWeight: 500 }}>
               {userDisplay?.name ?? 'Loading…'}
             </p>
             {userDisplay?.email && userDisplay.email !== userDisplay.name && (
@@ -205,6 +201,17 @@ export function AppSidebar({
           </button>
         </div>
       </div>
+    </>
+  )
+}
+
+export function AppSidebar(props: SidebarProps) {
+  return (
+    <aside
+      className="flex h-full w-[200px] flex-col"
+      style={{ background: 'var(--card)', borderRight: '1px solid var(--paper-ink)' }}
+    >
+      <SidebarBody {...props} />
     </aside>
   )
 }
@@ -214,16 +221,19 @@ function SidebarLink({
   active,
   badge,
   muted,
+  onNavigate,
 }: {
   item: NavItem
   active: boolean
   badge?: number | string
   muted?: boolean
+  onNavigate?: () => void
 }) {
   const Icon = item.icon
   return (
     <Link
       href={item.href}
+      onClick={onNavigate}
       className={cn('relative flex items-center transition-colors')}
       style={{
         gap: 10,

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { Meeting } from '@/lib/supabase/types'
 import { AddMeetingForm } from './AddMeetingForm'
 import { updateMeetingOutcome } from '@/lib/actions/meetings'
@@ -173,19 +173,21 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
 
 export function MeetingsList({ meetings, roleId }: MeetingsListProps) {
   const [showForm, setShowForm] = useState(false)
+  // Captured once on mount — keeps this component pure on re-render.
+  const [now] = useState(() => Date.now())
 
-  const sorted = [...meetings].sort((a, b) => {
-    const aTime = a.scheduled_at ? new Date(a.scheduled_at).getTime() : Infinity
-    const bTime = b.scheduled_at ? new Date(b.scheduled_at).getTime() : Infinity
-    // Upcoming first (ascending), then past
-    const now = Date.now()
-    const aUpcoming = aTime >= now
-    const bUpcoming = bTime >= now
-    if (aUpcoming && !bUpcoming) return -1
-    if (!aUpcoming && bUpcoming) return 1
-    if (aUpcoming && bUpcoming) return aTime - bTime
-    return bTime - aTime // past: most recent first
-  })
+  const sorted = useMemo(() => {
+    return [...meetings].sort((a, b) => {
+      const aTime = a.scheduled_at ? new Date(a.scheduled_at).getTime() : Infinity
+      const bTime = b.scheduled_at ? new Date(b.scheduled_at).getTime() : Infinity
+      const aUpcoming = aTime >= now
+      const bUpcoming = bTime >= now
+      if (aUpcoming && !bUpcoming) return -1
+      if (!aUpcoming && bUpcoming) return 1
+      if (aUpcoming && bUpcoming) return aTime - bTime
+      return bTime - aTime // past: most recent first
+    })
+  }, [meetings, now])
 
   return (
     <div className="space-y-4">
