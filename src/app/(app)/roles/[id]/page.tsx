@@ -9,6 +9,7 @@ import { MeetingsList } from '@/components/meetings/MeetingsList'
 import { deleteRole } from '@/lib/actions/roles'
 import { ExternalLink, Trash2, Building2 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import type { RoleWithCompany } from '@/lib/supabase/types'
 
 const STAGE_COLORS: Record<string, string> = {
@@ -66,7 +67,7 @@ export default async function RoleDetailPage({
               <Building2 className="h-7 w-7 text-sky-600" />
             </div>
             <div>
-              <h1 className="font-['Plus_Jakarta_Sans'] text-2xl font-extrabold text-slate-900">{role.role_title}</h1>
+              <h1 className="font-headline text-2xl font-extrabold text-slate-900">{role.role_title}</h1>
               <p className="text-lg text-slate-500">{role.company.name}</p>
               <div className="mt-2 flex items-center gap-3 flex-wrap">
                 <Badge className={`${STAGE_COLORS[role.stage] ?? 'bg-slate-100 text-slate-600'} text-xs font-medium border-0`}>
@@ -92,11 +93,23 @@ export default async function RoleDetailPage({
                 </Button>
               </a>
             )}
-            <form action={deleteRole.bind(null, role.id)}>
-              <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-500 hover:bg-red-50">
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </form>
+            <ConfirmDialog
+              trigger={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-400 hover:text-red-500 hover:bg-red-50"
+                  aria-label="Delete role"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              }
+              title="Delete this role?"
+              description={`This permanently removes ${role.role_title} at ${role.company.name}, along with its timeline, meetings, and documents. This can’t be undone.`}
+              confirmLabel="Delete role"
+              variant="destructive"
+              onConfirm={deleteRole.bind(null, role.id)}
+            />
           </div>
         </div>
 

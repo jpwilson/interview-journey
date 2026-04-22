@@ -1,9 +1,12 @@
 import type { ReactNode } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { acceptOffer, declineOffer } from '@/lib/actions/offers'
-import { TrendingUp } from 'lucide-react'
+import { getUserTier } from '@/lib/limits'
+import Link from 'next/link'
+import { TrendingUp, Download, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import type { Offer } from '@/lib/supabase/types'
 
 type OfferWithRole = Offer & {
@@ -84,25 +87,40 @@ function OfferColumn({ offer }: OfferColumnProps) {
 
       {/* Actions */}
       <div className="rounded-b-xl border border-t-0 border-slate-100 bg-[#f8f9fa] px-4 py-3 flex gap-2">
-        <form action={acceptOffer.bind(null, offer.id)} className="flex-1">
-          <Button
-            type="submit"
-            size="sm"
-            className="w-full bg-gradient-to-r from-[#00658f] to-[#4ea5d9] hover:from-[#005578] hover:to-[#3a8fbf] text-white border-0"
-          >
-            Accept
-          </Button>
-        </form>
-        <form action={declineOffer.bind(null, offer.id)} className="flex-1">
-          <Button
-            type="submit"
-            size="sm"
-            variant="outline"
-            className="w-full border-slate-300 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
-          >
-            Decline
-          </Button>
-        </form>
+        <div className="flex-1">
+          <ConfirmDialog
+            trigger={
+              <Button
+                size="sm"
+                className="w-full bg-gradient-to-r from-[#00658f] to-[#4ea5d9] hover:from-[#005578] hover:to-[#3a8fbf] text-white border-0"
+              >
+                Accept
+              </Button>
+            }
+            title={`Accept the offer from ${company}?`}
+            description={`Accepting will mark this offer as accepted. Any other pending offers stay as-is — you can decline them separately.`}
+            confirmLabel="Accept offer"
+            onConfirm={acceptOffer.bind(null, offer.id)}
+          />
+        </div>
+        <div className="flex-1">
+          <ConfirmDialog
+            trigger={
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full border-slate-300 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+              >
+                Decline
+              </Button>
+            }
+            title={`Decline the offer from ${company}?`}
+            description="This marks the offer as declined and removes it from the comparison view."
+            confirmLabel="Decline offer"
+            variant="destructive"
+            onConfirm={declineOffer.bind(null, offer.id)}
+          />
+        </div>
       </div>
     </div>
   )
@@ -110,6 +128,8 @@ function OfferColumn({ offer }: OfferColumnProps) {
 
 export default async function OffersPage() {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const tier = user ? await getUserTier(user.id) : 'free'
 
   const { data: offers } = await supabase
     .from('offers')
@@ -140,6 +160,21 @@ export default async function OffersPage() {
             {pendingOffers.length} pending
           </Badge>
         )}
+        <div className={pendingOffers.length > 0 ? '' : 'ml-auto'}>
+          {tier === 'pro' ? (
+            <a href="/api/export/offers" download>
+              <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
+                <Download className="mr-2 h-4 w-4" /> Export CSV
+              </Button>
+            </a>
+          ) : (
+            <Link href="/settings?upgrade=export" title="CSV export is a Pro feature">
+              <Button variant="outline" size="sm" className="border-slate-200 text-slate-500 hover:bg-slate-50">
+                <Lock className="mr-2 h-4 w-4" /> Export CSV
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* Empty state */}

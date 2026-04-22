@@ -49,7 +49,7 @@ export default function SignupPage() {
         <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl editorial-gradient">
           <Briefcase className="h-6 w-6 text-white" />
         </div>
-        <CardTitle className="font-['Plus_Jakarta_Sans'] text-2xl font-extrabold text-slate-900">Start your journey</CardTitle>
+        <CardTitle className="font-headline text-2xl font-extrabold text-slate-900">Start your journey</CardTitle>
         <CardDescription className="text-slate-500">
           Track every step of your career — free forever
         </CardDescription>

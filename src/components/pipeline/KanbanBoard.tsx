@@ -107,7 +107,7 @@ export function KanbanBoard({ initialRoles }: Props) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex h-full gap-4 overflow-x-auto pb-4">
+      <div className="flex h-full gap-4 overflow-x-auto snap-x snap-mandatory pb-4 sm:snap-none [scrollbar-width:thin]">
         {STAGES.map((stage) => {
           const stageRoles = rolesByStage(stage.id)
           return (

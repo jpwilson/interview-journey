@@ -84,7 +84,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] p-8">
-      <h1 className="mb-2 font-['Plus_Jakarta_Sans'] text-2xl font-extrabold text-slate-900">Overview</h1>
+      <h1 className="mb-2 font-headline text-2xl font-extrabold text-slate-900">Overview</h1>
       <p className="mb-8 text-sm text-slate-500">Your job search at a glance</p>
 
       {/* Career Snapshot mini-timeline */}
@@ -146,7 +146,7 @@ export default async function DashboardPage() {
         {/* Active roles */}
         <Card className="bg-white rounded-xl border border-slate-100 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-slate-900">Active roles</CardTitle>
+            <CardTitle className="font-headline text-lg font-extrabold text-slate-900">Active roles</CardTitle>
             <Link href="/pipeline" className="text-sm text-sky-700 hover:text-sky-600 font-medium">
               View pipeline →
             </Link>
@@ -181,7 +181,7 @@ export default async function DashboardPage() {
         {/* Recent activity */}
         <Card className="bg-white rounded-xl border border-slate-100 shadow-sm">
           <CardHeader>
-            <CardTitle className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-slate-900">Recent activity</CardTitle>
+            <CardTitle className="font-headline text-lg font-extrabold text-slate-900">Recent activity</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {events.map((event) => {
