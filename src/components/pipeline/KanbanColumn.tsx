@@ -29,7 +29,7 @@ export function KanbanColumn({ stage, applications, droppableId }: Props) {
         ref={setNodeRef}
         className={cn(
           'flex min-h-24 flex-1 flex-col gap-3 rounded-b-xl p-2 transition-colors',
-          isOver ? 'bg-sky-50' : 'bg-slate-50',
+          isOver ? 'bg-[var(--accent-ij-wash)]' : 'bg-slate-50',
         )}
       >
         {applications.map((app) => (

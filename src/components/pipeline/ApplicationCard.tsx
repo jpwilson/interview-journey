@@ -23,11 +23,11 @@ function getInitials(name: string) {
 }
 
 const INITIALS_BG = [
-  'bg-sky-100 text-sky-700',
+  'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
   'bg-purple-100 text-purple-700',
   'bg-green-100 text-green-700',
   'bg-amber-100 text-amber-700',
-  'bg-indigo-100 text-indigo-700',
+  'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
   'bg-rose-100 text-rose-700',
 ]
 
@@ -51,7 +51,7 @@ export function ApplicationCard({ application: app, isDragging }: Props) {
       style={style}
       className={cn(
         'group relative rounded-xl border border-slate-100 bg-white p-3 shadow-sm hover:shadow-md transition-shadow',
-        (isDragging || isSortableDragging) && 'opacity-50 ring-2 ring-sky-400'
+        (isDragging || isSortableDragging) && 'opacity-50 ring-2 ring-[var(--accent-ij)]'
       )}
     >
       {/* Drag handle */}
@@ -65,7 +65,7 @@ export function ApplicationCard({ application: app, isDragging }: Props) {
 
       <Link
         href={`/roles/${app.id}`}
-        className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+        className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-2"
       >
         <div className="flex items-start gap-2 pr-6">
           <div className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-xs font-bold', companyColorClass(app.company.name))}>

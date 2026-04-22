@@ -18,7 +18,7 @@ const STAGE_COLORS: Record<string, string> = {
   screening: 'bg-yellow-100 text-yellow-700',
   interviewing: 'bg-blue-100 text-blue-700',
   offer: 'bg-purple-100 text-purple-700',
-  negotiating: 'bg-indigo-100 text-indigo-700',
+  negotiating: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
   resolved: 'bg-slate-100 text-slate-500',
 }
 
@@ -28,7 +28,7 @@ const STAGE_DOT_COLORS: Record<string, string> = {
   screening: 'bg-yellow-500',
   interviewing: 'bg-blue-500',
   offer: 'bg-purple-500',
-  negotiating: 'bg-indigo-500',
+  negotiating: 'bg-[var(--accent-ij-wash)]0',
   resolved: 'bg-slate-400',
 }
 
@@ -57,7 +57,7 @@ function getCompanyStatus(roles: RoleWithEvents[]): { label: string; color: stri
     return { label: 'Alumni', color: 'bg-green-100 text-green-700' }
   }
   if (roles.some((r) => r.stage !== 'resolved')) {
-    return { label: 'Active pursuit', color: 'bg-sky-100 text-sky-700' }
+    return { label: 'Active pursuit', color: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]' }
   }
   return { label: 'Previously applied', color: 'bg-slate-100 text-slate-600' }
 }
@@ -143,7 +143,7 @@ export default async function CompanyDetailPage({
       <div className="mb-8 rounded-xl bg-white border border-slate-100 shadow-sm p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-[#00658f] to-[#4ea5d9]">
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)]">
               <Building2 className="h-7 w-7 text-white" />
             </div>
             <div>
@@ -156,7 +156,7 @@ export default async function CompanyDetailPage({
                     href={company.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm text-sky-700 hover:text-sky-600 transition-colors"
+                    className="flex items-center gap-1 text-sm text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] transition-colors"
                   >
                     <ExternalLink className="h-3 w-3" />
                     {company.website.replace(/^https?:\/\//, '')}
@@ -196,25 +196,25 @@ export default async function CompanyDetailPage({
         <TabsList className="mb-6 bg-white border border-slate-100 shadow-sm">
           <TabsTrigger
             value="roles"
-            className="data-[state=active]:bg-sky-600 data-[state=active]:text-white text-slate-600"
+            className="data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white text-slate-600"
           >
             Roles ({roles.length})
           </TabsTrigger>
           <TabsTrigger
             value="documents"
-            className="data-[state=active]:bg-sky-600 data-[state=active]:text-white text-slate-600"
+            className="data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white text-slate-600"
           >
             Documents ({documents.length})
           </TabsTrigger>
           <TabsTrigger
             value="people"
-            className="data-[state=active]:bg-sky-600 data-[state=active]:text-white text-slate-600"
+            className="data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white text-slate-600"
           >
             People ({contactMap.size})
           </TabsTrigger>
           <TabsTrigger
             value="notes"
-            className="data-[state=active]:bg-sky-600 data-[state=active]:text-white text-slate-600"
+            className="data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white text-slate-600"
           >
             Notes
           </TabsTrigger>
@@ -297,7 +297,7 @@ export default async function CompanyDetailPage({
                 return (
                   <div key={role.id}>
                     <h3 className="mb-2 text-sm font-semibold text-slate-700">
-                      <Link href={`/roles/${role.id}`} className="hover:text-sky-700 transition-colors">
+                      <Link href={`/roles/${role.id}`} className="hover:text-[var(--accent-ij-ink)] transition-colors">
                         {role.role_title}
                       </Link>
                     </h3>
@@ -371,11 +371,11 @@ export default async function CompanyDetailPage({
                                   <Badge
                                     className={`text-xs border-0 ${
                                       cr.relationship === 'recruiter'
-                                        ? 'bg-sky-100 text-sky-700'
+                                        ? 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]'
                                         : cr.relationship === 'interviewer'
                                         ? 'bg-purple-100 text-purple-700'
                                         : cr.relationship === 'hiring_manager'
-                                        ? 'bg-indigo-100 text-indigo-700'
+                                        ? 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]'
                                         : 'bg-slate-100 text-slate-600'
                                     }`}
                                   >
@@ -385,7 +385,7 @@ export default async function CompanyDetailPage({
                                 {role && (
                                   <Link
                                     href={`/roles/${role.id}`}
-                                    className="text-xs text-slate-400 hover:text-sky-700 transition-colors"
+                                    className="text-xs text-slate-400 hover:text-[var(--accent-ij-ink)] transition-colors"
                                   >
                                     {role.role_title}
                                   </Link>
@@ -402,7 +402,7 @@ export default async function CompanyDetailPage({
                           rel="noopener noreferrer"
                           className="shrink-0"
                         >
-                          <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:border-sky-300">
+                          <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:border-[var(--accent-ij-wash)]">
                             <ExternalLink className="h-3 w-3 mr-1" /> LinkedIn
                           </Button>
                         </a>
@@ -422,9 +422,9 @@ export default async function CompanyDetailPage({
               name="notes"
               defaultValue={company.notes ?? ''}
               placeholder="Add notes about this company — culture, interview process, contacts, anything relevant…"
-              className="min-h-48 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-sky-500/20"
+              className="min-h-48 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)]/20"
             />
-            <Button type="submit" className="bg-sky-600 hover:bg-sky-700 text-white">
+            <Button type="submit" className="bg-[var(--accent-ij-ink)] hover:bg-[var(--accent-ij-ink)] text-white">
               <StickyNote className="mr-2 h-4 w-4" /> Save notes
             </Button>
           </form>

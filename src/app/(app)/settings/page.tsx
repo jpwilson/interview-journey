@@ -42,7 +42,7 @@ export default async function SettingsPage({
       )}
 
       {params.upgrade && (
-        <div className="mb-6 rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-700">
+        <div className="mb-6 rounded-xl bg-[var(--accent-ij-wash)] border border-[var(--accent-ij-wash)] p-4 text-[var(--accent-ij-ink)]">
           This feature requires a Pro plan. Upgrade below to unlock it.
         </div>
       )}
@@ -67,14 +67,14 @@ export default async function SettingsPage({
       {/* Email forwarding */}
       <Card className="mb-6 border-slate-100 bg-white shadow-sm">
         <CardHeader className="flex flex-row items-center gap-2">
-          <Mail className="h-5 w-5 text-sky-600" />
+          <Mail className="h-5 w-5 text-[var(--accent-ij-ink)]" />
           <CardTitle className="text-slate-900 font-bold">Email forwarding</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
             <p className="mb-2 text-sm text-slate-500">Your personal forwarding address</p>
             <div className="flex items-center gap-3 rounded-lg bg-slate-50 border border-slate-200 px-4 py-3">
-              <code className="flex-1 select-all font-mono text-sm text-sky-700">
+              <code className="flex-1 select-all font-mono text-sm text-[var(--accent-ij-ink)]">
                 parse+{user.id}@interviewjourney.app
               </code>
               <CopyButton text={`parse+${user.id}@interviewjourney.app`} />
@@ -122,7 +122,7 @@ export default async function SettingsPage({
                   'Priority AI processing',
                 ].map((f) => (
                   <div key={f} className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-sky-600" />
+                    <CheckCircle className="h-4 w-4 text-[var(--accent-ij-ink)]" />
                     {f}
                   </div>
                 ))}

@@ -16,9 +16,9 @@ const STAGE_COLORS: Record<string, string> = {
   exploring: 'bg-slate-100 text-slate-600',
   applied: 'bg-blue-50 text-blue-700',
   screening: 'bg-yellow-50 text-yellow-700',
-  interviewing: 'bg-sky-50 text-sky-700',
+  interviewing: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
   offer: 'bg-purple-50 text-purple-700',
-  negotiating: 'bg-indigo-50 text-indigo-700',
+  negotiating: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
   resolved: 'bg-green-50 text-green-700',
 }
 
@@ -63,8 +63,8 @@ export default async function RoleDetailPage({
       <div className="mb-8 rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-sky-50">
-              <Building2 className="h-7 w-7 text-sky-600" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--accent-ij-wash)]">
+              <Building2 className="h-7 w-7 text-[var(--accent-ij-ink)]" />
             </div>
             <div>
               <h1 className="font-headline text-2xl font-extrabold text-slate-900">{role.role_title}</h1>
@@ -132,25 +132,25 @@ export default async function RoleDetailPage({
         <TabsList className="mb-6 bg-transparent border-b border-slate-200 rounded-none w-full justify-start gap-0 p-0 h-auto">
           <TabsTrigger
             value="timeline"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-sky-600 data-[state=active]:text-sky-700 data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
           >
             Timeline ({events?.length ?? 0})
           </TabsTrigger>
           <TabsTrigger
             value="meetings"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-sky-600 data-[state=active]:text-sky-700 data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
           >
             Meetings ({meetings?.length ?? 0})
           </TabsTrigger>
           <TabsTrigger
             value="documents"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-sky-600 data-[state=active]:text-sky-700 data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
           >
             Documents ({documents?.length ?? 0})
           </TabsTrigger>
           <TabsTrigger
             value="add-event"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-sky-600 data-[state=active]:text-sky-700 data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
           >
             Add event
           </TabsTrigger>

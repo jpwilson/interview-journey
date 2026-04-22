@@ -171,8 +171,10 @@
   }
 }
 
+/* Backwards-compat: `.editorial-gradient` now renders the v2 moss gradient
+   so older components keep working while we migrate them. */
 .editorial-gradient {
-  background: linear-gradient(135deg, #00658f 0%, #4ea5d9 100%);
+  background: linear-gradient(135deg, var(--accent-ij) 0%, var(--accent-ij-ink) 100%);
 }
 
 /* ─── Interview Journey v2 design system ──────────────────────────────────

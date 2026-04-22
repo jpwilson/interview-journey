@@ -61,9 +61,9 @@ function OfferColumn({ offer }: OfferColumnProps) {
   return (
     <div className="flex flex-col min-w-[240px] max-w-xs flex-1">
       {/* Header */}
-      <div className="rounded-t-xl border border-slate-100 bg-gradient-to-br from-[#00658f] to-[#4ea5d9] px-4 py-4">
+      <div className="rounded-t-xl border border-slate-100 bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] px-4 py-4">
         <p className="font-bold text-white truncate">{company}</p>
-        <p className="text-sm text-sky-100 truncate">{role}</p>
+        <p className="text-sm text-[var(--accent-ij-wash)] truncate">{role}</p>
       </div>
 
       {/* Rows */}
@@ -92,7 +92,7 @@ function OfferColumn({ offer }: OfferColumnProps) {
             trigger={
               <Button
                 size="sm"
-                className="w-full bg-gradient-to-r from-[#00658f] to-[#4ea5d9] hover:from-[#005578] hover:to-[#3a8fbf] text-white border-0"
+                className="w-full bg-gradient-to-r from-[var(--accent-ij)] to-[var(--accent-ij-ink)] hover:from-[#005578] hover:to-[#3a8fbf] text-white border-0"
               >
                 Accept
               </Button>
@@ -143,7 +143,7 @@ export default async function OffersPage() {
     <div className="min-h-full bg-[#f8f9fa] p-8">
       {/* Header */}
       <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#00658f] to-[#4ea5d9]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)]">
           <TrendingUp className="h-5 w-5 text-white" />
         </div>
         <div>
@@ -156,7 +156,7 @@ export default async function OffersPage() {
           <p className="text-sm text-slate-500">Compare pending offers side by side</p>
         </div>
         {pendingOffers.length > 0 && (
-          <Badge className="ml-auto bg-sky-100 text-sky-700 border-0">
+          <Badge className="ml-auto bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)] border-0">
             {pendingOffers.length} pending
           </Badge>
         )}

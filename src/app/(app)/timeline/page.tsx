@@ -63,7 +63,7 @@ function TimelinePaywall() {
   return (
     <div className="min-h-full bg-[#f8f9fa] p-8">
       <div className="mx-auto max-w-3xl">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700">
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[var(--accent-ij-wash)] px-3 py-1 text-xs font-medium text-[var(--accent-ij-ink)]">
           <Lock className="h-3 w-3" /> Pro feature
         </div>
         <h1 className="font-headline mb-3 text-3xl font-extrabold text-slate-900">
@@ -80,7 +80,7 @@ function TimelinePaywall() {
               key={title}
               className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm"
             >
-              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
+              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]">
                 <Icon className="h-4 w-4" />
               </div>
               <p className="font-headline mb-1 font-bold text-slate-900">{title}</p>
@@ -89,7 +89,7 @@ function TimelinePaywall() {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-sky-100 bg-gradient-to-br from-sky-50 to-white p-6 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[var(--accent-ij-wash)] bg-gradient-to-br from-[var(--accent-ij-wash)] to-white p-6 shadow-sm">
           <div className="flex-1 min-w-[14rem]">
             <p className="font-headline text-lg font-bold text-slate-900">
               Unlock the timeline with Pro
@@ -101,7 +101,7 @@ function TimelinePaywall() {
           </div>
           <Link
             href="/settings?upgrade=timeline"
-            className="inline-flex items-center gap-1 rounded-full bg-gradient-to-br from-[#00658f] to-[#4ea5d9] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-200 transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-1 rounded-full bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[var(--accent-ij-glow-a)] transition-opacity hover:opacity-90"
           >
             Upgrade to Pro <ArrowRight className="h-4 w-4" />
           </Link>

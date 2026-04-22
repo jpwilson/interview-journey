@@ -227,7 +227,7 @@ export default async function AnalyticsPage() {
               <div className="flex gap-10">
                 {avgDaysToInterview !== null && (
                   <div>
-                    <p className="text-4xl font-extrabold text-sky-700">{avgDaysToInterview}d</p>
+                    <p className="text-4xl font-extrabold text-[var(--accent-ij-ink)]">{avgDaysToInterview}d</p>
                     <p className="mt-1 text-sm text-slate-500">Avg. applied → first interview</p>
                   </div>
                 )}

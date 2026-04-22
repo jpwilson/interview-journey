@@ -216,7 +216,7 @@ const EXAMPLES: WorkedExample[] = [
 
 export function DropShowcase() {
   return (
-    <div style={{ minHeight: '100%', background: 'var(--paper)' }}>
+    <div style={{ minHeight: '100%' }}>
       <Header />
       <div style={{ padding: '22px 22px 80px', maxWidth: 1200, margin: '0 auto' }}>
         <StepOne />
@@ -234,7 +234,9 @@ function Header() {
       style={{
         padding: '20px 22px 16px',
         borderBottom: '1px solid var(--paper-ink)',
-        background: 'var(--card)',
+        background: 'color-mix(in srgb, var(--card) 92%, transparent)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
       }}
     >
       <div

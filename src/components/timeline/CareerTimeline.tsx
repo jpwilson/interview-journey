@@ -17,7 +17,7 @@ const STAGE_COLORS: Record<string, string> = {
   screening: 'bg-yellow-500',
   interviewing: 'bg-blue-500',
   offer: 'bg-purple-500',
-  negotiating: 'bg-indigo-500',
+  negotiating: 'bg-[var(--accent-ij-wash)]0',
   resolved: 'bg-slate-400',
 }
 
@@ -27,7 +27,7 @@ const STAGE_DOT_RING: Record<string, string> = {
   screening: 'ring-yellow-100',
   interviewing: 'ring-blue-100',
   offer: 'ring-purple-100',
-  negotiating: 'ring-indigo-100',
+  negotiating: 'ring-[var(--accent-ij-wash)]',
   resolved: 'ring-slate-200',
 }
 
@@ -99,8 +99,8 @@ export function CareerTimeline({ roles }: Props) {
           onClick={() => setFilter(key)}
           className={
             filter === key
-              ? 'rounded-full px-4 py-1.5 text-sm font-medium bg-sky-600 text-white transition-colors'
-              : 'rounded-full px-4 py-1.5 text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:border-sky-300 transition-colors'
+              ? 'rounded-full px-4 py-1.5 text-sm font-medium bg-[var(--accent-ij-ink)] text-white transition-colors'
+              : 'rounded-full px-4 py-1.5 text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:border-[var(--accent-ij-wash)] transition-colors'
           }
         >
           {label}
@@ -163,7 +163,7 @@ export function CareerTimeline({ roles }: Props) {
               <div className="w-36 shrink-0 pt-1 text-right">
                 <Link
                   href={`/companies/${companyId}`}
-                  className="truncate text-sm font-semibold text-sky-700 hover:text-sky-600 transition-colors block"
+                  className="truncate text-sm font-semibold text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] transition-colors block"
                 >
                   {companyName}
                 </Link>
