@@ -88,7 +88,32 @@ async function ensurePro(userId) {
     .from('subscriptions')
     .upsert({ user_id: userId, tier: 'pro', status: 'active' }, { onConflict: 'user_id' })
   if (error) throw error
-  await sb.from('profiles').update({ display_name: 'Maya Lin' }).eq('id', userId)
+}
+
+// Update profile with v2 employment + search status fields. Swallow errors
+// gracefully if migration 003 hasn't been applied yet.
+async function setProfileEmployment(userId, stripeCompanyId) {
+  const { error } = await sb
+    .from('profiles')
+    .update({
+      display_name: 'Maya Lin',
+      current_employer_id: stripeCompanyId,
+      current_title: 'Senior Software Engineer',
+      employment_start_date: '2024-11-04',
+      search_status: 'open',
+      prefs: {
+        funnelRange: '90d',
+        autoCloseDays: 30,
+        docConfidenceThreshold: 85,
+        onboardedAt: new Date().toISOString(),
+      },
+    })
+    .eq('id', userId)
+  if (error) {
+    console.warn(`! profile update partial (migration 003 maybe not applied): ${error.message}`)
+    // Fall back to basics
+    await sb.from('profiles').update({ display_name: 'Maya Lin' }).eq('id', userId)
+  }
 }
 
 async function clearDemoData(userId) {
@@ -100,6 +125,7 @@ async function clearDemoData(userId) {
 }
 
 const COMPANIES = [
+  // Current + pipeline targets
   { slug: 'anthropic', name: 'Anthropic', domain: 'anthropic.com', industry: 'AI research' },
   { slug: 'stripe', name: 'Stripe', domain: 'stripe.com', industry: 'Payments' },
   { slug: 'vercel', name: 'Vercel', domain: 'vercel.com', industry: 'Developer tools' },
@@ -107,6 +133,20 @@ const COMPANIES = [
   { slug: 'linear', name: 'Linear', domain: 'linear.app', industry: 'Developer tools' },
   { slug: 'figma', name: 'Figma', domain: 'figma.com', industry: 'Design tools' },
   { slug: 'airbnb', name: 'Airbnb', domain: 'airbnb.com', industry: 'Travel' },
+  // Past employers (for career timeline)
+  { slug: 'acme', name: 'Acme Systems', domain: 'acme.example', industry: 'Enterprise SaaS' },
+  { slug: 'globex', name: 'Globex', domain: 'globex.example', industry: 'Fintech' },
+  { slug: 'initech', name: 'Initech', domain: 'initech.example', industry: 'Consumer' },
+]
+
+// Past employment history for the career timeline. These insert as
+// resolved:hired roles with applied_at/resolved_at spanning the job tenure.
+// Semantically imperfect (they weren't tracked through this app at the time)
+// but renders correctly in the Career Timeline component.
+const PAST_EMPLOYMENTS = [
+  { companySlug: 'acme',    role_title: 'Junior Software Engineer', start: '2019-06-03', end: '2021-09-10', source: 'referral' },
+  { companySlug: 'globex',  role_title: 'Software Engineer II',     start: '2021-09-20', end: '2023-05-12', source: 'cold application' },
+  { companySlug: 'initech', role_title: 'Senior Engineer',          start: '2023-05-22', end: '2024-10-18', source: 'recruiter' },
 ]
 
 const ROLE_SPECS = [
@@ -295,6 +335,23 @@ async function seedData(userId) {
     if (r.resolved_days_ago != null) row.resolved_at = daysAgo(r.resolved_days_ago)
     return row
   })
+
+  // Past-employment roles (resolved:hired) so the Career Timeline has data
+  for (const emp of PAST_EMPLOYMENTS) {
+    roleRows.push({
+      user_id: userId,
+      company_id: companyIdBySlug[emp.companySlug],
+      role_title: emp.role_title,
+      stage: 'resolved',
+      kanban_order: 100,
+      source: emp.source,
+      applied_at: new Date(emp.start).toISOString(),
+      engaged_at: new Date(emp.start).toISOString(),
+      resolution: 'hired',
+      resolved_at: new Date(emp.end).toISOString(),
+    })
+  }
+
   const { data: createdRoles, error: rErr } = await sb.from('roles').insert(roleRows).select()
   if (rErr) throw rErr
   const roleIdByIdx = createdRoles.map((r) => r.id)
@@ -364,6 +421,18 @@ async function main() {
   const user = await ensureDemoUser()
   await ensurePro(user.id)
   const counts = await seedData(user.id)
+
+  // Link Stripe as current employer in the profile
+  const { data: stripeCo } = await sb
+    .from('companies')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('name', 'Stripe')
+    .maybeSingle()
+  if (stripeCo) {
+    await setProfileEmployment(user.id, stripeCo.id)
+  }
+
   console.log('\n✓ demo account ready')
   console.log('  email:    ', DEMO_EMAIL)
   console.log('  password: ', DEMO_PASSWORD)

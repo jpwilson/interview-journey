@@ -4,6 +4,7 @@ import { StatusBar, type SearchStatus } from '@/components/dashboard/StatusBar'
 import { CareerTimeline, type CareerRole } from '@/components/dashboard/CareerTimeline'
 import { FunnelBlock, type FunnelRole } from '@/components/dashboard/FunnelBlock'
 import { GhostingAlerts } from '@/components/dashboard/GhostingAlerts'
+import { OnboardingModal } from '@/components/onboarding/OnboardingModal'
 import { computeAlertRoles } from '@/lib/alerts'
 import type { RoleWithCompany } from '@/lib/supabase/types'
 
@@ -14,6 +15,7 @@ type ProfileV2 = {
   current_title: string | null
   employment_start_date: string | null
   search_status: SearchStatus | null
+  prefs: { onboardedAt?: string } | null
 }
 
 function sectionLabelStyle(): React.CSSProperties {
@@ -61,14 +63,19 @@ export default async function DashboardPage() {
   try {
     const { data } = await supabase
       .from('profiles')
-      .select('id, display_name, current_employer_id, current_title, employment_start_date, search_status')
+      .select('id, display_name, current_employer_id, current_title, employment_start_date, search_status, prefs')
       .eq('id', userId)
       .maybeSingle()
     profile = (data ?? null) as ProfileV2 | null
   } catch {
     const { data } = await supabase.from('profiles').select('id, display_name').eq('id', userId).maybeSingle()
-    profile = data ? ({ ...data, current_employer_id: null, current_title: null, employment_start_date: null, search_status: null } as ProfileV2) : null
+    profile = data ? ({ ...data, current_employer_id: null, current_title: null, employment_start_date: null, search_status: null, prefs: null } as ProfileV2) : null
   }
+
+  const needsOnboarding = !profile?.prefs?.onboardedAt
+  const { data: companiesForOnboarding } = needsOnboarding
+    ? await supabase.from('companies').select('id, name').eq('user_id', userId).order('name')
+    : { data: null }
 
   const [rolesRes, eventsRes, currentEmployerRes, pipelineEventsRes] = await Promise.all([
     supabase.from('roles').select('*, company:companies(*)').order('updated_at', { ascending: false }),
@@ -179,6 +186,9 @@ export default async function DashboardPage() {
 
   return (
     <div style={{ minHeight: '100%', background: 'var(--paper)' }}>
+      {needsOnboarding && (
+        <OnboardingModal userId={userId} existingCompanies={companiesForOnboarding ?? []} />
+      )}
       <StatusBar
         displayName={displayName}
         currentEmployer={currentEmployer}
