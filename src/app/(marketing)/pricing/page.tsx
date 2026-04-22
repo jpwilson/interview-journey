@@ -31,7 +31,7 @@ export default function PricingPage() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg editorial-gradient">
             <Briefcase className="h-4 w-4 text-white" />
           </div>
-          <span className="font-['Plus_Jakarta_Sans'] text-lg font-extrabold text-slate-900 tracking-tight">Interview Journey</span>
+          <span className="font-headline text-lg font-extrabold text-slate-900 tracking-tight">Interview Journey</span>
         </Link>
         <div className="flex gap-3">
           <Link href="/login"><Button variant="ghost" className="text-slate-600 hover:text-slate-900 font-medium">Sign in</Button></Link>
@@ -40,7 +40,7 @@ export default function PricingPage() {
       </nav>
 
       <div className="mx-auto max-w-4xl px-6 py-28">
-        <h1 className="mb-4 text-center font-['Plus_Jakarta_Sans'] text-4xl font-extrabold text-slate-900">Simple, honest pricing</h1>
+        <h1 className="mb-4 text-center font-headline text-4xl font-extrabold text-slate-900">Simple, honest pricing</h1>
         <p className="mb-16 text-center text-lg text-slate-500">
           Free forever for casual job seekers. Pro for serious ones.
         </p>

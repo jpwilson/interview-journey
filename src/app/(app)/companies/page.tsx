@@ -56,7 +56,7 @@ export default async function CompaniesPage() {
     <div className="min-h-full bg-[#f8f9fa] p-8">
       <div className="mb-8 flex items-end justify-between">
         <div>
-          <h1 className="font-['Plus_Jakarta_Sans'] text-2xl font-extrabold text-slate-900">Companies</h1>
+          <h1 className="font-headline text-2xl font-extrabold text-slate-900">Companies</h1>
           <p className="mt-1 text-sm text-slate-500">{rows.length} companies tracked</p>
         </div>
       </div>
