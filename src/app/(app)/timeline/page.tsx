@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { TimelineTabs } from '@/components/timeline/TimelineTabs'
+import { ShareTimelineButton } from '@/components/timeline/ShareTimelineButton'
 import { getUserTier } from '@/lib/limits'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -33,9 +34,10 @@ export default async function TimelinePage() {
 
   return (
     <div className="min-h-full bg-[#f8f9fa] p-8">
-      <h1 className="font-headline mb-8 text-3xl font-extrabold text-slate-900">
-        Career Timeline
-      </h1>
+      <div className="mb-8 flex items-center justify-between gap-3">
+        <h1 className="font-headline text-3xl font-extrabold text-slate-900">Career Timeline</h1>
+        <ShareTimelineButton />
+      </div>
       <TimelineTabs roles={roles} allEvents={allEvents} />
     </div>
   )
