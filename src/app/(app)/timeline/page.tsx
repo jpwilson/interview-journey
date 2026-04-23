@@ -23,6 +23,7 @@ export default async function TimelinePage() {
       company:companies(*),
       role_events(*)
     `)
+    .is('deleted_at', null)
     .order('applied_at', { ascending: true })
 
   const roles = data ?? []

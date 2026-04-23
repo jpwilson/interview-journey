@@ -35,6 +35,7 @@ export default async function RoleDetailPage({
       .from('roles')
       .select('*, company:companies(*)')
       .eq('id', id)
+      .is('deleted_at', null)
       .single(),
     supabase
       .from('role_events')

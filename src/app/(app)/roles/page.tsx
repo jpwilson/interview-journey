@@ -32,6 +32,7 @@ export default async function RolesPage() {
   const { data } = await supabase
     .from('roles')
     .select('*, company:companies(*)')
+    .is('deleted_at', null)
     .order('updated_at', { ascending: false })
 
   const roles = (data ?? []) as RoleWithCompany[]
