@@ -88,15 +88,13 @@ export function PipelineTabs({
   const total = initialRoles.length
 
   return (
-    <div style={{ minHeight: '100%' }}>
+    <div style={{ minHeight: '100%', background: 'var(--paper)' }}>
       {/* Page header */}
       <div
         style={{
           padding: '24px 22px 18px',
           borderBottom: '1px solid var(--paper-ink)',
-          background: 'color-mix(in srgb, var(--card) 92%, transparent)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
+          background: 'var(--card)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
@@ -280,9 +278,7 @@ function PipelineTable({ roles }: { roles: RoleWithCompany[] }) {
           alignItems: 'center',
           flexWrap: 'wrap',
           borderBottom: '1px solid var(--border-soft)',
-          background: 'color-mix(in srgb, var(--card) 88%, transparent)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
+          background: 'var(--card)',
         }}
       >
         <div style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 6 }}>

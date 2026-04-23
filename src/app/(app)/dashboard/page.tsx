@@ -185,7 +185,7 @@ export default async function DashboardPage() {
   ]
 
   return (
-    <div style={{ minHeight: '100%' }}>
+    <div style={{ minHeight: '100%', background: 'var(--paper)' }}>
       {needsOnboarding && (
         <OnboardingModal userId={userId} existingCompanies={companiesForOnboarding ?? []} />
       )}

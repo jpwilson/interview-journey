@@ -68,9 +68,7 @@ export function StatusBar({
   return (
     <section
       style={{
-        background: 'color-mix(in srgb, var(--card) 92%, transparent)',
-        backdropFilter: 'blur(6px)',
-        WebkitBackdropFilter: 'blur(6px)',
+        background: 'var(--card)',
         borderBottom: '1px solid var(--paper-ink)',
         padding: '18px 22px',
       }}

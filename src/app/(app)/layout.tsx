@@ -30,23 +30,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <DropZoneProvider>
-      <div
-        className="relative flex h-screen overflow-hidden"
-        style={{
-          // Paper base + three very soft moss radial washes, all baked into
-          // a single background image so pages can sit transparent on top.
-          backgroundColor: 'var(--paper)',
-          backgroundImage: [
-            'radial-gradient(circle at 15% 5%, var(--accent-ij-glow-a), transparent 45%)',
-            'radial-gradient(circle at 92% 85%, var(--accent-ij-glow-b), transparent 45%)',
-            'radial-gradient(circle at 55% 45%, var(--accent-ij-glow-c), transparent 55%)',
-          ].join(', '),
-        }}
-      >
-        <div className="hidden md:flex relative z-10">
+      <div className="flex h-screen overflow-hidden" style={{ background: 'var(--paper)' }}>
+        <div className="hidden md:flex">
           <AppSidebar {...sidebarProps} />
         </div>
-        <div className="flex flex-1 flex-col overflow-hidden relative z-10">
+        <div className="flex flex-1 flex-col overflow-hidden">
           <MobileTopbar />
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>

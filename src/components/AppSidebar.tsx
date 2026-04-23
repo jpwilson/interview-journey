@@ -242,11 +242,11 @@ function SidebarLink({
         fontFamily: 'var(--font-sans)',
         fontSize: 12,
         fontWeight: active ? 500 : 400,
-        color: active ? 'var(--ink)' : muted ? 'var(--ink-5)' : 'var(--ink-3)',
-        background: active ? 'var(--paper-2)' : 'transparent',
+        color: active ? '#fafaf9' : muted ? 'var(--ink-5)' : 'var(--ink-3)',
+        background: active ? 'var(--accent-ij-ink)' : 'transparent',
       }}
     >
-      <span style={{ color: active ? 'var(--accent-ij-ink)' : 'inherit', display: 'flex' }}>
+      <span style={{ color: 'inherit', display: 'flex', opacity: active ? 0.9 : 1 }}>
         <Icon size={14} strokeWidth={1.5} />
       </span>
       <span style={{ flex: 1 }}>{item.label}</span>
@@ -257,8 +257,8 @@ function SidebarLink({
             fontSize: 10,
             padding: '1px 6px',
             borderRadius: 4,
-            background: active ? 'var(--accent-ij-wash)' : 'var(--paper-2)',
-            color: active ? 'var(--accent-ij-ink)' : 'var(--ink-4)',
+            background: active ? 'color-mix(in srgb, var(--paper) 20%, transparent)' : 'var(--paper-2)',
+            color: active ? '#fafaf9' : 'var(--ink-4)',
           }}
         >
           {badge}
