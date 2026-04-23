@@ -95,8 +95,8 @@ function TimelinePaywall() {
               Unlock the timeline with Pro
             </p>
             <p className="text-sm text-slate-500">
-              $12/month. Cancel anytime. Includes unlimited roles, uploads, and AI
-              classifications.
+              $12/mo billed annually ($144/yr) · $19/mo monthly · or $99 lifetime
+              for the first 500 founding members. Cancel anytime.
             </p>
           </div>
           <Link

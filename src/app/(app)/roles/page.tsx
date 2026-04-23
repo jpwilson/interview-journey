@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createRole } from '@/lib/actions/roles'
-import { getUserTier } from '@/lib/limits'
+import { getUserTier, isPaidTier } from '@/lib/limits'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -41,7 +41,7 @@ export default async function RolesPage() {
       <div className="mb-8 flex items-center justify-between gap-3">
         <h1 className="font-headline text-2xl font-extrabold text-slate-900">Roles</h1>
         <div className="flex items-center gap-2">
-          {tier === 'pro' ? (
+          {isPaidTier(tier) ? (
             <a href="/api/export/roles" download>
               <Button variant="outline" className="border-slate-200 text-slate-600 hover:bg-slate-50">
                 <Download className="mr-2 h-4 w-4" /> Export CSV

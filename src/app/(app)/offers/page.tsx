@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { acceptOffer, declineOffer } from '@/lib/actions/offers'
-import { getUserTier } from '@/lib/limits'
+import { getUserTier, isPaidTier } from '@/lib/limits'
 import Link from 'next/link'
 import { TrendingUp, Download, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -161,7 +161,7 @@ export default async function OffersPage() {
           </Badge>
         )}
         <div className={pendingOffers.length > 0 ? '' : 'ml-auto'}>
-          {tier === 'pro' ? (
+          {isPaidTier(tier) ? (
             <a href="/api/export/offers" download>
               <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
                 <Download className="mr-2 h-4 w-4" /> Export CSV

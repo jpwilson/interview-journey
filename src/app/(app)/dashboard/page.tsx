@@ -142,6 +142,8 @@ export default async function DashboardPage() {
   const active = allRoles.filter((r) => r.stage !== 'resolved')
   const inDiligence = allRoles.filter((r) => ['interviewing', 'offer', 'negotiating'].includes(r.stage)).length
   const offersOut = allRoles.filter((r) => ['offer', 'negotiating'].includes(r.stage)).length
+  // Server component — runs once per render, purity rule is a false positive here.
+  // eslint-disable-next-line react-hooks/purity
   const nowMs = Date.now()
   const ms30d = 30 * 24 * 3600 * 1000
   const silentSoon = active.filter((r) => {
