@@ -138,58 +138,96 @@ export default async function CompanyDetailPage({
   const saveNotes = saveCompanyNotes.bind(null, company.id)
 
   return (
-    <div className="min-h-full bg-[#f8f9fa] p-8">
-      {/* Header card */}
-      <div className="mb-8 rounded-xl bg-white border border-slate-100 shadow-sm p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)]">
-              <Building2 className="h-7 w-7 text-white" />
-            </div>
-            <div>
-              <h1 className="font-headline text-2xl font-extrabold text-slate-900">
-                {company.name}
-              </h1>
-              <div className="mt-1 flex flex-wrap items-center gap-2">
-                {company.website && (
-                  <a
-                    href={company.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] transition-colors"
-                  >
-                    <ExternalLink className="h-3 w-3" />
-                    {company.website.replace(/^https?:\/\//, '')}
-                  </a>
-                )}
-                <Badge className={`${status.color} text-xs border-0`}>{status.label}</Badge>
-              </div>
-            </div>
-          </div>
+    <div style={{ minHeight: '100%', background: 'var(--paper)' }}>
+      {/* Editorial header */}
+      <header style={{ padding: '24px 22px 18px', borderBottom: '1px solid var(--paper-ink)', background: 'var(--card)' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-4)' }}>
+          Company
         </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
+          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 500, color: 'var(--ink)', marginTop: 4, letterSpacing: -0.3 }}>
+            {company.name}
+          </h1>
+          <span
+            style={{
+              padding: '3px 10px',
+              borderRadius: 999,
+              fontSize: 11,
+              fontWeight: 500,
+              background: status.color.includes('green') ? 'var(--accent-ij-wash)' : 'var(--paper-2)',
+              color: status.color.includes('green') ? 'var(--accent-ij-ink)' : 'var(--ink-3)',
+            }}
+          >
+            {status.label}
+          </span>
+        </div>
+        {company.website && (
+          <a
+            href={company.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              marginTop: 8,
+              fontSize: 12,
+              color: 'var(--accent-ij-ink)',
+              textDecoration: 'none',
+            }}
+          >
+            <ExternalLink size={12} />
+            {company.website.replace(/^https?:\/\//, '')}
+          </a>
+        )}
 
-        {/* Stats row */}
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
           {[
             { label: 'Applications', value: applicationCount },
             { label: 'Interviews', value: interviewCount },
-            { label: 'Offers', value: offerCount },
+            { label: 'Offers', value: offerCount, accent: offerCount > 0 },
             {
               label: 'Last applied',
-              value: lastApplied
-                ? formatDistanceToNow(new Date(lastApplied), { addSuffix: true })
-                : '—',
+              value: lastApplied ? formatDistanceToNow(new Date(lastApplied), { addSuffix: true }) : '—',
             },
-          ].map(({ label, value }) => (
-            <div key={label} className="rounded-lg bg-[#f8f9fa] border border-slate-100 p-4">
-              <p className="text-xs text-slate-500">{label}</p>
-              <p className={`font-bold text-slate-900 ${typeof value === 'number' ? 'text-2xl' : 'text-sm mt-0.5'}`}>
+          ].map(({ label, value, accent }) => (
+            <div
+              key={label}
+              style={{
+                background: accent ? 'var(--accent-ij-wash)' : 'var(--paper-2)',
+                border: `1px solid ${accent ? 'var(--accent-ij-wash)' : 'var(--border-soft)'}`,
+                borderRadius: 6,
+                padding: '10px 14px',
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: accent ? 'var(--accent-ij-ink)' : 'var(--ink-4)',
+                }}
+              >
+                {label}
+              </p>
+              <p
+                style={{
+                  fontFamily: typeof value === 'number' ? 'var(--font-serif)' : 'var(--font-sans)',
+                  fontSize: typeof value === 'number' ? 22 : 13,
+                  fontWeight: 500,
+                  color: accent ? 'var(--accent-ij-ink)' : 'var(--ink)',
+                  marginTop: 4,
+                }}
+              >
                 {value}
               </p>
             </div>
           ))}
         </div>
-      </div>
+      </header>
+
+      <div style={{ padding: '22px 22px 80px', maxWidth: 1200, margin: '0 auto' }}>
 
       {/* Tabs */}
       <Tabs defaultValue="roles">
@@ -430,6 +468,7 @@ export default async function CompanyDetailPage({
           </form>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   )
 }

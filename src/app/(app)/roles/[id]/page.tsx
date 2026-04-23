@@ -1,25 +1,25 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ApplicationTimeline } from '@/components/timeline/ApplicationTimeline'
 import { DocumentVault } from '@/components/documents/DocumentVault'
 import { AddEventForm } from '@/components/timeline/AddEventForm'
 import { MeetingsList } from '@/components/meetings/MeetingsList'
 import { deleteRole } from '@/lib/actions/roles'
-import { ExternalLink, Trash2, Building2 } from 'lucide-react'
+import { ExternalLink, Trash2 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { PageShell } from '@/components/ui/PageHeader'
 import type { RoleWithCompany } from '@/lib/supabase/types'
 
-const STAGE_COLORS: Record<string, string> = {
-  exploring: 'bg-slate-100 text-slate-600',
-  applied: 'bg-blue-50 text-blue-700',
-  screening: 'bg-yellow-50 text-yellow-700',
-  interviewing: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
-  offer: 'bg-purple-50 text-purple-700',
-  negotiating: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
-  resolved: 'bg-green-50 text-green-700',
+const STAGE_DOT: Record<string, string> = {
+  exploring: 'var(--s-exploring)',
+  applied: 'var(--s-applied)',
+  screening: 'var(--s-screening)',
+  interviewing: 'var(--s-interview)',
+  offer: 'var(--s-offer)',
+  negotiating: 'var(--s-negotiate)',
+  resolved: 'var(--s-hired)',
 }
 
 export default async function RoleDetailPage({
@@ -57,38 +57,50 @@ export default async function RoleDetailPage({
 
   const role = roleData as RoleWithCompany
 
+  const stageDot = STAGE_DOT[role.stage] ?? 'var(--ink-4)'
+
   return (
-    <div className="min-h-screen bg-[#f8f9fa] p-8">
-      {/* Header */}
-      <div className="mb-8 rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--accent-ij-wash)]">
-              <Building2 className="h-7 w-7 text-[var(--accent-ij-ink)]" />
+    <PageShell>
+      {/* Editorial page header */}
+      <header style={{ padding: '24px 22px 18px', borderBottom: '1px solid var(--paper-ink)', background: 'var(--card)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
+          <div style={{ flex: '1 1 480px', minWidth: 0 }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-4)' }}>
+              Role · {role.company.name}
             </div>
-            <div>
-              <h1 className="font-headline text-2xl font-extrabold text-slate-900">{role.role_title}</h1>
-              <p className="text-lg text-slate-500">{role.company.name}</p>
-              <div className="mt-2 flex items-center gap-3 flex-wrap">
-                <Badge className={`${STAGE_COLORS[role.stage] ?? 'bg-slate-100 text-slate-600'} text-xs font-medium border-0`}>
-                  {role.stage}
-                </Badge>
-                {role.resolution && (
-                  <Badge variant="outline" className="border-slate-200 text-slate-500 text-xs capitalize">
-                    {role.resolution}
-                  </Badge>
-                )}
-                {role.location && <span className="text-sm text-slate-500">{role.location}</span>}
-                {role.remote_type && (
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 capitalize">{role.remote_type}</span>
-                )}
-              </div>
+            <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, color: 'var(--ink)', marginTop: 4, letterSpacing: -0.3 }}>
+              {role.role_title}
+            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 10, fontSize: 12, color: 'var(--ink-4)', flexWrap: 'wrap' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase', color: stageDot }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: stageDot }} />
+                {role.stage}
+              </span>
+              {role.resolution && (
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  · {role.resolution}
+                </span>
+              )}
+              {role.location && <span>· {role.location}</span>}
+              {role.remote_type && (
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10 }}>· {role.remote_type}</span>
+              )}
+              {(role.salary_min || role.salary_max) && (
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-2)' }}>
+                  · ${role.salary_min ? (role.salary_min / 1000).toFixed(0) : '?'}k
+                  {role.salary_max ? `–${(role.salary_max / 1000).toFixed(0)}k` : '+'} {role.currency}
+                </span>
+              )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {role.job_url && (
               <a href={role.job_url} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  style={{ borderColor: 'var(--paper-ink)', background: 'var(--card)', color: 'var(--ink-3)' }}
+                >
                   <ExternalLink className="mr-2 h-4 w-4" /> Job listing
                 </Button>
               </a>
@@ -98,7 +110,7 @@ export default async function RoleDetailPage({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-red-400 hover:text-red-500 hover:bg-red-50"
+                  style={{ color: 'var(--ink-5)' }}
                   aria-label="Delete role"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -112,24 +124,11 @@ export default async function RoleDetailPage({
             />
           </div>
         </div>
+      </header>
 
-        {/* Salary */}
-        {(role.salary_min || role.salary_max) && (
-          <div className="mt-4 rounded-lg bg-slate-50 px-4 py-3">
-            <p className="text-xs text-slate-400 uppercase tracking-wide">Compensation</p>
-            <p className="text-xl font-bold text-slate-900">
-              ${role.salary_min ? (role.salary_min / 1000).toFixed(0) : '?'}k
-              {role.salary_max ? ` – $${(role.salary_max / 1000).toFixed(0)}k` : '+'}
-              {' '}
-              <span className="text-sm font-normal text-slate-400">{role.currency}</span>
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Tabs */}
-      <Tabs defaultValue="timeline">
-        <TabsList className="mb-6 bg-transparent border-b border-slate-200 rounded-none w-full justify-start gap-0 p-0 h-auto">
+      <div style={{ padding: '22px 22px 80px', maxWidth: 1200, margin: '0 auto' }}>
+        <Tabs defaultValue="timeline">
+          <TabsList className="mb-6 bg-transparent border-b rounded-none w-full justify-start gap-0 p-0 h-auto" style={{ borderColor: 'var(--paper-ink)' }}>
           <TabsTrigger
             value="timeline"
             className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
@@ -172,6 +171,7 @@ export default async function RoleDetailPage({
           <AddEventForm roleId={role.id} />
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </PageShell>
   )
 }

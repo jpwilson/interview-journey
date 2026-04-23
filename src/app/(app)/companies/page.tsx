@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Building2 } from 'lucide-react'
 import type { Company, Role } from '@/lib/supabase/types'
 import { CompaniesTable } from '@/components/companies/CompaniesTable'
+import { PageHeader, PageShell } from '@/components/ui/PageHeader'
 
 type CompanyWithRoles = Company & { roles: Role[] }
 
@@ -53,25 +54,39 @@ export default async function CompaniesPage() {
   const rows = ((data ?? []) as CompanyWithRoles[]).map(toRow)
 
   return (
-    <div className="min-h-full bg-[#f8f9fa] p-8">
-      <div className="mb-8 flex items-end justify-between">
-        <div>
-          <h1 className="font-headline text-2xl font-extrabold text-slate-900">Companies</h1>
-          <p className="mt-1 text-sm text-slate-500">{rows.length} companies tracked</p>
-        </div>
-      </div>
-
-      {rows.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white border border-slate-100 shadow-sm">
-            <Building2 className="h-8 w-8 text-slate-400" />
+    <PageShell>
+      <PageHeader
+        kicker="Companies"
+        title={`${rows.length} ${rows.length === 1 ? 'company' : 'companies'} tracked`}
+        subtitle="Every org you've engaged — active pursuits, alumni, and previously-applied. Companies are created automatically when you add a role."
+      />
+      <div style={{ padding: '22px 22px 80px', maxWidth: 1200, margin: '0 auto' }}>
+        {rows.length === 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 6,
+              border: '1px dashed var(--paper-ink)',
+              background: 'var(--card)',
+              padding: '64px 24px',
+              textAlign: 'center',
+            }}
+          >
+            <Building2 className="mb-3 h-10 w-10" style={{ color: 'var(--ink-5)' }} />
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 18, fontWeight: 500, color: 'var(--ink)' }}>
+              No companies yet
+            </p>
+            <p style={{ marginTop: 6, fontSize: 13, color: 'var(--ink-4)' }}>
+              Companies are created automatically when you add a role.
+            </p>
           </div>
-          <p className="mb-2 text-lg font-semibold text-slate-700">No companies yet</p>
-          <p className="text-sm text-slate-500">Companies are created automatically when you add a role.</p>
-        </div>
-      ) : (
-        <CompaniesTable rows={rows} />
-      )}
-    </div>
+        ) : (
+          <CompaniesTable rows={rows} />
+        )}
+      </div>
+    </PageShell>
   )
 }
