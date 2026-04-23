@@ -39,8 +39,6 @@ const STAGE_COLOR: Record<EffectiveStage, string> = {
   declined: 'var(--s-declined)',
 }
 
-const MS_30D = 30 * 24 * 3600 * 1000
-
 function silentDays(role: RoleWithCompany): number | null {
   const ref = role.last_contact_at ?? role.applied_at ?? role.created_at
   if (!ref) return null

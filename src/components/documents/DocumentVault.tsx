@@ -44,7 +44,7 @@ interface Props {
   roleId: string
 }
 
-export function DocumentVault({ documents, roleId }: Props) {
+export function DocumentVault({ documents }: Props) {
   const [docs, setDocs] = useState(documents)
   const supabase = createClient()
 
