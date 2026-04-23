@@ -533,6 +533,40 @@ export interface Database {
         }
         Relationships: []
       }
+      share_links: {
+        Row: {
+          id: string
+          user_id: string
+          slug: string
+          scope: 'full_timeline' | 'single_role'
+          role_id: string | null
+          display_name: string | null
+          anonymize_companies: boolean
+          show_compensation: boolean
+          view_count: number
+          created_at: string
+          expires_at: string | null
+          revoked_at: string | null
+        }
+        Insert: {
+          user_id: string
+          slug: string
+          scope: 'full_timeline' | 'single_role'
+          role_id?: string | null
+          display_name?: string | null
+          anonymize_companies?: boolean
+          show_compensation?: boolean
+          expires_at?: string | null
+        }
+        Update: {
+          display_name?: string | null
+          anonymize_companies?: boolean
+          show_compensation?: boolean
+          expires_at?: string | null
+          revoked_at?: string | null
+        }
+        Relationships: []
+      }
     }
   }
 }
@@ -549,6 +583,7 @@ export type Meeting = Database['public']['Tables']['meetings']['Row']
 export type Offer = Database['public']['Tables']['offers']['Row']
 export type Resume = Database['public']['Tables']['resumes']['Row']
 export type AnalyticsEvent = Database['public']['Tables']['analytics_events']['Row']
+export type ShareLink = Database['public']['Tables']['share_links']['Row']
 
 // Joined types used in UI
 export type RoleWithCompany = Role & { company: Company }
