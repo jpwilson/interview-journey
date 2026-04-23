@@ -2,13 +2,14 @@ import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { classifyDocument, docTypeToEventType, inferStageAdvance } from '@/lib/ai/classify'
 import type { ClassificationResult } from '@/lib/ai/classify'
 
-// Langfuse is optional — only init if real keys are present
-function maybeGetLangfuse() {
+// Langfuse is optional — only init if real keys are present.
+// Dynamic import keeps the dependency out of the hot path for users without tracing.
+async function maybeGetLangfuse() {
   const pk = process.env.LANGFUSE_PUBLIC_KEY
   const sk = process.env.LANGFUSE_SECRET_KEY
   if (!pk || !sk || pk.includes('placeholder')) return null
   try {
-    const { Langfuse } = require('langfuse')
+    const { Langfuse } = await import('langfuse')
     return new Langfuse({
       publicKey: pk,
       secretKey: sk,
@@ -53,7 +54,7 @@ async function processDocument(
   userId: string,
   service: ReturnType<typeof createServiceClient>
 ) {
-  const langfuse = maybeGetLangfuse()
+  const langfuse = await maybeGetLangfuse()
   const trace = langfuse?.trace({
     name: 'document-classification',
     userId,

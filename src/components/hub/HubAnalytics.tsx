@@ -47,6 +47,8 @@ export function HubAnalytics() {
       })
     }
     load()
+    // supabase client is a stable singleton; run once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!stats) return <p className="py-8 text-center text-sm text-slate-400">Loading stats…</p>

@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { stripe } from '@/lib/stripe/client'
-import { redirect } from 'next/navigation'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
