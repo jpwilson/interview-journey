@@ -22,36 +22,29 @@ const STAGE_COLORS: Record<string, string> = {
   resolved: 'bg-green-50 text-green-700',
 }
 
-export default async function RoleDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default async function RoleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
 
-  const [{ data: roleData }, { data: events }, { data: documents }, { data: meetings }] = await Promise.all([
-    supabase
-      .from('roles')
-      .select('*, company:companies(*)')
-      .eq('id', id)
-      .single(),
-    supabase
-      .from('role_events')
-      .select('*')
-      .eq('role_id', id)
-      .order('event_date', { ascending: false }),
-    supabase
-      .from('documents')
-      .select('*')
-      .eq('role_id', id)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('meetings')
-      .select('*')
-      .eq('role_id', id)
-      .order('scheduled_at', { ascending: true }),
-  ])
+  const [{ data: roleData }, { data: events }, { data: documents }, { data: meetings }] =
+    await Promise.all([
+      supabase.from('roles').select('*, company:companies(*)').eq('id', id).single(),
+      supabase
+        .from('role_events')
+        .select('*')
+        .eq('role_id', id)
+        .order('event_date', { ascending: false }),
+      supabase
+        .from('documents')
+        .select('*')
+        .eq('role_id', id)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('meetings')
+        .select('*')
+        .eq('role_id', id)
+        .order('scheduled_at', { ascending: true }),
+    ])
 
   if (!roleData) notFound()
 
@@ -67,20 +60,29 @@ export default async function RoleDetailPage({
               <Building2 className="h-7 w-7 text-[var(--accent-ij-ink)]" />
             </div>
             <div>
-              <h1 className="font-headline text-2xl font-extrabold text-slate-900">{role.role_title}</h1>
+              <h1 className="font-headline text-2xl font-extrabold text-slate-900">
+                {role.role_title}
+              </h1>
               <p className="text-lg text-slate-500">{role.company.name}</p>
-              <div className="mt-2 flex items-center gap-3 flex-wrap">
-                <Badge className={`${STAGE_COLORS[role.stage] ?? 'bg-slate-100 text-slate-600'} text-xs font-medium border-0`}>
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <Badge
+                  className={`${STAGE_COLORS[role.stage] ?? 'bg-slate-100 text-slate-600'} border-0 text-xs font-medium`}
+                >
                   {role.stage}
                 </Badge>
                 {role.resolution && (
-                  <Badge variant="outline" className="border-slate-200 text-slate-500 text-xs capitalize">
+                  <Badge
+                    variant="outline"
+                    className="border-slate-200 text-xs text-slate-500 capitalize"
+                  >
                     {role.resolution}
                   </Badge>
                 )}
                 {role.location && <span className="text-sm text-slate-500">{role.location}</span>}
                 {role.remote_type && (
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 capitalize">{role.remote_type}</span>
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 capitalize">
+                    {role.remote_type}
+                  </span>
                 )}
               </div>
             </div>
@@ -88,7 +90,11 @@ export default async function RoleDetailPage({
           <div className="flex items-center gap-2">
             {role.job_url && (
               <a href={role.job_url} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-slate-200 text-slate-600 hover:bg-slate-50"
+                >
                   <ExternalLink className="mr-2 h-4 w-4" /> Job listing
                 </Button>
               </a>
@@ -98,7 +104,7 @@ export default async function RoleDetailPage({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-red-400 hover:text-red-500 hover:bg-red-50"
+                  className="text-red-400 hover:bg-red-50 hover:text-red-500"
                   aria-label="Delete role"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -116,11 +122,10 @@ export default async function RoleDetailPage({
         {/* Salary */}
         {(role.salary_min || role.salary_max) && (
           <div className="mt-4 rounded-lg bg-slate-50 px-4 py-3">
-            <p className="text-xs text-slate-400 uppercase tracking-wide">Compensation</p>
+            <p className="text-xs tracking-wide text-slate-400 uppercase">Compensation</p>
             <p className="text-xl font-bold text-slate-900">
               ${role.salary_min ? (role.salary_min / 1000).toFixed(0) : '?'}k
-              {role.salary_max ? ` – $${(role.salary_max / 1000).toFixed(0)}k` : '+'}
-              {' '}
+              {role.salary_max ? ` – $${(role.salary_max / 1000).toFixed(0)}k` : '+'}{' '}
               <span className="text-sm font-normal text-slate-400">{role.currency}</span>
             </p>
           </div>
@@ -129,28 +134,28 @@ export default async function RoleDetailPage({
 
       {/* Tabs */}
       <Tabs defaultValue="timeline">
-        <TabsList className="mb-6 bg-transparent border-b border-slate-200 rounded-none w-full justify-start gap-0 p-0 h-auto">
+        <TabsList className="mb-6 h-auto w-full justify-start gap-0 rounded-none border-b border-slate-200 bg-transparent p-0">
           <TabsTrigger
             value="timeline"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+            className="rounded-none border-b-2 border-transparent px-4 pt-0 pb-3 font-medium text-slate-500 transition-colors hover:text-slate-900 data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--accent-ij-ink)]"
           >
             Timeline ({events?.length ?? 0})
           </TabsTrigger>
           <TabsTrigger
             value="meetings"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+            className="rounded-none border-b-2 border-transparent px-4 pt-0 pb-3 font-medium text-slate-500 transition-colors hover:text-slate-900 data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--accent-ij-ink)]"
           >
             Meetings ({meetings?.length ?? 0})
           </TabsTrigger>
           <TabsTrigger
             value="documents"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+            className="rounded-none border-b-2 border-transparent px-4 pt-0 pb-3 font-medium text-slate-500 transition-colors hover:text-slate-900 data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--accent-ij-ink)]"
           >
             Documents ({documents?.length ?? 0})
           </TabsTrigger>
           <TabsTrigger
             value="add-event"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+            className="rounded-none border-b-2 border-transparent px-4 pt-0 pb-3 font-medium text-slate-500 transition-colors hover:text-slate-900 data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--accent-ij-ink)]"
           >
             Add event
           </TabsTrigger>

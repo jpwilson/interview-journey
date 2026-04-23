@@ -3,7 +3,13 @@
 import { useState, useTransition } from 'react'
 import { Share2, Copy, Check, ExternalLink } from 'lucide-react'
 import {
-  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -77,8 +83,8 @@ export function ShareTimelineButton() {
         <DialogHeader>
           <DialogTitle>Share your career timeline</DialogTitle>
           <DialogDescription>
-            A public, read-only link. No sign-in required for viewers. You can revoke it anytime from
-            this dialog.
+            A public, read-only link. No sign-in required for viewers. You can revoke it anytime
+            from this dialog.
           </DialogDescription>
         </DialogHeader>
 
@@ -89,7 +95,11 @@ export function ShareTimelineButton() {
                 {typeof window !== 'undefined' ? window.location.origin : ''}/s/{slug}
               </code>
               <Button size="sm" variant="ghost" onClick={handleCopy} className="shrink-0">
-                {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                {copied ? (
+                  <Check className="h-4 w-4 text-green-600" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
               </Button>
             </div>
             <a
@@ -115,7 +125,7 @@ export function ShareTimelineButton() {
               <p className="text-xs text-slate-500">Shown at the top of the public page.</p>
             </div>
 
-            <label className="flex items-start gap-3 rounded-lg border border-slate-200 p-3 cursor-pointer hover:bg-slate-50">
+            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 p-3 hover:bg-slate-50">
               <input
                 type="checkbox"
                 checked={anonymize}
@@ -125,12 +135,13 @@ export function ShareTimelineButton() {
               <div>
                 <p className="text-sm font-medium text-slate-900">Anonymize company names</p>
                 <p className="text-xs text-slate-500">
-                  Show companies as <code className="font-mono">S••••e</code> instead of the real name.
+                  Show companies as <code className="font-mono">S••••e</code> instead of the real
+                  name.
                 </p>
               </div>
             </label>
 
-            <label className="flex items-start gap-3 rounded-lg border border-slate-200 p-3 cursor-pointer hover:bg-slate-50">
+            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 p-3 hover:bg-slate-50">
               <input
                 type="checkbox"
                 checked={showComp}
@@ -149,7 +160,9 @@ export function ShareTimelineButton() {
 
         <DialogFooter>
           {slug ? (
-            <Button variant="ghost" onClick={() => handleOpenChange(false)}>Done</Button>
+            <Button variant="ghost" onClick={() => handleOpenChange(false)}>
+              Done
+            </Button>
           ) : (
             <>
               <Button variant="ghost" onClick={() => handleOpenChange(false)} disabled={pending}>

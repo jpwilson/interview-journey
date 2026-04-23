@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
 interface FunnelCounts {
   applied: number
@@ -57,12 +49,13 @@ export function AnalyticsFunnel({ counts }: AnalyticsFunnelProps) {
 
       {/* Horizontal bar chart */}
       <ResponsiveContainer width="100%" height={220}>
-        <BarChart
-          layout="vertical"
-          data={data}
-          margin={{ top: 0, right: 24, bottom: 0, left: 80 }}
-        >
-          <XAxis type="number" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
+        <BarChart layout="vertical" data={data} margin={{ top: 0, right: 24, bottom: 0, left: 80 }}>
+          <XAxis
+            type="number"
+            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+          />
           <YAxis
             type="category"
             dataKey="stage"
@@ -73,7 +66,12 @@ export function AnalyticsFunnel({ counts }: AnalyticsFunnelProps) {
           />
           <Tooltip
             cursor={{ fill: 'rgba(0,101,143,0.05)' }}
-            contentStyle={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+            contentStyle={{
+              background: '#fff',
+              border: '1px solid #e2e8f0',
+              borderRadius: 8,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            }}
             labelStyle={{ color: '#0f172a', fontWeight: 600 }}
             itemStyle={{ color: '#64748b' }}
           />

@@ -16,7 +16,8 @@ export function HubChatbot() {
     {
       id: '0',
       role: 'assistant',
-      content: "Hi! I'm your career coach. Ask me anything about job searching, interviews, salary negotiation, or your career strategy.",
+      content:
+        "Hi! I'm your career coach. Ask me anything about job searching, interviews, salary negotiation, or your career strategy.",
     },
   ])
   const [input, setInput] = useState('')
@@ -70,9 +71,7 @@ export function HubChatbot() {
             try {
               const chunk = JSON.parse(line.slice(2))
               setMessages((prev) =>
-                prev.map((m) =>
-                  m.id === assistantId ? { ...m, content: m.content + chunk } : m
-                )
+                prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + chunk } : m))
               )
             } catch {
               // skip malformed chunks
@@ -97,7 +96,7 @@ export function HubChatbot() {
   return (
     <div className="flex h-full flex-col">
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-3 pb-2">
+      <div className="flex-1 space-y-3 overflow-y-auto pb-2">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -110,9 +109,7 @@ export function HubChatbot() {
             )}
             <div
               className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
-                msg.role === 'user'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-700 text-slate-200'
+                msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-200'
               }`}
             >
               {msg.content || (isLoading && msg.role === 'assistant' ? '…' : '')}
@@ -123,15 +120,20 @@ export function HubChatbot() {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="flex gap-2 pt-2 border-t border-slate-700">
+      <form onSubmit={handleSubmit} className="flex gap-2 border-t border-slate-700 pt-2">
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask your career coach…"
           disabled={isLoading}
-          className="border-slate-600 bg-slate-700 text-white text-sm placeholder:text-slate-500"
+          className="border-slate-600 bg-slate-700 text-sm text-white placeholder:text-slate-500"
         />
-        <Button type="submit" size="sm" disabled={isLoading || !input.trim()} className="bg-blue-600 hover:bg-blue-500">
+        <Button
+          type="submit"
+          size="sm"
+          disabled={isLoading || !input.trim()}
+          className="bg-blue-600 hover:bg-blue-500"
+        >
           <Send className="h-4 w-4" />
         </Button>
       </form>

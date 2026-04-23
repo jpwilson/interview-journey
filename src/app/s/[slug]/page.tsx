@@ -4,8 +4,18 @@ import Link from 'next/link'
 import { format, parseISO, differenceInDays } from 'date-fns'
 import type { Metadata } from 'next'
 import {
-  Briefcase, Calendar, CheckCircle, XCircle, Star, FileText, AlertCircle,
-  MessageSquare, TrendingUp, ArrowRight, Clock, Building2,
+  Briefcase,
+  Calendar,
+  CheckCircle,
+  XCircle,
+  Star,
+  FileText,
+  AlertCircle,
+  MessageSquare,
+  TrendingUp,
+  ArrowRight,
+  Clock,
+  Building2,
 } from 'lucide-react'
 
 const EVENT_ICONS: Record<string, typeof CheckCircle> = {
@@ -71,7 +81,9 @@ type ShareLinkRow = {
   revoked_at: string | null
 }
 
-async function getShareData(slug: string): Promise<{ link: ShareLinkRow; roles: RoleRow[] } | null> {
+async function getShareData(
+  slug: string
+): Promise<{ link: ShareLinkRow; roles: RoleRow[] } | null> {
   const service = createServiceClient()
 
   const { data: linkData } = await service
@@ -94,7 +106,7 @@ async function getShareData(slug: string): Promise<{ link: ShareLinkRow; roles: 
   let rolesQuery = service
     .from('roles')
     .select(
-      'id, role_title, stage, salary_min, salary_max, currency, location, remote_type, applied_at, deleted_at, company:companies(name), role_events(id, event_type, event_date, title, description, metadata, source)',
+      'id, role_title, stage, salary_min, salary_max, currency, location, remote_type, applied_at, deleted_at, company:companies(name), role_events(id, event_type, event_date, title, description, metadata, source)'
     )
     .eq('user_id', link.user_id)
     .is('deleted_at', null)
@@ -138,11 +150,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function SharePage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export default async function SharePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const data = await getShareData(slug)
 
@@ -159,8 +167,9 @@ export default async function SharePage({
 
   const stats = {
     total: roles.length,
-    active: roles.filter((r) => ['applied', 'screening', 'interviewing', 'offer', 'negotiating'].includes(r.stage))
-      .length,
+    active: roles.filter((r) =>
+      ['applied', 'screening', 'interviewing', 'offer', 'negotiating'].includes(r.stage)
+    ).length,
     offers: roles.filter((r) => r.stage === 'offer' || r.stage === 'negotiating').length,
     events: allEvents.length,
   }
@@ -184,19 +193,30 @@ export default async function SharePage({
       {/* Top nav */}
       <nav
         className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 backdrop-blur-sm"
-        style={{ borderBottom: '1px solid var(--paper-ink)', background: 'color-mix(in srgb, var(--paper) 82%, transparent)' }}
+        style={{
+          borderBottom: '1px solid var(--paper-ink)',
+          background: 'color-mix(in srgb, var(--paper) 82%, transparent)',
+        }}
       >
         <Link href="/" className="flex items-center gap-2">
           <div
             className="flex h-8 w-8 items-center justify-center rounded-lg"
-            style={{ background: 'linear-gradient(135deg, var(--accent-ij), var(--accent-ij-ink))' }}
+            style={{
+              background: 'linear-gradient(135deg, var(--accent-ij), var(--accent-ij-ink))',
+            }}
           >
             <Briefcase className="h-4 w-4 text-white" />
           </div>
           <span
-            style={{ fontFamily: 'var(--font-serif)', fontSize: 15, fontWeight: 500, letterSpacing: -0.3 }}
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 15,
+              fontWeight: 500,
+              letterSpacing: -0.3,
+            }}
           >
-            Interview <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em>
+            Interview{' '}
+            <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em>
           </span>
         </Link>
         <Link
@@ -348,7 +368,9 @@ export default async function SharePage({
                 <span style={{ fontWeight: 500 }}>
                   {anonymize ? anonymizeCompany(role.company.name) : role.company.name}
                 </span>
-                <span style={{ color: 'var(--ink-4)', fontFamily: 'var(--font-mono)', fontSize: 10 }}>
+                <span
+                  style={{ color: 'var(--ink-4)', fontFamily: 'var(--font-mono)', fontSize: 10 }}
+                >
                   {role.stage}
                 </span>
               </div>
@@ -372,17 +394,21 @@ export default async function SharePage({
           </h2>
           <div className="relative pl-10">
             <div
-              className="absolute left-[15px] top-2 bottom-2 w-px"
+              className="absolute top-2 bottom-2 left-[15px] w-px"
               style={{ background: 'var(--paper-ink)' }}
             />
             {allEvents.map(({ event, role }) => {
               const Icon = EVENT_ICONS[event.event_type] ?? Clock
-              const companyName = anonymize ? anonymizeCompany(role.company.name) : role.company.name
-              const metadata = event.metadata as { offer_details?: { base_salary?: number } } | undefined
+              const companyName = anonymize
+                ? anonymizeCompany(role.company.name)
+                : role.company.name
+              const metadata = event.metadata as
+                | { offer_details?: { base_salary?: number } }
+                | undefined
               return (
                 <div key={event.id} className="relative mb-3">
                   <div
-                    className="absolute -left-[30px] top-4 flex h-5 w-5 items-center justify-center rounded-full"
+                    className="absolute top-4 -left-[30px] flex h-5 w-5 items-center justify-center rounded-full"
                     style={{
                       background: stageDot(role.stage),
                       boxShadow: '0 0 0 4px var(--paper)',
@@ -401,13 +427,18 @@ export default async function SharePage({
                             className="flex h-6 w-6 items-center justify-center rounded-md"
                             style={{ background: 'var(--accent-ij-wash)' }}
                           >
-                            <Building2 className="h-3 w-3" style={{ color: 'var(--accent-ij-ink)' }} />
+                            <Building2
+                              className="h-3 w-3"
+                              style={{ color: 'var(--accent-ij-ink)' }}
+                            />
                           </div>
                           <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--ink-2)' }}>
                             {companyName}
                           </span>
                           <span style={{ color: 'var(--paper-ink)' }}>·</span>
-                          <span style={{ fontSize: 12, color: 'var(--ink-4)' }}>{role.role_title}</span>
+                          <span style={{ fontSize: 12, color: 'var(--ink-4)' }}>
+                            {role.role_title}
+                          </span>
                         </div>
                         <p style={{ fontWeight: 500, color: 'var(--ink)' }}>{event.title}</p>
                         {event.description && (
@@ -462,7 +493,8 @@ export default async function SharePage({
             Keep receipts for your whole career
           </h3>
           <p className="mx-auto mb-6 max-w-md text-sm" style={{ color: 'var(--ink-3)' }}>
-            Drop any document — offer letters, rejections, NDAs — and AI auto-organizes your entire job search.
+            Drop any document — offer letters, rejections, NDAs — and AI auto-organizes your entire
+            job search.
           </p>
           <Link
             href="/signup"
@@ -496,13 +528,21 @@ export default async function SharePage({
 
 function stageDot(stage: string): string {
   switch (stage) {
-    case 'exploring': return 'var(--s-exploring)'
-    case 'applied': return 'var(--s-applied)'
-    case 'screening': return 'var(--s-screening)'
-    case 'interviewing': return 'var(--s-interview)'
-    case 'offer': return 'var(--s-offer)'
-    case 'negotiating': return 'var(--s-negotiate)'
-    case 'resolved': return 'var(--s-hired)'
-    default: return 'var(--ink-5)'
+    case 'exploring':
+      return 'var(--s-exploring)'
+    case 'applied':
+      return 'var(--s-applied)'
+    case 'screening':
+      return 'var(--s-screening)'
+    case 'interviewing':
+      return 'var(--s-interview)'
+    case 'offer':
+      return 'var(--s-offer)'
+    case 'negotiating':
+      return 'var(--s-negotiate)'
+    case 'resolved':
+      return 'var(--s-hired)'
+    default:
+      return 'var(--ink-5)'
   }
 }

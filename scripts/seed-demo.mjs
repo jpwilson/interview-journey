@@ -28,7 +28,7 @@ const env = Object.fromEntries(
     .map((l) => {
       const i = l.indexOf('=')
       return [l.slice(0, i).trim(), l.slice(i + 1).trim()]
-    }),
+    })
 )
 const SUPABASE_URL = env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_KEY = env.SUPABASE_SERVICE_ROLE_KEY
@@ -144,9 +144,27 @@ const COMPANIES = [
 // Semantically imperfect (they weren't tracked through this app at the time)
 // but renders correctly in the Career Timeline component.
 const PAST_EMPLOYMENTS = [
-  { companySlug: 'acme',    role_title: 'Junior Software Engineer', start: '2019-06-03', end: '2021-09-10', source: 'referral' },
-  { companySlug: 'globex',  role_title: 'Software Engineer II',     start: '2021-09-20', end: '2023-05-12', source: 'cold application' },
-  { companySlug: 'initech', role_title: 'Senior Engineer',          start: '2023-05-22', end: '2024-10-18', source: 'recruiter' },
+  {
+    companySlug: 'acme',
+    role_title: 'Junior Software Engineer',
+    start: '2019-06-03',
+    end: '2021-09-10',
+    source: 'referral',
+  },
+  {
+    companySlug: 'globex',
+    role_title: 'Software Engineer II',
+    start: '2021-09-20',
+    end: '2023-05-12',
+    source: 'cold application',
+  },
+  {
+    companySlug: 'initech',
+    role_title: 'Senior Engineer',
+    start: '2023-05-22',
+    end: '2024-10-18',
+    source: 'recruiter',
+  },
 ]
 
 const ROLE_SPECS = [
@@ -169,7 +187,15 @@ const ROLE_SPECS = [
       { days_ago: 0, event_type: 'interview_scheduled', title: 'Onsite loop — 4 rounds' },
     ],
     meetings: [
-      { days_ago: -1, type: 'onsite_loop', round_number: 4, duration_minutes: 240, format: 'onsite', location: 'SF HQ', outcome: 'pending' },
+      {
+        days_ago: -1,
+        type: 'onsite_loop',
+        round_number: 4,
+        duration_minutes: 240,
+        format: 'onsite',
+        location: 'SF HQ',
+        outcome: 'pending',
+      },
     ],
   },
   {
@@ -220,7 +246,15 @@ const ROLE_SPECS = [
       { days_ago: 1, event_type: 'interview_completed', title: 'Technical interview' },
     ],
     meetings: [
-      { days_ago: 1, type: 'technical', round_number: 2, duration_minutes: 60, format: 'video', platform: 'Zoom', outcome: 'passed' },
+      {
+        days_ago: 1,
+        type: 'technical',
+        round_number: 2,
+        duration_minutes: 60,
+        format: 'video',
+        platform: 'Zoom',
+        outcome: 'passed',
+      },
     ],
   },
   {
@@ -307,11 +341,19 @@ async function seedData(userId) {
   await clearDemoData(userId)
 
   // companies
-  const companyRows = COMPANIES.map((c) => ({ user_id: userId, name: c.name, domain: c.domain, industry: c.industry }))
-  const { data: createdCompanies, error: cErr } = await sb.from('companies').insert(companyRows).select()
+  const companyRows = COMPANIES.map((c) => ({
+    user_id: userId,
+    name: c.name,
+    domain: c.domain,
+    industry: c.industry,
+  }))
+  const { data: createdCompanies, error: cErr } = await sb
+    .from('companies')
+    .insert(companyRows)
+    .select()
   if (cErr) throw cErr
   const companyIdBySlug = Object.fromEntries(
-    COMPANIES.map((c) => [c.slug, createdCompanies.find((r) => r.name === c.name).id]),
+    COMPANIES.map((c) => [c.slug, createdCompanies.find((r) => r.name === c.name).id])
   )
 
   // roles

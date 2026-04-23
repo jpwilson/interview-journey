@@ -46,7 +46,10 @@ export function CareerTimeline({ roles, height = 120 }: { roles: CareerRole[]; h
           fontSize: 12,
         }}
       >
-        No past or current roles yet. <a href="/settings" style={{ color: 'var(--accent-ij-ink)' }}>Add your current role →</a>
+        No past or current roles yet.{' '}
+        <a href="/settings" style={{ color: 'var(--accent-ij-ink)' }}>
+          Add your current role →
+        </a>
       </div>
     )
   }
@@ -76,7 +79,14 @@ export function CareerTimeline({ roles, height = 120 }: { roles: CareerRole[]; h
         </g>
       ))}
 
-      <line x1={xFor(now)} y1={20} x2={xFor(now)} y2={height - 30} stroke="var(--accent-ij)" strokeWidth="1" />
+      <line
+        x1={xFor(now)}
+        y1={20}
+        x2={xFor(now)}
+        y2={height - 30}
+        stroke="var(--accent-ij)"
+        strokeWidth="1"
+      />
       <text
         x={xFor(now)}
         y={height - 18}

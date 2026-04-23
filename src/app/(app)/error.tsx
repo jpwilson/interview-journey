@@ -21,10 +21,7 @@ export default function AppError({
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
           <AlertTriangle className="h-6 w-6" />
         </div>
-        <h2
-          className="text-xl"
-          style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}
-        >
+        <h2 className="text-xl" style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink)' }}>
           Something went wrong
         </h2>
         <p className="mt-2 text-sm text-slate-500">
@@ -34,7 +31,9 @@ export default function AppError({
           <p className="mt-3 font-mono text-[11px] text-slate-400">ref: {error.digest}</p>
         )}
         <div className="mt-6 flex items-center justify-center gap-3">
-          <Button onClick={reset} variant="default">Try again</Button>
+          <Button onClick={reset} variant="default">
+            Try again
+          </Button>
           <Button variant="ghost" onClick={() => (window.location.href = '/dashboard')}>
             Go to dashboard
           </Button>

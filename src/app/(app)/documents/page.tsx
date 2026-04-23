@@ -18,11 +18,13 @@ export default async function DocumentsPage() {
     .order('created_at', { ascending: false })
 
   const documents = (data ?? []) as DocumentWithRole[]
-  const needsReview = documents.filter((d) => d.needs_review || d.classification_status === 'failed')
+  const needsReview = documents.filter(
+    (d) => d.needs_review || d.classification_status === 'failed'
+  )
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] p-8">
-      <h1 className="mb-8 font-headline text-2xl font-extrabold text-slate-900">Documents</h1>
+      <h1 className="font-headline mb-8 text-2xl font-extrabold text-slate-900">Documents</h1>
 
       {needsReview.length > 0 && (
         <div className="mb-8">
@@ -43,7 +45,7 @@ export default async function DocumentsPage() {
                       )}
                     </div>
                   </div>
-                  <Badge variant="outline" className="border-amber-300 text-amber-700 bg-amber-50">
+                  <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-700">
                     {doc.classification_status === 'failed' ? 'Failed' : 'Review needed'}
                   </Badge>
                 </CardContent>
@@ -64,7 +66,10 @@ export default async function DocumentsPage() {
           </div>
         ) : (
           documents.map((doc) => (
-            <Card key={doc.id} className="bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+            <Card
+              key={doc.id}
+              className="rounded-xl border border-slate-100 bg-white shadow-sm transition-shadow hover:shadow-md"
+            >
               <CardContent className="flex items-center justify-between py-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50">
@@ -75,7 +80,7 @@ export default async function DocumentsPage() {
                     {doc.role ? (
                       <Link
                         href={`/roles/${doc.role_id}`}
-                        className="text-xs text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] font-medium"
+                        className="text-xs font-medium text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)]"
                       >
                         {doc.role.role_title} @ {doc.role.company.name}
                       </Link>

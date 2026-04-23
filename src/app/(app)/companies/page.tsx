@@ -63,11 +63,13 @@ export default async function CompaniesPage() {
 
       {rows.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white border border-slate-100 shadow-sm">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm">
             <Building2 className="h-8 w-8 text-slate-400" />
           </div>
           <p className="mb-2 text-lg font-semibold text-slate-700">No companies yet</p>
-          <p className="text-sm text-slate-500">Companies are created automatically when you add a role.</p>
+          <p className="text-sm text-slate-500">
+            Companies are created automatically when you add a role.
+          </p>
         </div>
       ) : (
         <CompaniesTable rows={rows} />

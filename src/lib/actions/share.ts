@@ -30,7 +30,9 @@ const createSchema = z.object({
 
 export async function createShareLink(formData: FormData): Promise<{ slug: string }> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const parsed = createSchema.safeParse({
@@ -92,7 +94,9 @@ export async function createShareLink(formData: FormData): Promise<{ slug: strin
 
 export async function revokeShareLink(slug: string): Promise<void> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   const { error } = await supabase

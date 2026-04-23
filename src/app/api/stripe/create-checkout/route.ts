@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { priceId } = await request.json()
@@ -29,9 +31,7 @@ export async function POST(request: Request) {
     })
     customerId = customer.id
 
-    await service
-      .from('subscriptions')
-      .upsert({ user_id: user.id, stripe_customer_id: customerId })
+    await service.from('subscriptions').upsert({ user_id: user.id, stripe_customer_id: customerId })
   }
 
   const session = await stripe.checkout.sessions.create({

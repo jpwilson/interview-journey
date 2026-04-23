@@ -8,15 +8,33 @@ import type { RoleStage } from '@/lib/supabase/types'
 import { checkLimits } from '@/lib/limits'
 
 const ROLE_STAGES = [
-  'exploring', 'applied', 'screening', 'interviewing', 'offer', 'negotiating', 'resolved',
+  'exploring',
+  'applied',
+  'screening',
+  'interviewing',
+  'offer',
+  'negotiating',
+  'resolved',
 ] as const
 
 const EVENT_TYPES = [
-  'applied', 'screening_scheduled', 'screening_completed',
-  'interview_scheduled', 'interview_completed', 'technical_assessment',
-  'offer_received', 'offer_accepted', 'offer_declined', 'offer_rescinded',
-  'rejected', 'withdrawn', 'reference_check', 'nda_signed',
-  'document_added', 'note_added', 'stage_changed',
+  'applied',
+  'screening_scheduled',
+  'screening_completed',
+  'interview_scheduled',
+  'interview_completed',
+  'technical_assessment',
+  'offer_received',
+  'offer_accepted',
+  'offer_declined',
+  'offer_rescinded',
+  'rejected',
+  'withdrawn',
+  'reference_check',
+  'nda_signed',
+  'document_added',
+  'note_added',
+  'stage_changed',
 ] as const
 
 const addRoleEventSchema = z.object({
@@ -27,17 +45,22 @@ const addRoleEventSchema = z.object({
   event_date: z.string().datetime().optional().or(z.literal('')).nullable(),
 })
 
-const kanbanUpdateSchema = z.array(
-  z.object({
-    id: z.string().uuid(),
-    kanban_order: z.number().int().min(0).max(1_000_000),
-    stage: z.enum(ROLE_STAGES),
-  }),
-).min(1).max(200)
+const kanbanUpdateSchema = z
+  .array(
+    z.object({
+      id: z.string().uuid(),
+      kanban_order: z.number().int().min(0).max(1_000_000),
+      stage: z.enum(ROLE_STAGES),
+    })
+  )
+  .min(1)
+  .max(200)
 
 export async function createRole(formData: FormData) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   await checkLimits(user.id, 'roles')
@@ -102,7 +125,9 @@ export async function createRole(formData: FormData) {
 
 export async function updateRoleStage(roleId: string, stage: RoleStage) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   const { data: role, error } = await supabase
@@ -134,12 +159,16 @@ export async function updateKanbanOrder(
   updates: { id: string; kanban_order: number; stage: RoleStage }[]
 ) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   const parsed = kanbanUpdateSchema.safeParse(updates)
   if (!parsed.success) {
-    throw new Error(`Invalid kanban update: ${parsed.error.issues[0]?.message ?? 'validation failed'}`)
+    throw new Error(
+      `Invalid kanban update: ${parsed.error.issues[0]?.message ?? 'validation failed'}`
+    )
   }
 
   // Pre-verify every role id belongs to this user so we don't silently no-op on forged ids.
@@ -158,12 +187,8 @@ export async function updateKanbanOrder(
 
   const results = await Promise.all(
     parsed.data.map(({ id, kanban_order, stage }) =>
-      supabase
-        .from('roles')
-        .update({ kanban_order, stage })
-        .eq('id', id)
-        .eq('user_id', user.id),
-    ),
+      supabase.from('roles').update({ kanban_order, stage }).eq('id', id).eq('user_id', user.id)
+    )
   )
 
   const firstErr = results.find((r) => r.error)?.error
@@ -174,7 +199,9 @@ export async function updateKanbanOrder(
 
 export async function addRoleEvent(formData: FormData) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const rawDate = (formData.get('event_date') as string | null) ?? null
@@ -216,14 +243,12 @@ export async function addRoleEvent(formData: FormData) {
 
 export async function deleteRole(roleId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  await supabase
-    .from('roles')
-    .delete()
-    .eq('id', roleId)
-    .eq('user_id', user.id)
+  await supabase.from('roles').delete().eq('id', roleId).eq('user_id', user.id)
 
   revalidatePath('/roles')
   revalidatePath('/pipeline')

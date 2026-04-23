@@ -4,7 +4,13 @@ import { addRoleEvent } from '@/lib/actions/roles'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useState } from 'react'
 
@@ -28,7 +34,10 @@ export function AddEventForm({ roleId }: { roleId: string }) {
   const [eventType, setEventType] = useState('')
 
   return (
-    <form action={addRoleEvent} className="space-y-4 rounded-lg border border-slate-700 bg-slate-800 p-6">
+    <form
+      action={addRoleEvent}
+      className="space-y-4 rounded-lg border border-slate-700 bg-slate-800 p-6"
+    >
       <input type="hidden" name="role_id" value={roleId} />
       <input type="hidden" name="event_type" value={eventType} />
 
@@ -49,22 +58,42 @@ export function AddEventForm({ roleId }: { roleId: string }) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="title" className="text-slate-300">Title *</Label>
-        <Input id="title" name="title" required placeholder="e.g. Phone screen with Sarah"
-          className="border-slate-600 bg-slate-700 text-white" />
+        <Label htmlFor="title" className="text-slate-300">
+          Title *
+        </Label>
+        <Input
+          id="title"
+          name="title"
+          required
+          placeholder="e.g. Phone screen with Sarah"
+          className="border-slate-600 bg-slate-700 text-white"
+        />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description" className="text-slate-300">Notes</Label>
-        <Textarea id="description" name="description" placeholder="Any details..."
-          className="border-slate-600 bg-slate-700 text-white" rows={3} />
+        <Label htmlFor="description" className="text-slate-300">
+          Notes
+        </Label>
+        <Textarea
+          id="description"
+          name="description"
+          placeholder="Any details..."
+          className="border-slate-600 bg-slate-700 text-white"
+          rows={3}
+        />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="event_date" className="text-slate-300">Date</Label>
-        <Input id="event_date" name="event_date" type="date"
+        <Label htmlFor="event_date" className="text-slate-300">
+          Date
+        </Label>
+        <Input
+          id="event_date"
+          name="event_date"
+          type="date"
           defaultValue={new Date().toISOString().slice(0, 10)}
-          className="border-slate-600 bg-slate-700 text-white" />
+          className="border-slate-600 bg-slate-700 text-white"
+        />
       </div>
 
       <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500" disabled={!eventType}>

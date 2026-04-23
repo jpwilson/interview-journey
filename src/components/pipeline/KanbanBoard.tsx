@@ -36,15 +36,11 @@ export function KanbanBoard({ initialRoles }: Props) {
   const [roles, setRoles] = useState(initialRoles)
   const [activeRole, setActiveRole] = useState<RoleWithCompany | null>(null)
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
-  )
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   const rolesByStage = useCallback(
     (stage: RoleStage) =>
-      roles
-        .filter((r) => r.stage === stage)
-        .sort((a, b) => a.kanban_order - b.kanban_order),
+      roles.filter((r) => r.stage === stage).sort((a, b) => a.kanban_order - b.kanban_order),
     [roles]
   )
 
@@ -68,9 +64,7 @@ export function KanbanBoard({ initialRoles }: Props) {
 
     if (!newStage || newStage === activeRole.stage) return
 
-    setRoles((prev) =>
-      prev.map((r) => (r.id === activeId ? { ...r, stage: newStage } : r))
-    )
+    setRoles((prev) => prev.map((r) => (r.id === activeId ? { ...r, stage: newStage } : r)))
   }
 
   async function handleDragEnd({ active, over }: DragEndEvent) {
@@ -107,7 +101,7 @@ export function KanbanBoard({ initialRoles }: Props) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex h-full gap-4 overflow-x-auto snap-x snap-mandatory pb-4 sm:snap-none [scrollbar-width:thin]">
+      <div className="flex h-full snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [scrollbar-width:thin] sm:snap-none">
         {STAGES.map((stage) => {
           const stageRoles = rolesByStage(stage.id)
           return (
@@ -117,11 +111,7 @@ export function KanbanBoard({ initialRoles }: Props) {
               items={stageRoles.map((r) => r.id)}
               strategy={verticalListSortingStrategy}
             >
-              <KanbanColumn
-                stage={stage}
-                applications={stageRoles}
-                droppableId={stage.id}
-              />
+              <KanbanColumn stage={stage} applications={stageRoles} droppableId={stage.id} />
             </SortableContext>
           )
         })}

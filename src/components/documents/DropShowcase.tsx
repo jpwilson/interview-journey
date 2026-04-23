@@ -2,7 +2,18 @@
 
 import { useState, useRef } from 'react'
 import Link from 'next/link'
-import { Upload, FileText, Mail, Image as ImageIcon, Link2, Sparkles, CheckCircle2, XCircle, AlertCircle, Clipboard } from 'lucide-react'
+import {
+  Upload,
+  FileText,
+  Mail,
+  Image as ImageIcon,
+  Link2,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  Clipboard,
+} from 'lucide-react'
 
 type ExtractionKind = 'advance' | 'reject' | 'offer' | 'nda' | 'outbound'
 
@@ -48,10 +59,10 @@ const EXAMPLES: WorkedExample[] = [
       from: 'Priya Desai · priya@vercel.com',
       subject: 'Next steps — HM call with Guillermo',
       body: [
-        'Hi Maya — great news, the team loved you. We\'d like to set up the hiring-manager',
+        "Hi Maya — great news, the team loved you. We'd like to set up the hiring-manager",
         'call with Guillermo Rauch, 45 minutes, systems-design focused.',
         'Can you send over 2 weeks of availability, PT or ET? No prep needed — just come ready',
-        'to talk about how you\'ve built things at scale.',
+        "to talk about how you've built things at scale.",
       ],
     },
     extracted: {
@@ -67,10 +78,7 @@ const EXAMPLES: WorkedExample[] = [
       header: '✓ New to-do created',
       title: 'HM call with Guillermo Rauch',
       body: 'Added to Vercel · Sr Frontend Engineer. Due: send availability by Wednesday. Email is attached.',
-      ctas: [
-        { label: 'Draft reply', primary: true },
-        { label: 'Open role' },
-      ],
+      ctas: [{ label: 'Draft reply', primary: true }, { label: 'Open role' }],
     },
   },
   {
@@ -85,7 +93,7 @@ const EXAMPLES: WorkedExample[] = [
       body: [
         'Hi Maya,',
         'Thank you for your interest in the Frontend Engineer role at Figma. After careful',
-        'review, we\'ve decided to move forward with other candidates.',
+        "review, we've decided to move forward with other candidates.",
         'We appreciate the time you took to apply and wish you the best in your search.',
       ],
     },
@@ -103,10 +111,7 @@ const EXAMPLES: WorkedExample[] = [
       title: 'Figma · Frontend Engineer',
       body: 'Auto-closed. Email attached to the role for history. Shows up in the Pipeline table under "Closed."',
       strikethrough: true,
-      ctas: [
-        { label: 'Undo', primary: true },
-        { label: 'View in archive' },
-      ],
+      ctas: [{ label: 'Undo', primary: true }, { label: 'View in archive' }],
     },
   },
   {
@@ -120,7 +125,7 @@ const EXAMPLES: WorkedExample[] = [
       subject: 'Offer of Employment — Senior Software Engineer',
       body: [
         'Dear Maya,',
-        'We\'re delighted to offer you the position of Senior Software Engineer at Stripe.',
+        "We're delighted to offer you the position of Senior Software Engineer at Stripe.",
         'Base salary: $245,000 · Signing bonus: $40,000 · Equity: 1,200 RSU over 4 years.',
         'This offer is valid through April 26, 2026.',
       ],
@@ -138,10 +143,7 @@ const EXAMPLES: WorkedExample[] = [
       header: '📎 Offer attached · decision due',
       title: 'Stripe offer — $245k + $40k sign-on + 1,200 RSU',
       body: 'Offer extracted and attached. Comp fields populated on the role. Decision deadline tracked.',
-      ctas: [
-        { label: 'Open offer comparison', primary: true },
-        { label: 'Draft counter' },
-      ],
+      ctas: [{ label: 'Open offer comparison', primary: true }, { label: 'Draft counter' }],
     },
   },
   {
@@ -173,10 +175,7 @@ const EXAMPLES: WorkedExample[] = [
       header: '📎 NDA attached · needs signature',
       title: 'Anthropic NDA — Staff SWE onsite',
       body: 'Filed under Anthropic · Staff Software Engineer. Reminder set for 24h before onsite to confirm signed.',
-      ctas: [
-        { label: 'Sign now', primary: true },
-        { label: 'Open role' },
-      ],
+      ctas: [{ label: 'Sign now', primary: true }, { label: 'Open role' }],
     },
   },
   {
@@ -189,9 +188,9 @@ const EXAMPLES: WorkedExample[] = [
       from: 'Alex Park (Ramp)',
       subject: 'LinkedIn message · inbound',
       body: [
-        'Hi Maya! I\'m a recruiter at Ramp. Loved your background in payments',
-        'infrastructure — we\'re hiring a Staff Engineer on the core team and I think',
-        'you\'d be a great fit. Happy to share more if you\'re open to chat?',
+        "Hi Maya! I'm a recruiter at Ramp. Loved your background in payments",
+        "infrastructure — we're hiring a Staff Engineer on the core team and I think",
+        "you'd be a great fit. Happy to share more if you're open to chat?",
       ],
     },
     extracted: {
@@ -206,10 +205,7 @@ const EXAMPLES: WorkedExample[] = [
       header: '⚠ Needs review · new lead',
       title: 'Ramp · Staff Engineer (inbound)',
       body: 'Below auto-route threshold (81% · needs ≥85%). Confirm to add as an exploring role, or archive if not interested.',
-      ctas: [
-        { label: 'Add to pipeline', primary: true },
-        { label: 'Archive' },
-      ],
+      ctas: [{ label: 'Add to pipeline', primary: true }, { label: 'Archive' }],
     },
   },
 ]
@@ -397,7 +393,15 @@ function DropZone() {
           ⌘V
         </kbd>
       </div>
-      <div style={{ display: 'flex', gap: 8, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 8,
+          marginTop: 20,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+      >
         <FormatTag icon={<ImageIcon size={12} />} label="Screenshot" />
         <FormatTag icon={<Mail size={12} />} label="Email (.eml)" />
         <FormatTag icon={<FileText size={12} />} label="PDF" />
@@ -469,7 +473,15 @@ function RecentDrops() {
         >
           <FileText size={14} color="var(--ink-4)" />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 12, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: 'var(--ink)',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               {r.filename}
             </div>
             <div style={{ fontSize: 10, color: 'var(--ink-4)', fontFamily: 'var(--font-mono)' }}>
@@ -512,8 +524,8 @@ function StepTwo() {
     <section style={{ marginBottom: 40 }}>
       <SectionLabel n={2} title="Extract" />
       <div style={{ fontSize: 12, color: 'var(--ink-4)', marginBottom: 16 }}>
-        Five worked examples of real-world documents the AI has classified. Company and role
-        matches link back to your pipeline; low-confidence routes drop into the Needs Review queue.
+        Five worked examples of real-world documents the AI has classified. Company and role matches
+        link back to your pipeline; low-confidence routes drop into the Needs Review queue.
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         {EXAMPLES.map((ex) => (
@@ -609,15 +621,31 @@ function ExtractCard({ ex }: { ex: WorkedExample }) {
             color: 'var(--ink-4)',
           }}
         >
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: 'var(--accent-ij-ink)' }}>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              color: 'var(--accent-ij-ink)',
+            }}
+          >
             <Sparkles size={11} /> Extracted · AI
           </span>
-          <span style={{ color: lowConfidence ? 'var(--status-warn)' : 'var(--ink-3)', fontWeight: 500 }}>
+          <span
+            style={{
+              color: lowConfidence ? 'var(--status-warn)' : 'var(--ink-3)',
+              fontWeight: 500,
+            }}
+          >
             {ex.confidence}% confidence
           </span>
         </div>
         <dl style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: 8, fontSize: 12 }}>
-          <Field label="Type" value={ex.extracted.type} emphasize={ex.kind === 'reject' || ex.kind === 'advance'} />
+          <Field
+            label="Type"
+            value={ex.extracted.type}
+            emphasize={ex.kind === 'reject' || ex.kind === 'advance'}
+          />
           <Field
             label="Company"
             value={
@@ -636,13 +664,19 @@ function ExtractCard({ ex }: { ex: WorkedExample }) {
             value={
               <span>
                 {ex.extracted.role.name}
-                {ex.extracted.role.matched ? <MatchPill label="matched" /> : <MatchPill label="new" warn />}
+                {ex.extracted.role.matched ? (
+                  <MatchPill label="matched" />
+                ) : (
+                  <MatchPill label="new" warn />
+                )}
               </span>
             }
             emphasize
           />
           {ex.extracted.fromPerson && <Field label="From" value={ex.extracted.fromPerson} />}
-          {ex.extracted.nextStep && <Field label="Next step" value={ex.extracted.nextStep} emphasize />}
+          {ex.extracted.nextStep && (
+            <Field label="Next step" value={ex.extracted.nextStep} emphasize />
+          )}
           {ex.extracted.ask && <Field label="Ask" value={ex.extracted.ask} />}
           {ex.extracted.tone && <Field label="Tone" value={ex.extracted.tone} />}
           {ex.extracted.action && <Field label="Action" value={ex.extracted.action} emphasize />}
@@ -652,7 +686,15 @@ function ExtractCard({ ex }: { ex: WorkedExample }) {
   )
 }
 
-function Field({ label, value, emphasize }: { label: string; value: React.ReactNode; emphasize?: boolean }) {
+function Field({
+  label,
+  value,
+  emphasize,
+}: {
+  label: string
+  value: React.ReactNode
+  emphasize?: boolean
+}) {
   return (
     <>
       <dt
@@ -690,7 +732,9 @@ function MatchPill({ label, warn }: { label: string; warn?: boolean }) {
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
         fontFamily: 'var(--font-mono)',
-        background: warn ? 'color-mix(in srgb, var(--status-warn) 14%, var(--paper))' : 'var(--accent-ij-wash)',
+        background: warn
+          ? 'color-mix(in srgb, var(--status-warn) 14%, var(--paper))'
+          : 'var(--accent-ij-wash)',
         color: warn ? 'var(--status-warn)' : 'var(--accent-ij-ink)',
       }}
     >
@@ -707,7 +751,13 @@ function StepThree() {
         For each classification, an outcome: a to-do created, a role closed, an offer attached. At
         &lt;85% confidence the route drops into Needs Review instead of auto-applying.
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 14,
+        }}
+      >
         {EXAMPLES.map((ex) => (
           <ActionCard key={ex.id} ex={ex} />
         ))}
