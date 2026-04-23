@@ -9,8 +9,6 @@ function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const ORDERED_STAGES = ['applied', 'screening', 'interviewing', 'offer', 'hired'] as const
-
 export default async function AnalyticsPage() {
   const supabase = await createClient()
   const {
