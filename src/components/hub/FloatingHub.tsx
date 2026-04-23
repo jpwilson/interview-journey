@@ -1,12 +1,13 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import Link from 'next/link'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { MessageSquare, BarChart3, Clock, X, Minus, Briefcase } from 'lucide-react'
+import { MessageSquare, BarChart3, Award, X, Minus, Briefcase, ExternalLink } from 'lucide-react'
 import { HubChatbot } from './HubChatbot'
 import { HubAnalytics } from './HubAnalytics'
-import { HubChangelog } from './HubChangelog'
+import { HubHighlights } from './HubHighlights'
 import { cn } from '@/lib/utils'
 
 export function FloatingHub() {
@@ -119,7 +120,13 @@ export function FloatingHub() {
               value="chat"
               className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
             >
-              <MessageSquare className="h-3 w-3" /> Chat
+              <MessageSquare className="h-3 w-3" /> Coach
+            </TabsTrigger>
+            <TabsTrigger
+              value="highlights"
+              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
+            >
+              <Award className="h-3 w-3" /> Highlights
             </TabsTrigger>
             <TabsTrigger
               value="analytics"
@@ -127,22 +134,40 @@ export function FloatingHub() {
             >
               <BarChart3 className="h-3 w-3" /> Stats
             </TabsTrigger>
-            <TabsTrigger
-              value="changelog"
-              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
-            >
-              <Clock className="h-3 w-3" /> Changelog
-            </TabsTrigger>
           </TabsList>
           <div className="flex-1 overflow-hidden p-3">
-            <TabsContent value="chat" className="mt-0 h-full">
-              <HubChatbot />
+            <TabsContent value="chat" className="mt-0 h-full flex flex-col">
+              <div className="flex-1 overflow-hidden">
+                <HubChatbot />
+              </div>
+              <Link
+                href="/coach"
+                onClick={() => setIsOpen(false)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                  marginTop: 10,
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  color: 'var(--accent-ij-ink)',
+                  background: 'var(--accent-ij-wash)',
+                  borderRadius: 4,
+                  textDecoration: 'none',
+                  fontFamily: 'var(--font-mono)',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Open Career Coach <ExternalLink size={11} />
+              </Link>
+            </TabsContent>
+            <TabsContent value="highlights" className="mt-0 h-full overflow-y-auto">
+              <HubHighlights />
             </TabsContent>
             <TabsContent value="analytics" className="mt-0 h-full overflow-y-auto">
               <HubAnalytics />
-            </TabsContent>
-            <TabsContent value="changelog" className="mt-0 h-full overflow-y-auto">
-              <HubChangelog />
             </TabsContent>
           </div>
         </Tabs>
