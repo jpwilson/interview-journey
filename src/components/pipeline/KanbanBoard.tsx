@@ -23,9 +23,9 @@ const STAGES: { id: RoleStage; label: string; color: string }[] = [
   { id: 'exploring', label: 'Exploring', color: 'border-slate-400' },
   { id: 'applied', label: 'Applied', color: 'border-blue-400' },
   { id: 'screening', label: 'Screening', color: 'border-yellow-400' },
-  { id: 'interviewing', label: 'Interviewing', color: 'border-sky-500' },
+  { id: 'interviewing', label: 'Interviewing', color: 'border-[var(--accent-ij)]' },
   { id: 'offer', label: 'Offer', color: 'border-purple-500' },
-  { id: 'negotiating', label: 'Negotiating', color: 'border-indigo-500' },
+  { id: 'negotiating', label: 'Negotiating', color: 'border-[var(--accent-ij)]' },
 ]
 
 interface Props {

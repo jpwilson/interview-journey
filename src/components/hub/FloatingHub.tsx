@@ -48,10 +48,15 @@ export function FloatingHub() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00658f] to-[#4ea5d9] shadow-lg ring-2 ring-sky-300/30 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-300/60"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110 focus-visible:outline-none"
         aria-label="Open hub"
+        style={{
+          background: 'linear-gradient(135deg, var(--accent-ij), var(--accent-ij-ink))',
+          boxShadow: '0 8px 28px var(--accent-ij-glow-a), 0 2px 6px rgba(28,25,23,0.08)',
+          border: '2px solid color-mix(in srgb, var(--accent-ij-wash) 70%, transparent)',
+        }}
       >
-        <Briefcase className="h-6 w-6 text-white" />
+        <Briefcase className="h-6 w-6" style={{ color: '#fff' }} />
       </button>
     )
   }
@@ -74,8 +79,18 @@ export function FloatingHub() {
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center gap-2">
-          <Briefcase className="h-4 w-4 text-sky-600" />
-          <span className="text-sm font-semibold text-slate-900">Interview Journey Hub</span>
+          <Briefcase className="h-4 w-4" style={{ color: 'var(--accent-ij-ink)' }} />
+          <span
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 14,
+              fontWeight: 500,
+              color: 'var(--ink)',
+              letterSpacing: -0.2,
+            }}
+          >
+            Interview <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em> Hub
+          </span>
         </div>
         <div className="flex items-center gap-1">
           <Button
@@ -102,19 +117,19 @@ export function FloatingHub() {
           <TabsList className="mx-3 mt-3 bg-slate-100 border border-slate-200">
             <TabsTrigger
               value="chat"
-              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-sky-600 data-[state=active]:text-white"
+              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
             >
               <MessageSquare className="h-3 w-3" /> Chat
             </TabsTrigger>
             <TabsTrigger
               value="analytics"
-              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-sky-600 data-[state=active]:text-white"
+              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
             >
               <BarChart3 className="h-3 w-3" /> Stats
             </TabsTrigger>
             <TabsTrigger
               value="changelog"
-              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-sky-600 data-[state=active]:text-white"
+              className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
             >
               <Clock className="h-3 w-3" /> Changelog
             </TabsTrigger>

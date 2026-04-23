@@ -11,7 +11,7 @@ type SortDir = 'asc' | 'desc'
 type FilterStatus = 'all' | 'active' | 'alumni' | 'past'
 
 const STATUS_STYLES: Record<string, string> = {
-  active: 'bg-sky-50 text-sky-700 border-sky-200',
+  active: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)] border-[var(--accent-ij-wash)]',
   alumni: 'bg-green-50 text-green-700 border-green-200',
   past: 'bg-slate-50 text-slate-500 border-slate-200',
 }
@@ -34,9 +34,9 @@ function SortIcon({
 }) {
   if (activeKey !== col) return <ArrowUpDown className="h-3 w-3 text-slate-300" />
   return dir === 'asc' ? (
-    <ArrowUp className="h-3 w-3 text-sky-600" />
+    <ArrowUp className="h-3 w-3 text-[var(--accent-ij-ink)]" />
   ) : (
-    <ArrowDown className="h-3 w-3 text-sky-600" />
+    <ArrowDown className="h-3 w-3 text-[var(--accent-ij-ink)]" />
   )
 }
 
@@ -114,7 +114,7 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search companies..."
-            className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
+            className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)]/20 focus:border-[var(--accent-ij)]"
           />
         </div>
 
@@ -124,10 +124,10 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-1 ${
+              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-1 ${
                 filter === key
-                  ? 'bg-sky-600 text-white shadow-sm'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700'
+                  ? 'bg-[var(--accent-ij-ink)] text-white shadow-sm'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:border-[var(--accent-ij-wash)] hover:text-[var(--accent-ij-ink)]'
               }`}
             >
               {label}
@@ -187,18 +187,18 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
               filtered.map((row, i) => (
                 <tr
                   key={row.id}
-                  className={`group transition-colors hover:bg-sky-50/40 ${i !== filtered.length - 1 ? 'border-b border-slate-100' : ''}`}
+                  className={`group transition-colors hover:bg-[var(--accent-ij-wash)]/40 ${i !== filtered.length - 1 ? 'border-b border-slate-100' : ''}`}
                 >
                   <td className="py-3.5 px-4">
                     <Link
                       href={`/companies/${row.id}`}
-                      className="flex items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                      className="flex items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-2"
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white text-xs font-bold">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white text-xs font-bold">
                         {row.name.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-semibold text-slate-900 group-hover:text-sky-700 transition-colors">{row.name}</p>
+                        <p className="font-semibold text-slate-900 group-hover:text-[var(--accent-ij-ink)] transition-colors">{row.name}</p>
                         {row.domain && (
                           <p className="text-xs text-slate-400">{row.domain}</p>
                         )}
@@ -217,7 +217,7 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
                   </td>
                   <td className="py-3.5 px-4 text-center">
                     {row.activeCount > 0 ? (
-                      <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-sky-100 px-2 text-xs font-bold text-sky-700">
+                      <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-[var(--accent-ij-wash)] px-2 text-xs font-bold text-[var(--accent-ij-ink)]">
                         {row.activeCount}
                       </span>
                     ) : (

@@ -171,49 +171,58 @@
   }
 }
 
+/* Backwards-compat: `.editorial-gradient` now renders the v2 moss gradient
+   so older components keep working while we migrate them. */
 .editorial-gradient {
-  background: linear-gradient(135deg, #00658f 0%, #4ea5d9 100%);
+  background: linear-gradient(135deg, var(--accent-ij) 0%, var(--accent-ij-ink) 100%);
 }
 
-/* ─── Interview Journey v2 editorial design system ─────────────────────────
-   Warm paper surfaces, deep inks, moss-green accent, lowercase status chips.
-   Used on the marketing site and any component opting into the editorial
-   look (Wordmark, Chip, landing sections). Coexists with shadcn tokens.
+/* ─── Interview Journey v2 design system ──────────────────────────────────
+   Warm paper surfaces, deep inks, moss-green accent. Exact tokens from the
+   v2 handoff (docs/research/launch-brief.md references this design).
+   Shadcn tokens above remain in play; these are opt-in via `var(--paper)` etc.
 */
 :root {
   /* Warm off-whites */
-  --paper:        oklch(98.2% 0.008 80);
-  --paper-2:      oklch(96.4% 0.010 78);
-  --paper-3:      oklch(93.8% 0.012 76);
-  --paper-ink:    oklch(88% 0.014 74);
+  --paper:        #fafaf9;  /* main canvas background */
+  --paper-2:      #f5f5f4;  /* subtle surface (table header, chip bg) */
+  --paper-3:      #f0efed;  /* deeper surface */
+  --paper-ink:    #e7e5e4;  /* card borders, hairlines */
+  --border-soft:  #f5f5f4;  /* internal dividers */
+  --card:         #ffffff;  /* card background */
 
   /* Deep inks */
-  --ink:          oklch(22% 0.015 60);
-  --ink-2:        oklch(36% 0.014 62);
-  --ink-3:        oklch(52% 0.012 64);
-  --ink-4:        oklch(68% 0.010 66);
-  --ink-5:        oklch(82% 0.008 70);
+  --ink:          #1c1917;  /* primary text */
+  --ink-2:        #44403c;  /* secondary text */
+  --ink-3:        #57534e;  /* ink-muted */
+  --ink-4:        #78716c;  /* muted, metadata, captions */
+  --ink-5:        #a8a29e;  /* muted-2, disabled / tertiary */
 
-  /* Accent — moss green (v2 default) */
-  --accent-ij:       oklch(48% 0.14 145);
-  --accent-ij-ink:   oklch(40% 0.13 148);
-  --accent-ij-wash:  oklch(93% 0.05 140);
-  --accent-ij-glow-a: oklch(68% 0.16 145 / 0.30);
-  --accent-ij-glow-b: oklch(62% 0.14 170 / 0.26);
-  --accent-ij-glow-c: oklch(76% 0.12 120 / 0.24);
+  /* Accent — moss (v2 default) */
+  --accent-ij:       #3e7a4f;  /* primary accent */
+  --accent-ij-ink:   #2f5d3d;  /* accent text on paper */
+  --accent-ij-wash:  #e7efe3;  /* accent chip / highlight bg */
+  --accent-ij-glow-a: rgba(62, 122, 79, 0.30);
+  --accent-ij-glow-b: rgba(47, 93, 61, 0.26);
+  --accent-ij-glow-c: rgba(76, 140, 95, 0.24);
 
-  /* Status palette — sunset muted */
-  --s-exploring:  oklch(68% 0.04 250);
-  --s-applied:    oklch(62% 0.07 230);
-  --s-screening:  oklch(72% 0.12 85);
-  --s-interview:  oklch(60% 0.13 60);
-  --s-offer:      oklch(62% 0.11 150);
-  --s-negotiate:  oklch(58% 0.14 180);
-  --s-hired:      oklch(55% 0.13 155);
-  --s-rejected:   oklch(58% 0.12 35);
-  --s-withdrew:   oklch(62% 0.03 70);
-  --s-ghosted:    oklch(68% 0.025 300);
-  --s-declined:   oklch(58% 0.10 15);
+  /* Semantic status (funnel, chips) */
+  --status-ok:    #16a34a;  /* positive */
+  --status-warn:  #d97706;  /* warning */
+  --status-go:    #2563eb;  /* keep going */
+
+  /* Stage palette (pipeline chips) */
+  --s-exploring:  #78716c;  /* stone-500 */
+  --s-applied:    #2563eb;  /* blue-600 */
+  --s-screening:  #d97706;  /* amber-600 */
+  --s-interview:  #7c3aed;  /* violet-600 */
+  --s-offer:      #3e7a4f;  /* moss */
+  --s-negotiate:  #0891b2;  /* cyan-600 */
+  --s-hired:      #16a34a;  /* green-600 */
+  --s-rejected:   #dc2626;  /* red-600 */
+  --s-withdrew:   #78716c;
+  --s-ghosted:    #a8a29e;
+  --s-declined:   #be185d;  /* pink-700 */
 }
 
 /* Placeholder striped bg — for image slots */

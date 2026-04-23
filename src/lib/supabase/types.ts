@@ -67,15 +67,30 @@ export interface Database {
           avatar_url: string | null
           created_at: string
           updated_at: string
+          current_employer_id: string | null
+          current_title: string | null
+          employment_start_date: string | null
+          search_status: 'happy' | 'open' | 'active' | null
+          prefs: Record<string, unknown> | null
         }
         Insert: {
           id: string
           display_name?: string | null
           avatar_url?: string | null
+          current_employer_id?: string | null
+          current_title?: string | null
+          employment_start_date?: string | null
+          search_status?: 'happy' | 'open' | 'active' | null
+          prefs?: Record<string, unknown> | null
         }
         Update: {
           display_name?: string | null
           avatar_url?: string | null
+          current_employer_id?: string | null
+          current_title?: string | null
+          employment_start_date?: string | null
+          search_status?: 'happy' | 'open' | 'active' | null
+          prefs?: Record<string, unknown> | null
         }
         Relationships: []
       }

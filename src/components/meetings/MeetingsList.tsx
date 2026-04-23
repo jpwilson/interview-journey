@@ -99,10 +99,10 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
   }
 
   return (
-    <div className={`rounded-xl border p-4 space-y-3 bg-white shadow-sm ${upcoming ? 'border-sky-100' : 'border-slate-100'}`}>
+    <div className={`rounded-xl border p-4 space-y-3 bg-white shadow-sm ${upcoming ? 'border-[var(--accent-ij-wash)]' : 'border-slate-100'}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${upcoming ? 'bg-sky-50 text-sky-600' : 'bg-slate-100 text-slate-500'}`}>
+          <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${upcoming ? 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]' : 'bg-slate-100 text-slate-500'}`}>
             <TypeIcon type={meeting.type} />
           </div>
           <div>
@@ -199,7 +199,7 @@ export function MeetingsList({ meetings, roleId }: MeetingsListProps) {
           <Button
             size="sm"
             onClick={() => setShowForm(true)}
-            className="bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white rounded-full px-4 font-semibold shadow-md shadow-sky-200 border-0 hover:opacity-90 transition-opacity"
+            className="bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white rounded-full px-4 font-semibold shadow-md shadow-[var(--accent-ij-glow-a)] border-0 hover:opacity-90 transition-opacity"
           >
             <Plus className="mr-1.5 h-4 w-4" />
             Add meeting
@@ -221,7 +221,7 @@ export function MeetingsList({ meetings, roleId }: MeetingsListProps) {
             size="sm"
             variant="ghost"
             onClick={() => setShowForm(true)}
-            className="mt-3 text-sky-700 hover:text-sky-600 hover:bg-sky-50"
+            className="mt-3 text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] hover:bg-[var(--accent-ij-wash)]"
           >
             Schedule your first meeting
           </Button>

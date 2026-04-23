@@ -17,13 +17,13 @@ export function TimelineTabs({ roles, allEvents }: Props) {
       <TabsList className="mb-6 bg-white border border-slate-100 shadow-sm p-1 h-auto w-fit rounded-xl">
         <TabsTrigger
           value="river"
-          className="h-auto rounded-lg px-5 py-2 text-sm font-medium data-active:bg-sky-600 data-active:text-white"
+          className="h-auto rounded-lg px-5 py-2 text-sm font-medium data-active:bg-[var(--accent-ij-ink)] data-active:text-white"
         >
           River
         </TabsTrigger>
         <TabsTrigger
           value="chronicle"
-          className="h-auto rounded-lg px-5 py-2 text-sm font-medium data-active:bg-sky-600 data-active:text-white"
+          className="h-auto rounded-lg px-5 py-2 text-sm font-medium data-active:bg-[var(--accent-ij-ink)] data-active:text-white"
         >
           Chronicle
         </TabsTrigger>

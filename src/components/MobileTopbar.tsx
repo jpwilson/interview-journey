@@ -24,7 +24,7 @@ export function MobileTopbar() {
             <button
               type="button"
               aria-label="Open navigation menu"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)]"
             >
               <Menu className="h-5 w-5" />
             </button>

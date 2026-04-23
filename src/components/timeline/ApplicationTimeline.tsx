@@ -32,8 +32,8 @@ const EVENT_COLORS: Record<string, string> = {
   applied: 'bg-slate-400',
   screening_scheduled: 'bg-yellow-400',
   screening_completed: 'bg-yellow-500',
-  interview_scheduled: 'bg-sky-500',
-  interview_completed: 'bg-sky-400',
+  interview_scheduled: 'bg-[var(--accent-ij)]',
+  interview_completed: 'bg-[var(--accent-ij)]',
   technical_assessment: 'bg-blue-500',
   offer_received: 'bg-purple-500',
   offer_accepted: 'bg-green-500',
@@ -41,11 +41,11 @@ const EVENT_COLORS: Record<string, string> = {
   offer_rescinded: 'bg-red-500',
   rejected: 'bg-red-500',
   withdrawn: 'bg-slate-400',
-  reference_check: 'bg-indigo-400',
-  nda_signed: 'bg-indigo-400',
+  reference_check: 'bg-[var(--accent-ij)]',
+  nda_signed: 'bg-[var(--accent-ij)]',
   document_added: 'bg-slate-400',
   note_added: 'bg-slate-400',
-  stage_changed: 'bg-sky-500',
+  stage_changed: 'bg-[var(--accent-ij)]',
 }
 
 interface Props {
@@ -139,7 +139,7 @@ export function ApplicationTimeline({ events }: Props) {
                     {event.event_type.replace(/_/g, ' ')}
                   </Badge>
                   {event.source === 'ai_parsed' && (
-                    <Badge className="bg-sky-50 text-xs text-sky-700 border-0">AI</Badge>
+                    <Badge className="bg-[var(--accent-ij-wash)] text-xs text-[var(--accent-ij-ink)] border-0">AI</Badge>
                   )}
                 </div>
               </div>

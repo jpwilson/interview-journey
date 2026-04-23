@@ -54,7 +54,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           <select
             name="type"
             required
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]"
           >
             <option value="">Select type…</option>
             {MEETING_TYPES.map((t) => (
@@ -70,7 +70,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
             type="text"
             name="platform"
             placeholder="Zoom, Teams, phone…"
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]"
           />
         </div>
 
@@ -80,7 +80,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           <input
             type="datetime-local"
             name="scheduled_at"
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]"
           />
         </div>
 
@@ -92,7 +92,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
             name="duration_minutes"
             placeholder="60"
             min={1}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]"
           />
         </div>
       </div>
@@ -104,7 +104,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           name="prep_notes"
           rows={2}
           placeholder="What to research, how to prepare…"
-          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 resize-none"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)] resize-none"
         />
       </div>
 
@@ -122,7 +122,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           type="submit"
           size="sm"
           disabled={isPending}
-          className="bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white rounded-full px-5 font-semibold shadow-md shadow-sky-200 border-0 hover:opacity-90 transition-opacity"
+          className="bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white rounded-full px-5 font-semibold shadow-md shadow-[var(--accent-ij-glow-a)] border-0 hover:opacity-90 transition-opacity"
         >
           {isPending ? 'Saving…' : 'Save meeting'}
         </Button>

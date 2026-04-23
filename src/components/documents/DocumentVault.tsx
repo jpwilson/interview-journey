@@ -19,7 +19,7 @@ const STATUS_ICONS = {
 
 const STATUS_COLORS = {
   pending: 'text-yellow-500',
-  processing: 'text-sky-600',
+  processing: 'text-[var(--accent-ij-ink)]',
   classified: 'text-green-600',
   failed: 'text-red-500',
 }
@@ -159,7 +159,7 @@ export function DocumentVault({ documents, roleId }: Props) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-sky-600 hover:text-sky-700 hover:bg-sky-50"
+                  className="text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] hover:bg-[var(--accent-ij-wash)]"
                   onClick={() => handleDownload(doc)}
                 >
                   <Download className="h-4 w-4" />

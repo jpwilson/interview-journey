@@ -75,7 +75,7 @@ export default async function DocumentsPage() {
                     {doc.role ? (
                       <Link
                         href={`/roles/${doc.role_id}`}
-                        className="text-xs text-sky-700 hover:text-sky-600 font-medium"
+                        className="text-xs text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] font-medium"
                       >
                         {doc.role.role_title} @ {doc.role.company.name}
                       </Link>

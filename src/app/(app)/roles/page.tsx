@@ -18,9 +18,9 @@ const STAGE_COLORS: Record<string, string> = {
   exploring: 'bg-slate-100 text-slate-600',
   applied: 'bg-blue-50 text-blue-700',
   screening: 'bg-yellow-50 text-yellow-700',
-  interviewing: 'bg-sky-50 text-sky-700',
+  interviewing: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
   offer: 'bg-purple-50 text-purple-700',
-  negotiating: 'bg-indigo-50 text-indigo-700',
+  negotiating: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
   resolved: 'bg-green-50 text-green-700',
 }
 
@@ -56,7 +56,7 @@ export default async function RolesPage() {
           )}
           <Dialog>
           <DialogTrigger render={
-            <Button className="bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white rounded-full px-6 py-2.5 font-semibold shadow-lg shadow-sky-200 border-0 hover:opacity-90 transition-opacity" />
+            <Button className="bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white rounded-full px-6 py-2.5 font-semibold shadow-lg shadow-[var(--accent-ij-glow-a)] border-0 hover:opacity-90 transition-opacity" />
           }>
             <Plus className="mr-2 h-4 w-4" /> Add role
           </DialogTrigger>
@@ -68,24 +68,24 @@ export default async function RolesPage() {
               <div className="space-y-2">
                 <Label htmlFor="company_name" className="text-slate-700">Company name *</Label>
                 <Input name="company_name" id="company_name" placeholder="Stripe" required
-                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-sky-500 focus:border-sky-500" />
+                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="role_title" className="text-slate-700">Role *</Label>
                 <Input name="role_title" id="role_title" placeholder="Senior Software Engineer" required
-                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-sky-500 focus:border-sky-500" />
+                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="job_url" className="text-slate-700">Job URL</Label>
                 <Input name="job_url" id="job_url" placeholder="https://..." type="url"
-                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-sky-500 focus:border-sky-500" />
+                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="notes" className="text-slate-700">Notes</Label>
                 <Input name="notes" id="notes" placeholder="Optional notes..."
-                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-sky-500 focus:border-sky-500" />
+                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]" />
               </div>
-              <Button type="submit" className="w-full bg-gradient-to-br from-[#00658f] to-[#4ea5d9] text-white rounded-full font-semibold shadow-lg shadow-sky-200 border-0 hover:opacity-90 transition-opacity">
+              <Button type="submit" className="w-full bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white rounded-full font-semibold shadow-lg shadow-[var(--accent-ij-glow-a)] border-0 hover:opacity-90 transition-opacity">
                 Add role
               </Button>
             </form>
@@ -96,8 +96,8 @@ export default async function RolesPage() {
 
       {roles.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sky-50">
-            <Briefcase className="h-8 w-8 text-sky-600" />
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--accent-ij-wash)]">
+            <Briefcase className="h-8 w-8 text-[var(--accent-ij-ink)]" />
           </div>
           <p className="mb-2 text-lg font-semibold text-slate-900">No roles yet</p>
           <p className="mb-6 text-sm text-slate-500">
@@ -111,8 +111,8 @@ export default async function RolesPage() {
               <Card className="bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                 <CardContent className="flex items-center justify-between py-4">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-50">
-                      <Briefcase className="h-5 w-5 text-sky-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent-ij-wash)]">
+                      <Briefcase className="h-5 w-5 text-[var(--accent-ij-ink)]" />
                     </div>
                     <div>
                       <p className="font-semibold text-slate-900">{role.role_title}</p>
