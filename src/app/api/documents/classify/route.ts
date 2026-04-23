@@ -9,7 +9,11 @@ function maybeGetLangfuse() {
   if (!pk || !sk || pk.includes('placeholder')) return null
   try {
     const { Langfuse } = require('langfuse')
-    return new Langfuse({ publicKey: pk, secretKey: sk, baseUrl: process.env.LANGFUSE_BASE_URL ?? 'https://cloud.langfuse.com' })
+    return new Langfuse({
+      publicKey: pk,
+      secretKey: sk,
+      baseUrl: process.env.LANGFUSE_BASE_URL ?? 'https://cloud.langfuse.com',
+    })
   } catch {
     return null
   }
@@ -20,7 +24,9 @@ export async function POST(request: Request) {
   if (!documentId) return Response.json({ error: 'documentId required' }, { status: 400 })
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   // Use service client for writes (bypasses RLS on internal operations)
@@ -36,32 +42,31 @@ export async function POST(request: Request) {
   // Run classification in background — respond immediately
   processDocument(documentId, user.id, service).catch(async (err) => {
     console.error('Classification failed:', err)
-    await service
-      .from('documents')
-      .update({ classification_status: 'failed' })
-      .eq('id', documentId)
+    await service.from('documents').update({ classification_status: 'failed' }).eq('id', documentId)
   })
 
   return Response.json({ status: 'processing' })
 }
 
-async function processDocument(documentId: string, userId: string, service: ReturnType<typeof createServiceClient>) {
+async function processDocument(
+  documentId: string,
+  userId: string,
+  service: ReturnType<typeof createServiceClient>
+) {
   const langfuse = maybeGetLangfuse()
-  const trace = langfuse?.trace({ name: 'document-classification', userId, metadata: { documentId } })
+  const trace = langfuse?.trace({
+    name: 'document-classification',
+    userId,
+    metadata: { documentId },
+  })
 
   // Fetch document record
-  const { data: doc } = await service
-    .from('documents')
-    .select('*')
-    .eq('id', documentId)
-    .single()
+  const { data: doc } = await service.from('documents').select('*').eq('id', documentId).single()
 
   if (!doc) throw new Error('Document not found')
 
   // Fetch file from Supabase Storage
-  const { data: fileData } = await service.storage
-    .from('documents')
-    .download(doc.storage_path)
+  const { data: fileData } = await service.storage.from('documents').download(doc.storage_path)
 
   if (!fileData) throw new Error('File not found in storage')
 
@@ -170,7 +175,9 @@ async function processDocument(documentId: string, userId: string, service: Retu
       await service.from('role_events').insert({
         user_id: userId,
         role_id: roleId,
-        event_type: docTypeToEventType(result.doc_type) as import('@/lib/supabase/types').TimelineEventType,
+        event_type: docTypeToEventType(
+          result.doc_type
+        ) as import('@/lib/supabase/types').TimelineEventType,
         title: result.summary,
         event_date: result.event_date ?? new Date().toISOString(),
         metadata: {
@@ -185,19 +192,22 @@ async function processDocument(documentId: string, userId: string, service: Retu
   }
 
   // Update document record with classification results
-  await service.from('documents').update({
-    classification_status: 'classified',
-    role_id: roleId,
-    doc_type: result.doc_type,
-    ai_confidence: result.confidence,
-    ai_raw_response: result as unknown as Record<string, unknown>,
-    extracted_company: result.company_name,
-    extracted_role: result.role_title,
-    extracted_date: result.event_date,
-    extracted_outcome: result.outcome,
-    extracted_summary: result.summary,
-    needs_review: needsReview,
-  }).eq('id', documentId)
+  await service
+    .from('documents')
+    .update({
+      classification_status: 'classified',
+      role_id: roleId,
+      doc_type: result.doc_type,
+      ai_confidence: result.confidence,
+      ai_raw_response: result as unknown as Record<string, unknown>,
+      extracted_company: result.company_name,
+      extracted_role: result.role_title,
+      extracted_date: result.event_date,
+      extracted_outcome: result.outcome,
+      extracted_summary: result.summary,
+      needs_review: needsReview,
+    })
+    .eq('id', documentId)
 
   await langfuse?.flushAsync()
 }

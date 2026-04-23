@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation'
 
 export async function addMeeting(formData: FormData) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const roleId = formData.get('role_id') as string
@@ -16,7 +18,9 @@ export async function addMeeting(formData: FormData) {
     type: (formData.get('type') as string) || 'other',
     scheduled_at: formData.get('scheduled_at') as string,
     round_number: formData.get('round_number') ? Number(formData.get('round_number')) : null,
-    duration_minutes: formData.get('duration_minutes') ? Number(formData.get('duration_minutes')) : null,
+    duration_minutes: formData.get('duration_minutes')
+      ? Number(formData.get('duration_minutes'))
+      : null,
     format: (formData.get('format') as string) || null,
     platform: (formData.get('platform') as string) || null,
     prep_notes: (formData.get('prep_notes') as string) || null,
@@ -27,9 +31,16 @@ export async function addMeeting(formData: FormData) {
   revalidatePath(`/roles/${roleId}`)
 }
 
-export async function updateMeetingOutcome(meetingId: string, outcome: string, outcomeNotes: string, roleId: string) {
+export async function updateMeetingOutcome(
+  meetingId: string,
+  outcome: string,
+  outcomeNotes: string,
+  roleId: string
+) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   await supabase

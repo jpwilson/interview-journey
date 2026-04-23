@@ -13,18 +13,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   if (!user) redirect('/login')
 
-  const [{ count: pipelineCount }, { count: docsPending }, { count: activeOffers }] = await Promise.all([
-    supabase
-      .from('roles')
-      .select('*', { count: 'exact', head: true })
-      .neq('stage', 'resolved')
-      .is('deleted_at', null),
-    supabase
-      .from('documents')
-      .select('*', { count: 'exact', head: true })
-      .in('classification_status', ['pending', 'processing']),
-    supabase.from('offers').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-  ])
+  const [{ count: pipelineCount }, { count: docsPending }, { count: activeOffers }] =
+    await Promise.all([
+      supabase
+        .from('roles')
+        .select('*', { count: 'exact', head: true })
+        .neq('stage', 'resolved')
+        .is('deleted_at', null),
+      supabase
+        .from('documents')
+        .select('*', { count: 'exact', head: true })
+        .in('classification_status', ['pending', 'processing']),
+      supabase.from('offers').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+    ])
 
   const sidebarProps = {
     pipelineCount: pipelineCount ?? undefined,

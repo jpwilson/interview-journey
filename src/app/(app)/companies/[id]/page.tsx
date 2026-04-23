@@ -57,16 +57,15 @@ function getCompanyStatus(roles: RoleWithEvents[]): { label: string; color: stri
     return { label: 'Alumni', color: 'bg-green-100 text-green-700' }
   }
   if (roles.some((r) => r.stage !== 'resolved')) {
-    return { label: 'Active pursuit', color: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]' }
+    return {
+      label: 'Active pursuit',
+      color: 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]',
+    }
   }
   return { label: 'Previously applied', color: 'bg-slate-100 text-slate-600' }
 }
 
-export default async function CompanyDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default async function CompanyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
 
@@ -86,28 +85,33 @@ export default async function CompanyDetailPage({
   const roles = (rolesData ?? []) as RoleWithEvents[]
   const roleIds = roles.map((r) => r.id)
 
-  const [{ data: docs }, { data: roleContacts }] = roleIds.length > 0
-    ? await Promise.all([
-        supabase
-          .from('documents')
-          .select('*')
-          .in('role_id', roleIds)
-          .order('created_at', { ascending: false }),
-        supabase
-          .from('role_contacts')
-          .select('*, contact:contacts(*)')
-          .in('role_id', roleIds),
-      ])
-    : [{ data: [] as Document[] }, { data: [] as RoleContact[] }]
+  const [{ data: docs }, { data: roleContacts }] =
+    roleIds.length > 0
+      ? await Promise.all([
+          supabase
+            .from('documents')
+            .select('*')
+            .in('role_id', roleIds)
+            .order('created_at', { ascending: false }),
+          supabase.from('role_contacts').select('*, contact:contacts(*)').in('role_id', roleIds),
+        ])
+      : [{ data: [] as Document[] }, { data: [] as RoleContact[] }]
 
   const documents = (docs ?? []) as Document[]
   const contacts = (roleContacts ?? []) as RoleContact[]
 
   const applicationCount = roles.length
   const interviewCount = roles.filter(
-    (r) => r.stage === 'interviewing' || r.role_events.some((e) => e.event_type.startsWith('interview'))
+    (r) =>
+      r.stage === 'interviewing' || r.role_events.some((e) => e.event_type.startsWith('interview'))
   ).length
-  const offerCount = roles.filter((r) => r.stage === 'offer' || r.stage === 'negotiating' || r.resolution === 'hired' || r.resolution === 'offer_declined').length
+  const offerCount = roles.filter(
+    (r) =>
+      r.stage === 'offer' ||
+      r.stage === 'negotiating' ||
+      r.resolution === 'hired' ||
+      r.resolution === 'offer_declined'
+  ).length
   const lastApplied = roles.reduce<string | null>((acc, r) => {
     const d = r.applied_at ?? r.created_at
     if (!acc || d > acc) return d
@@ -123,7 +127,10 @@ export default async function CompanyDetailPage({
     return acc
   }, {})
 
-  const contactMap = new Map<string, { contact: Contact; roles: { roleId: string; relationship: string | null }[] }>()
+  const contactMap = new Map<
+    string,
+    { contact: Contact; roles: { roleId: string; relationship: string | null }[] }
+  >()
   for (const rc of contacts) {
     const existing = contactMap.get(rc.contact_id)
     if (existing) {
@@ -141,7 +148,7 @@ export default async function CompanyDetailPage({
   return (
     <div className="min-h-full bg-[#f8f9fa] p-8">
       {/* Header card */}
-      <div className="mb-8 rounded-xl bg-white border border-slate-100 shadow-sm p-6">
+      <div className="mb-8 rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)]">
@@ -157,13 +164,13 @@ export default async function CompanyDetailPage({
                     href={company.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] transition-colors"
+                    className="flex items-center gap-1 text-sm text-[var(--accent-ij-ink)] transition-colors hover:text-[var(--accent-ij-ink)]"
                   >
                     <ExternalLink className="h-3 w-3" />
                     {company.website.replace(/^https?:\/\//, '')}
                   </a>
                 )}
-                <Badge className={`${status.color} text-xs border-0`}>{status.label}</Badge>
+                <Badge className={`${status.color} border-0 text-xs`}>{status.label}</Badge>
               </div>
             </div>
           </div>
@@ -182,9 +189,11 @@ export default async function CompanyDetailPage({
                 : '—',
             },
           ].map(({ label, value }) => (
-            <div key={label} className="rounded-lg bg-[#f8f9fa] border border-slate-100 p-4">
+            <div key={label} className="rounded-lg border border-slate-100 bg-[#f8f9fa] p-4">
               <p className="text-xs text-slate-500">{label}</p>
-              <p className={`font-bold text-slate-900 ${typeof value === 'number' ? 'text-2xl' : 'text-sm mt-0.5'}`}>
+              <p
+                className={`font-bold text-slate-900 ${typeof value === 'number' ? 'text-2xl' : 'mt-0.5 text-sm'}`}
+              >
                 {value}
               </p>
             </div>
@@ -194,28 +203,28 @@ export default async function CompanyDetailPage({
 
       {/* Tabs */}
       <Tabs defaultValue="roles">
-        <TabsList className="mb-6 bg-white border border-slate-100 shadow-sm">
+        <TabsList className="mb-6 border border-slate-100 bg-white shadow-sm">
           <TabsTrigger
             value="roles"
-            className="data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white text-slate-600"
+            className="text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
           >
             Roles ({roles.length})
           </TabsTrigger>
           <TabsTrigger
             value="documents"
-            className="data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white text-slate-600"
+            className="text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
           >
             Documents ({documents.length})
           </TabsTrigger>
           <TabsTrigger
             value="people"
-            className="data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white text-slate-600"
+            className="text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
           >
             People ({contactMap.size})
           </TabsTrigger>
           <TabsTrigger
             value="notes"
-            className="data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white text-slate-600"
+            className="text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
           >
             Notes
           </TabsTrigger>
@@ -239,14 +248,19 @@ export default async function CompanyDetailPage({
                     <Card className="border-slate-100 bg-white shadow-sm transition-shadow hover:shadow-md">
                       <CardContent className="py-4">
                         <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
                               <p className="font-semibold text-slate-900">{role.role_title}</p>
-                              <Badge className={`${STAGE_COLORS[role.stage] ?? 'bg-slate-100 text-slate-600'} text-xs border-0`}>
+                              <Badge
+                                className={`${STAGE_COLORS[role.stage] ?? 'bg-slate-100 text-slate-600'} border-0 text-xs`}
+                              >
                                 {role.stage}
                               </Badge>
                               {role.resolution && (
-                                <Badge variant="outline" className="border-slate-200 text-slate-500 text-xs capitalize">
+                                <Badge
+                                  variant="outline"
+                                  className="border-slate-200 text-xs text-slate-500 capitalize"
+                                >
                                   {RESOLUTION_LABELS[role.resolution] ?? role.resolution}
                                 </Badge>
                               )}
@@ -298,7 +312,10 @@ export default async function CompanyDetailPage({
                 return (
                   <div key={role.id}>
                     <h3 className="mb-2 text-sm font-semibold text-slate-700">
-                      <Link href={`/roles/${role.id}`} className="hover:text-[var(--accent-ij-ink)] transition-colors">
+                      <Link
+                        href={`/roles/${role.id}`}
+                        className="transition-colors hover:text-[var(--accent-ij-ink)]"
+                      >
                         {role.role_title}
                       </Link>
                     </h3>
@@ -306,13 +323,18 @@ export default async function CompanyDetailPage({
                       {roleDocs.map((doc) => (
                         <Card key={doc.id} className="border-slate-100 bg-white shadow-sm">
                           <CardContent className="flex items-center justify-between py-3">
-                            <div className="flex items-center gap-3 min-w-0">
+                            <div className="flex min-w-0 items-center gap-3">
                               <FileText className="h-4 w-4 shrink-0 text-slate-400" />
                               <div className="min-w-0">
-                                <p className="truncate text-sm font-medium text-slate-900">{doc.file_name}</p>
+                                <p className="truncate text-sm font-medium text-slate-900">
+                                  {doc.file_name}
+                                </p>
                                 <div className="mt-0.5 flex flex-wrap items-center gap-2">
                                   {doc.doc_type && (
-                                    <Badge variant="outline" className="border-slate-200 text-xs text-slate-500 capitalize">
+                                    <Badge
+                                      variant="outline"
+                                      className="border-slate-200 text-xs text-slate-500 capitalize"
+                                    >
                                       {doc.doc_type.replace(/_/g, ' ')}
                                     </Badge>
                                   )}
@@ -321,15 +343,17 @@ export default async function CompanyDetailPage({
                                       doc.classification_status === 'classified'
                                         ? 'text-green-600'
                                         : doc.classification_status === 'failed'
-                                        ? 'text-red-500'
-                                        : 'text-yellow-600'
+                                          ? 'text-red-500'
+                                          : 'text-yellow-600'
                                     }`}
                                   >
                                     {doc.classification_status}
                                   </span>
                                 </div>
                                 {doc.extracted_summary && (
-                                  <p className="mt-1 text-xs text-slate-400 line-clamp-2">{doc.extracted_summary}</p>
+                                  <p className="mt-1 line-clamp-2 text-xs text-slate-400">
+                                    {doc.extracted_summary}
+                                  </p>
                                 )}
                               </div>
                             </div>
@@ -360,9 +384,7 @@ export default async function CompanyDetailPage({
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="font-semibold text-slate-900">{contact.name}</p>
-                        {contact.title && (
-                          <p className="text-sm text-slate-500">{contact.title}</p>
-                        )}
+                        {contact.title && <p className="text-sm text-slate-500">{contact.title}</p>}
                         <div className="mt-2 flex flex-wrap items-center gap-2">
                           {contactRoles.map((cr) => {
                             const role = roles.find((r) => r.id === cr.roleId)
@@ -370,14 +392,14 @@ export default async function CompanyDetailPage({
                               <div key={cr.roleId} className="flex items-center gap-1.5">
                                 {cr.relationship && (
                                   <Badge
-                                    className={`text-xs border-0 ${
+                                    className={`border-0 text-xs ${
                                       cr.relationship === 'recruiter'
                                         ? 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]'
                                         : cr.relationship === 'interviewer'
-                                        ? 'bg-purple-100 text-purple-700'
-                                        : cr.relationship === 'hiring_manager'
-                                        ? 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]'
-                                        : 'bg-slate-100 text-slate-600'
+                                          ? 'bg-purple-100 text-purple-700'
+                                          : cr.relationship === 'hiring_manager'
+                                            ? 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]'
+                                            : 'bg-slate-100 text-slate-600'
                                     }`}
                                   >
                                     {cr.relationship.replace(/_/g, ' ')}
@@ -386,7 +408,7 @@ export default async function CompanyDetailPage({
                                 {role && (
                                   <Link
                                     href={`/roles/${role.id}`}
-                                    className="text-xs text-slate-400 hover:text-[var(--accent-ij-ink)] transition-colors"
+                                    className="text-xs text-slate-400 transition-colors hover:text-[var(--accent-ij-ink)]"
                                   >
                                     {role.role_title}
                                   </Link>
@@ -403,8 +425,12 @@ export default async function CompanyDetailPage({
                           rel="noopener noreferrer"
                           className="shrink-0"
                         >
-                          <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:border-[var(--accent-ij-wash)]">
-                            <ExternalLink className="h-3 w-3 mr-1" /> LinkedIn
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-slate-200 text-slate-600 hover:border-[var(--accent-ij-wash)]"
+                          >
+                            <ExternalLink className="mr-1 h-3 w-3" /> LinkedIn
                           </Button>
                         </a>
                       )}
@@ -425,7 +451,10 @@ export default async function CompanyDetailPage({
               placeholder="Add notes about this company — culture, interview process, contacts, anything relevant…"
               className="min-h-48 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)]/20"
             />
-            <Button type="submit" className="bg-[var(--accent-ij-ink)] hover:bg-[var(--accent-ij-ink)] text-white">
+            <Button
+              type="submit"
+              className="bg-[var(--accent-ij-ink)] text-white hover:bg-[var(--accent-ij-ink)]"
+            >
               <StickyNote className="mr-2 h-4 w-4" /> Save notes
             </Button>
           </form>

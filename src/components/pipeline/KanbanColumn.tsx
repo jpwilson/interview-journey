@@ -17,9 +17,14 @@ export function KanbanColumn({ stage, applications, droppableId }: Props) {
   return (
     <div className="flex w-[85vw] max-w-[320px] shrink-0 snap-start flex-col sm:w-72">
       {/* Column header */}
-      <div className={cn('mb-3 flex items-center gap-2 rounded-t-xl bg-white border-l-4 px-4 py-3 shadow-sm', stage.color)}>
+      <div
+        className={cn(
+          'mb-3 flex items-center gap-2 rounded-t-xl border-l-4 bg-white px-4 py-3 shadow-sm',
+          stage.color
+        )}
+      >
         <h3 className="font-semibold text-slate-900">{stage.label}</h3>
-        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 font-medium">
+        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
           {applications.length}
         </span>
       </div>
@@ -29,7 +34,7 @@ export function KanbanColumn({ stage, applications, droppableId }: Props) {
         ref={setNodeRef}
         className={cn(
           'flex min-h-24 flex-1 flex-col gap-3 rounded-b-xl p-2 transition-colors',
-          isOver ? 'bg-[var(--accent-ij-wash)]' : 'bg-slate-50',
+          isOver ? 'bg-[var(--accent-ij-wash)]' : 'bg-slate-50'
         )}
       >
         {applications.map((app) => (

@@ -11,7 +11,9 @@ import type { RoleWithCompany } from '@/lib/supabase/types'
 
 export default async function ArchivePage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const { data } = await supabase
@@ -31,8 +33,8 @@ export default async function ArchivePage() {
         <h1 className="font-headline text-2xl font-extrabold text-slate-900">Archive</h1>
       </div>
       <p className="mb-8 text-sm text-slate-500">
-        Deleted roles live here. Restore to put them back into your pipeline, or delete permanently to
-        remove them and their events, meetings, and documents.
+        Deleted roles live here. Restore to put them back into your pipeline, or delete permanently
+        to remove them and their events, meetings, and documents.
       </p>
 
       {archived.length === 0 ? (
@@ -40,13 +42,14 @@ export default async function ArchivePage() {
           <Archive className="mb-4 h-12 w-12 text-slate-300" />
           <p className="text-lg font-semibold text-slate-500">Archive is empty</p>
           <p className="mt-1 max-w-md text-sm text-slate-400">
-            When you delete a role, it lands here — not gone, just tucked away. You can restore it anytime.
+            When you delete a role, it lands here — not gone, just tucked away. You can restore it
+            anytime.
           </p>
         </div>
       ) : (
         <div className="space-y-3">
           {archived.map((role) => (
-            <Card key={role.id} className="bg-white rounded-xl border border-slate-100 shadow-sm">
+            <Card key={role.id} className="rounded-xl border border-slate-100 bg-white shadow-sm">
               <CardContent className="flex items-center justify-between gap-4 py-4">
                 <div className="flex min-w-0 items-center gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100">

@@ -15,9 +15,18 @@ const openrouter = createOpenAI({
 
 export const ClassificationSchema = z.object({
   doc_type: z.enum([
-    'offer_letter', 'rejection_email', 'interview_confirmation',
-    'nda', 'screening_email', 'assessment', 'reference_request',
-    'application_confirmation', 'resume', 'cover_letter', 'other', 'unknown',
+    'offer_letter',
+    'rejection_email',
+    'interview_confirmation',
+    'nda',
+    'screening_email',
+    'assessment',
+    'reference_request',
+    'application_confirmation',
+    'resume',
+    'cover_letter',
+    'other',
+    'unknown',
   ]),
   confidence: z.number().min(0).max(1),
   company_name: z.string().nullable(),
@@ -25,21 +34,25 @@ export const ClassificationSchema = z.object({
   event_date: z.string().nullable().describe('ISO 8601 date or null'),
   outcome: z.enum(['positive', 'negative', 'neutral']).nullable(),
   summary: z.string().describe('One sentence human-readable description'),
-  interview_details: z.object({
-    interview_type: z.string(),
-    scheduled_at: z.string().nullable(),
-    interviewer_names: z.array(z.string()),
-    platform: z.string().nullable(),
-    duration_minutes: z.number().nullable(),
-  }).nullable(),
-  offer_details: z.object({
-    base_salary: z.number().nullable(),
-    currency: z.string().nullable(),
-    equity: z.string().nullable(),
-    start_date: z.string().nullable(),
-    deadline: z.string().nullable(),
-    signing_bonus: z.number().nullable(),
-  }).nullable(),
+  interview_details: z
+    .object({
+      interview_type: z.string(),
+      scheduled_at: z.string().nullable(),
+      interviewer_names: z.array(z.string()),
+      platform: z.string().nullable(),
+      duration_minutes: z.number().nullable(),
+    })
+    .nullable(),
+  offer_details: z
+    .object({
+      base_salary: z.number().nullable(),
+      currency: z.string().nullable(),
+      equity: z.string().nullable(),
+      start_date: z.string().nullable(),
+      deadline: z.string().nullable(),
+      signing_bonus: z.number().nullable(),
+    })
+    .nullable(),
 })
 
 export type ClassificationResult = z.infer<typeof ClassificationSchema>
@@ -95,11 +108,16 @@ export function docTypeToEventType(docType: string): string {
 }
 
 /** Determine new stage from doc_type — only ever advance, never reverse */
-export function inferStageAdvance(
-  currentStage: string,
-  docType: string
-): string | null {
-  const STAGES = ['exploring', 'applied', 'screening', 'interviewing', 'offer', 'negotiating', 'resolved']
+export function inferStageAdvance(currentStage: string, docType: string): string | null {
+  const STAGES = [
+    'exploring',
+    'applied',
+    'screening',
+    'interviewing',
+    'offer',
+    'negotiating',
+    'resolved',
+  ]
   const currentIdx = STAGES.indexOf(currentStage)
 
   const docToStage: Record<string, string> = {

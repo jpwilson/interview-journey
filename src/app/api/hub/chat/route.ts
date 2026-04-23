@@ -20,7 +20,9 @@ Be concise, practical, and encouraging. Use markdown for lists and emphasis when
 
 export async function POST(request: Request) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { messages } = await request.json()

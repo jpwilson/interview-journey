@@ -8,7 +8,9 @@ import type { RoleEvent } from '@/lib/supabase/types'
 
 export default async function TimelinePage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const tier = await getUserTier(user.id)
@@ -18,11 +20,13 @@ export default async function TimelinePage() {
 
   const { data } = await supabase
     .from('roles')
-    .select(`
+    .select(
+      `
       *,
       company:companies(*),
       role_events(*)
-    `)
+    `
+    )
     .is('deleted_at', null)
     .order('applied_at', { ascending: true })
 
@@ -34,9 +38,7 @@ export default async function TimelinePage() {
 
   return (
     <div className="min-h-full bg-[#f8f9fa] p-8">
-      <h1 className="font-headline mb-8 text-3xl font-extrabold text-slate-900">
-        Career Timeline
-      </h1>
+      <h1 className="font-headline mb-8 text-3xl font-extrabold text-slate-900">Career Timeline</h1>
       <TimelineTabs roles={roles} allEvents={allEvents} />
     </div>
   )
@@ -77,10 +79,7 @@ function TimelinePaywall() {
 
         <div className="mb-10 grid gap-4 sm:grid-cols-3">
           {perks.map(({ icon: Icon, title, body }) => (
-            <div
-              key={title}
-              className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm"
-            >
+            <div key={title} className="rounded-xl border border-slate-100 bg-white p-5 shadow-sm">
               <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]">
                 <Icon className="h-4 w-4" />
               </div>
@@ -91,18 +90,17 @@ function TimelinePaywall() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[var(--accent-ij-wash)] bg-gradient-to-br from-[var(--accent-ij-wash)] to-white p-6 shadow-sm">
-          <div className="flex-1 min-w-[14rem]">
+          <div className="min-w-[14rem] flex-1">
             <p className="font-headline text-lg font-bold text-slate-900">
               Unlock the timeline with Pro
             </p>
             <p className="text-sm text-slate-500">
-              $12/month. Cancel anytime. Includes unlimited roles, uploads, and AI
-              classifications.
+              $12/month. Cancel anytime. Includes unlimited roles, uploads, and AI classifications.
             </p>
           </div>
           <Link
             href="/settings?upgrade=timeline"
-            className="inline-flex items-center gap-1 rounded-full bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[var(--accent-ij-glow-a)] transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-1 rounded-full bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--accent-ij-glow-a)] shadow-lg transition-opacity hover:opacity-90"
           >
             Upgrade to Pro <ArrowRight className="h-4 w-4" />
           </Link>
