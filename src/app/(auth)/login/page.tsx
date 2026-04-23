@@ -41,20 +41,45 @@ function LoginForm() {
   }
 
   return (
-    <Card className="border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
+    <Card
+      className="border shadow-xl"
+      style={{
+        borderColor: 'var(--paper-ink)',
+        background: 'var(--card)',
+        boxShadow: '0 20px 60px rgba(28,25,23,0.08), 0 2px 8px rgba(28,25,23,0.04)',
+      }}
+    >
       <CardHeader className="text-center">
-        <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl editorial-gradient">
+        <div
+          className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl"
+          style={{ background: 'linear-gradient(135deg, var(--accent-ij), var(--accent-ij-ink))' }}
+        >
           <Briefcase className="h-6 w-6 text-white" />
         </div>
-        <CardTitle className="font-headline text-2xl font-extrabold text-slate-900">Welcome back</CardTitle>
-        <CardDescription className="text-slate-500">
+        <CardTitle
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 500,
+            fontSize: 24,
+            letterSpacing: -0.3,
+            color: 'var(--ink)',
+          }}
+        >
+          Welcome back
+        </CardTitle>
+        <CardDescription style={{ color: 'var(--ink-4)' }}>
           Sign in to your Interview Journey
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Button
           variant="outline"
-          className="w-full border-slate-200 bg-white text-slate-700 hover:bg-slate-50 font-medium"
+          className="w-full font-medium"
+          style={{
+            borderColor: 'var(--paper-ink)',
+            background: 'var(--card)',
+            color: 'var(--ink-2)',
+          }}
           onClick={handleGoogleLogin}
         >
           <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -68,38 +93,97 @@ function LoginForm() {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-slate-200" />
+            <span className="w-full border-t" style={{ borderColor: 'var(--paper-ink)' }} />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-slate-400">Or</span>
+            <span
+              className="px-2"
+              style={{
+                background: 'var(--card)',
+                color: 'var(--ink-5)',
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.14em',
+              }}
+            >
+              Or
+            </span>
           </div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-slate-600 font-medium text-xs">Email</Label>
-            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com" required
-              className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:ring-sky-500/20 focus:border-sky-500" />
+            <Label
+              htmlFor="email"
+              style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}
+            >
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+              className="focus:ring-[var(--accent-ij-wash)] focus:border-[var(--accent-ij)]"
+              style={{
+                borderColor: 'var(--paper-ink)',
+                background: 'var(--card)',
+                color: 'var(--ink)',
+              }}
+            />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-slate-600 font-medium text-xs">Password</Label>
-            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••" required
-              className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:ring-sky-500/20 focus:border-sky-500" />
+            <Label
+              htmlFor="password"
+              style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}
+            >
+              Password
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              className="focus:ring-[var(--accent-ij-wash)] focus:border-[var(--accent-ij)]"
+              style={{
+                borderColor: 'var(--paper-ink)',
+                background: 'var(--card)',
+                color: 'var(--ink)',
+              }}
+            />
           </div>
-          <Button type="submit" className="w-full editorial-gradient text-white rounded-full font-semibold shadow-lg shadow-sky-200 border-0 hover:opacity-90" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign in'}
+          <Button
+            type="submit"
+            className="w-full rounded-full font-semibold text-white border-0 hover:opacity-90"
+            style={{
+              background: 'var(--accent-ij-ink)',
+              boxShadow: '0 4px 16px var(--accent-ij-glow-a)',
+            }}
+            disabled={loading}
+          >
+            {loading ? 'Signing in…' : 'Sign in'}
           </Button>
         </form>
 
-        {/* 1-click demo */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-slate-200" />
+            <span className="w-full border-t" style={{ borderColor: 'var(--paper-ink)' }} />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-slate-400">or try it instantly</span>
+            <span
+              className="px-2"
+              style={{
+                background: 'var(--card)',
+                color: 'var(--ink-5)',
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.14em',
+              }}
+            >
+              Or try it instantly
+            </span>
           </div>
         </div>
         <button
@@ -119,14 +203,21 @@ function LoginForm() {
             }
           }}
           disabled={loading}
-          className="w-full rounded-full border border-sky-200 bg-sky-50 py-2.5 text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-100 disabled:opacity-50"
+          className="w-full rounded-full py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
+          style={{
+            border: '1px solid var(--accent-ij)',
+            background: 'var(--accent-ij-wash)',
+            color: 'var(--accent-ij-ink)',
+          }}
         >
-          🚀 Demo login — see a live example
+          Try the live demo account
         </button>
 
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm" style={{ color: 'var(--ink-4)' }}>
           No account?{' '}
-          <Link href="/signup" className="text-sky-600 hover:text-sky-500 font-medium">Sign up free</Link>
+          <Link href="/signup" style={{ color: 'var(--accent-ij-ink)', fontWeight: 500 }}>
+            Sign up free
+          </Link>
         </p>
       </CardContent>
     </Card>
@@ -135,7 +226,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="h-96 animate-pulse rounded-xl bg-slate-100" />}>
+    <Suspense fallback={<div className="h-96 animate-pulse rounded-xl" style={{ background: 'var(--paper-2)' }} />}>
       <LoginForm />
     </Suspense>
   )

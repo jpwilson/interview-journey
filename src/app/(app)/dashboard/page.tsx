@@ -162,25 +162,24 @@ export default async function DashboardPage() {
   }
   const alertRoles = computeAlertRoles(allRoles, eventsByRole)
 
+  // Match the V6 reference: accent-wash only on Applications / In diligence / Next event.
   const tiles = [
-    { k: 'Active roles', v: String(active.length), sub: `${allRoles.length - active.length} resolved`, accent: true },
+    { k: 'Applications sent', v: String(allRoles.length), sub: `${active.length} active · ${allRoles.length - active.length} resolved`, accent: true },
+    { k: 'Reply rate', v: calcReplyRate(allRoles), sub: 'last 90 days' },
     { k: 'In diligence', v: String(inDiligence), sub: 'past recruiter screen', accent: true },
-    { k: 'Offers out', v: String(offersOut), sub: offersOut ? 'needs decision' : 'none yet', accent: offersOut > 0 },
     { k: 'Auto-closing soon', v: String(silentSoon), sub: 'silent 23+ days' },
     {
       k: 'Last applied',
-      v: latestApplied?.applied_at
-        ? relative(latestApplied.applied_at)
-        : '—',
+      v: latestApplied?.applied_at ? relative(latestApplied.applied_at) : '—',
       sub: latestApplied ? `${latestApplied.company.name} · ${latestApplied.role_title}` : 'Log a new application',
     },
     {
       k: 'Next event',
       v: events[0] ? relative(events[0].event_date, { future: true }) : '—',
       sub: events[0] && events[0].role ? `${events[0].role.company.name} · ${events[0].title}` : 'Nothing scheduled',
-      accent: !!events[0],
+      accent: true,
     },
-    { k: 'Reply rate', v: calcReplyRate(allRoles), sub: 'last 90 days' },
+    { k: 'Offers out', v: String(offersOut), sub: offersOut ? 'needs decision' : 'none yet' },
     { k: 'Total tracked', v: String(allRoles.length), sub: 'including resolved' },
   ]
 
@@ -224,7 +223,7 @@ export default async function DashboardPage() {
                           month: 'short',
                           day: 'numeric',
                           year: 'numeric',
-                        })}`
+                        })} · ${fmtTenure(profile.employment_start_date)}`
                       : ''}
                   </div>
                 </div>
@@ -243,6 +242,23 @@ export default async function DashboardPage() {
                 >
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-ij)' }} /> current
                 </span>
+              </div>
+              <hr style={{ border: 'none', borderTop: '1px solid var(--border-soft)', margin: '14px 0 14px' }} />
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: 12,
+                  fontSize: 13,
+                }}
+              >
+                <HoldingField label="Base" value="—" />
+                <HoldingField label="Highest ever" value="—" accent />
+                <HoldingField label="Last review" value="—" />
+                <HoldingField label="Next review" value="—" />
+              </div>
+              <div style={{ fontSize: 10, color: 'var(--ink-5)', marginTop: 10, fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
+                Comp fields editable in settings (coming)
               </div>
             </div>
           </section>
@@ -420,4 +436,42 @@ function calcReplyRate(roles: RoleWithCompany[]) {
   if (windowRoles.length === 0) return '—'
   const replied = windowRoles.filter((r) => ['screening', 'interviewing', 'offer', 'negotiating'].includes(r.stage) || r.last_contact_at).length
   return `${Math.round((replied / windowRoles.length) * 100)}%`
+}
+
+function fmtTenure(iso: string) {
+  const s = new Date(iso)
+  const n = new Date()
+  const m = (n.getFullYear() - s.getFullYear()) * 12 + (n.getMonth() - s.getMonth())
+  if (m < 0) return ''
+  const y = Math.floor(m / 12)
+  const mm = m % 12
+  return [y && `${y}y`, mm && `${mm}mo`].filter(Boolean).join(' ') || '0mo'
+}
+
+function HoldingField({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
+  return (
+    <div>
+      <div
+        style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 10,
+          letterSpacing: '0.14em',
+          textTransform: 'uppercase',
+          color: 'var(--ink-4)',
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          marginTop: 4,
+          fontSize: 14,
+          color: accent ? 'var(--accent-ij-ink)' : 'var(--ink)',
+          fontWeight: accent ? 500 : 400,
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  )
 }
