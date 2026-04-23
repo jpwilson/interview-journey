@@ -28,7 +28,7 @@ const STAGE_DOT_COLORS: Record<string, string> = {
   screening: 'bg-yellow-500',
   interviewing: 'bg-blue-500',
   offer: 'bg-purple-500',
-  negotiating: 'bg-[var(--accent-ij-wash)]0',
+  negotiating: 'bg-[var(--accent-ij-wash)]',
   resolved: 'bg-slate-400',
 }
 

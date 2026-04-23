@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { getUserTier } from '@/lib/limits'
+import { getUserTier, isPaidTier } from '@/lib/limits'
 import { toCsv, csvResponse } from '@/lib/csv'
 
 export async function GET() {
@@ -8,7 +8,7 @@ export async function GET() {
   if (!user) return new Response('Unauthorized', { status: 401 })
 
   const tier = await getUserTier(user.id)
-  if (tier !== 'pro') {
+  if (!isPaidTier(tier)) {
     return new Response('Export is a Pro feature', { status: 402 })
   }
 

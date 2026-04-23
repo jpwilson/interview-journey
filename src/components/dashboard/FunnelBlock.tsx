@@ -38,13 +38,15 @@ export function FunnelBlock({ roles, defaultRange = '90d' }: { roles: FunnelRole
     })
   }, [roles, range])
 
+  // Captured once on mount so the component stays pure across re-renders.
+  const [now] = useState(() => Date.now())
+
   const counts = useMemo(() => {
     let applied = 0
     let silent = 0
     let screen = 0
     let diligence = 0
     let offer = 0
-    const now = Date.now()
     const ms30d = 30 * 24 * 3600 * 1000
 
     for (const r of filtered) {
@@ -61,7 +63,7 @@ export function FunnelBlock({ roles, defaultRange = '90d' }: { roles: FunnelRole
     const replies = applied - silent
     const replyPct = applied > 0 ? Math.round((replies / applied) * 100) : 0
     return { applied, silent, screen, diligence, offer, replies, replyPct }
-  }, [filtered])
+  }, [filtered, now])
 
   const stages = [
     { key: 'Applied', n: counts.applied, hint: range === 'all' ? 'all time' : `in last ${range}`, positive: false },

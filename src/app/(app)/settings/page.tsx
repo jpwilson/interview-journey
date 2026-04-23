@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { UpgradeButton } from '@/components/settings/UpgradeButton'
 import { CopyButton } from '@/components/settings/CopyButton'
+import { isPaidTier } from '@/lib/limits'
 import { CheckCircle, Crown, Mail } from 'lucide-react'
 
 export default async function SettingsPage({
@@ -23,7 +24,8 @@ export default async function SettingsPage({
     supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
   ])
 
-  const isPro = sub?.tier === 'pro'
+  const tier = (sub?.tier ?? 'free') as 'free' | 'pro' | 'lifetime'
+  const isPro = isPaidTier(tier)
 
   return (
     <div className="min-h-full bg-[#f8f9fa] p-8">
