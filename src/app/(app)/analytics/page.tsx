@@ -5,8 +5,6 @@ import type { RoleWithCompany, RoleEvent } from '@/lib/supabase/types'
 import { AnalyticsFunnel } from '@/components/analytics/AnalyticsFunnel'
 import { PageHeader, PageShell, EditorialCard, SectionLabel } from '@/components/ui/PageHeader'
 
-const ORDERED_STAGES = ['applied', 'screening', 'interviewing', 'offer', 'hired'] as const
-
 export default async function AnalyticsPage() {
   const supabase = await createClient()
   const {
