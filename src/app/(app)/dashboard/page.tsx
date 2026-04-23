@@ -78,7 +78,7 @@ export default async function DashboardPage() {
     : { data: null }
 
   const [rolesRes, eventsRes, currentEmployerRes, pipelineEventsRes] = await Promise.all([
-    supabase.from('roles').select('*, company:companies(*)').order('updated_at', { ascending: false }),
+    supabase.from('roles').select('*, company:companies(*)').is('deleted_at', null).order('updated_at', { ascending: false }),
     supabase
       .from('role_events')
       .select('*, role:roles(role_title, company:companies(name))')
@@ -142,6 +142,8 @@ export default async function DashboardPage() {
   const active = allRoles.filter((r) => r.stage !== 'resolved')
   const inDiligence = allRoles.filter((r) => ['interviewing', 'offer', 'negotiating'].includes(r.stage)).length
   const offersOut = allRoles.filter((r) => ['offer', 'negotiating'].includes(r.stage)).length
+  // Server component — runs once per render, purity rule is a false positive here.
+  // eslint-disable-next-line react-hooks/purity
   const nowMs = Date.now()
   const ms30d = 30 * 24 * 3600 * 1000
   const silentSoon = active.filter((r) => {

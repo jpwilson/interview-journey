@@ -76,6 +76,7 @@ export default async function CompanyDetailPage({
       .from('roles')
       .select('*, role_events(*)')
       .eq('company_id', id)
+      .is('deleted_at', null)
       .order('applied_at', { ascending: false }),
   ])
 
