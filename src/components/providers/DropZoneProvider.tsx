@@ -70,16 +70,26 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
         canvas.toBlob(
           (blob) => {
-            if (!blob) { resolve(file); return }
-            const compressed = new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' })
-            console.log(`Compressed ${file.name}: ${(file.size / 1024).toFixed(0)}KB → ${(compressed.size / 1024).toFixed(0)}KB`)
+            if (!blob) {
+              resolve(file)
+              return
+            }
+            const compressed = new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), {
+              type: 'image/jpeg',
+            })
+            console.log(
+              `Compressed ${file.name}: ${(file.size / 1024).toFixed(0)}KB → ${(compressed.size / 1024).toFixed(0)}KB`
+            )
             resolve(compressed)
           },
           'image/jpeg',
           0.6
         )
       }
-      img.onerror = () => { URL.revokeObjectURL(url); resolve(file) }
+      img.onerror = () => {
+        URL.revokeObjectURL(url)
+        resolve(file)
+      }
       img.src = url
     })
   }
@@ -158,7 +168,11 @@ export function DropZoneProvider({ children }: { children: React.ReactNode }) {
             filter: `id=eq.${doc.id}`,
           },
           (payload) => {
-            const updated = payload.new as { classification_status: string; extracted_summary?: string; extracted_company?: string }
+            const updated = payload.new as {
+              classification_status: string
+              extracted_summary?: string
+              extracted_company?: string
+            }
             if (updated.classification_status === 'classified') {
               const company = updated.extracted_company ? ` → ${updated.extracted_company}` : ''
               toast.success(

@@ -141,8 +141,18 @@ export function PipelineTabs({
               background: 'var(--paper)',
             }}
           >
-            <TabButton active={tab === 'table'} onClick={() => switchTab('table')} icon={<Table2 size={13} />} label="Table" />
-            <TabButton active={tab === 'board'} onClick={() => switchTab('board')} icon={<Columns3 size={13} />} label="Board" />
+            <TabButton
+              active={tab === 'table'}
+              onClick={() => switchTab('table')}
+              icon={<Table2 size={13} />}
+              label="Table"
+            />
+            <TabButton
+              active={tab === 'board'}
+              onClick={() => switchTab('board')}
+              icon={<Columns3 size={13} />}
+              label="Board"
+            />
           </div>
           <Link
             href="/roles/new"
@@ -166,7 +176,11 @@ export function PipelineTabs({
         </div>
       </div>
 
-      {tab === 'table' ? <PipelineTable roles={initialRoles} /> : <BoardView roles={initialRoles} />}
+      {tab === 'table' ? (
+        <PipelineTable roles={initialRoles} />
+      ) : (
+        <BoardView roles={initialRoles} />
+      )}
     </div>
   )
 }
@@ -215,11 +229,18 @@ function PipelineTable({ roles }: { roles: RoleWithCompany[] }) {
   // Enrich each role with its effective stage once
   const enriched = useMemo(
     () => roles.map((r) => ({ role: r, eff: effectiveStage(r), silent: silentDays(r) })),
-    [roles],
+    [roles]
   )
 
   const counts = useMemo(() => {
-    const c: Record<Filter, number> = { all: 0, diligence: 0, screening: 0, silent: 0, rejected: 0, offer: 0 }
+    const c: Record<Filter, number> = {
+      all: 0,
+      diligence: 0,
+      screening: 0,
+      silent: 0,
+      rejected: 0,
+      offer: 0,
+    }
     for (const { eff } of enriched) {
       c.all += 1
       if (eff === 'interviewing' || eff === 'offer' || eff === 'negotiating') c.diligence += 1
@@ -233,18 +254,20 @@ function PipelineTable({ roles }: { roles: RoleWithCompany[] }) {
 
   const filtered = useMemo(() => {
     let list = enriched
-    if (filter === 'diligence') list = list.filter((x) => ['interviewing', 'offer', 'negotiating'].includes(x.eff))
+    if (filter === 'diligence')
+      list = list.filter((x) => ['interviewing', 'offer', 'negotiating'].includes(x.eff))
     else if (filter === 'screening') list = list.filter((x) => x.eff === 'screening')
     else if (filter === 'silent') list = list.filter((x) => x.eff === 'silent')
     else if (filter === 'rejected') list = list.filter((x) => x.eff === 'rejected')
-    else if (filter === 'offer') list = list.filter((x) => x.eff === 'offer' || x.eff === 'negotiating')
+    else if (filter === 'offer')
+      list = list.filter((x) => x.eff === 'offer' || x.eff === 'negotiating')
     if (query.trim()) {
       const q = query.toLowerCase()
       list = list.filter(
         ({ role: r }) =>
           r.company.name.toLowerCase().includes(q) ||
           r.role_title.toLowerCase().includes(q) ||
-          (r.location ?? '').toLowerCase().includes(q),
+          (r.location ?? '').toLowerCase().includes(q)
       )
     }
     // Sort: active first by last activity desc, then resolved by resolved_at desc, then silent by silentDays desc
@@ -252,8 +275,12 @@ function PipelineTable({ roles }: { roles: RoleWithCompany[] }) {
       const aResolved = ['hired', 'rejected', 'withdrew', 'ghosted', 'declined'].includes(a.eff)
       const bResolved = ['hired', 'rejected', 'withdrew', 'ghosted', 'declined'].includes(b.eff)
       if (aResolved !== bResolved) return aResolved ? 1 : -1
-      const aT = new Date(a.role.last_contact_at ?? a.role.applied_at ?? a.role.created_at).getTime()
-      const bT = new Date(b.role.last_contact_at ?? b.role.applied_at ?? b.role.created_at).getTime()
+      const aT = new Date(
+        a.role.last_contact_at ?? a.role.applied_at ?? a.role.created_at
+      ).getTime()
+      const bT = new Date(
+        b.role.last_contact_at ?? b.role.applied_at ?? b.role.created_at
+      ).getTime()
       return bT - aT
     })
   }, [enriched, filter, query])
@@ -371,13 +398,25 @@ function PipelineTable({ roles }: { roles: RoleWithCompany[] }) {
             <div style={{ textAlign: 'right' }}>Silent</div>
           </div>
           {filtered.length === 0 ? (
-            <div style={{ padding: '48px 16px', color: 'var(--ink-4)', fontSize: 13, textAlign: 'center' }}>
+            <div
+              style={{
+                padding: '48px 16px',
+                color: 'var(--ink-4)',
+                fontSize: 13,
+                textAlign: 'center',
+              }}
+            >
               No matches.{' '}
               {query && (
                 <button
                   type="button"
                   onClick={() => setQuery('')}
-                  style={{ color: 'var(--accent-ij-ink)', background: 'none', border: 'none', cursor: 'pointer' }}
+                  style={{
+                    color: 'var(--accent-ij-ink)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
                 >
                   Clear search
                 </button>
@@ -385,7 +424,13 @@ function PipelineTable({ roles }: { roles: RoleWithCompany[] }) {
             </div>
           ) : (
             filtered.map(({ role, eff, silent }, i) => (
-              <TableRow key={role.id} role={role} eff={eff} silent={silent} isLast={i === filtered.length - 1} />
+              <TableRow
+                key={role.id}
+                role={role}
+                eff={eff}
+                silent={silent}
+                isLast={i === filtered.length - 1}
+              />
             ))
           )}
         </div>
@@ -405,9 +450,11 @@ function PipelineTable({ roles }: { roles: RoleWithCompany[] }) {
           <span>
             {filtered.length} of {counts.all} · {counts.silent} silent · {counts.rejected} rejected
           </span>
-          <span style={{ fontStyle: 'italic', fontFamily: 'var(--font-sans)', color: 'var(--ink-5)' }}>
-            Tip: silent leads auto-archive after 30 days (configurable). They stay searchable forever — like old
-            CRM leads, some come back around.
+          <span
+            style={{ fontStyle: 'italic', fontFamily: 'var(--font-sans)', color: 'var(--ink-5)' }}
+          >
+            Tip: silent leads auto-archive after 30 days (configurable). They stay searchable
+            forever — like old CRM leads, some come back around.
           </span>
         </div>
       </div>
@@ -481,7 +528,14 @@ function TableRow({
         >
           {role.company.name[0]}
         </div>
-        <span style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <span
+          style={{
+            fontWeight: 500,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
           {role.company.name}
         </span>
       </div>
@@ -494,7 +548,17 @@ function TableRow({
         {role.applied_at ? fmtShortDate(role.applied_at) : '—'}
       </div>
       {/* Source */}
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.04em', color: 'var(--ink-4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+      <div
+        style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 10,
+          letterSpacing: '0.04em',
+          color: 'var(--ink-4)',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
         {role.source ?? '—'}
       </div>
       {/* Stage (dot chip) */}
@@ -518,7 +582,14 @@ function TableRow({
           {eff}
         </span>
         {resolved && role.resolved_at && (
-          <div style={{ fontSize: 9, color: 'var(--ink-5)', marginTop: 3, fontFamily: 'var(--font-mono)' }}>
+          <div
+            style={{
+              fontSize: 9,
+              color: 'var(--ink-5)',
+              marginTop: 3,
+              fontFamily: 'var(--font-mono)',
+            }}
+          >
             {eff} · {fmtShortDate(role.resolved_at)}
           </div>
         )}
@@ -532,7 +603,9 @@ function TableRow({
       {/* Remote */}
       <div style={{ fontSize: 11, color: 'var(--ink-4)' }}>{remote}</div>
       {/* Silent */}
-      <div style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: 11 }}>{silentCol}</div>
+      <div style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: 11 }}>
+        {silentCol}
+      </div>
     </Link>
   )
 }
@@ -555,8 +628,8 @@ function BoardView({ roles }: { roles: RoleWithCompany[] }) {
   return (
     <div style={{ padding: '20px 22px 40px' }}>
       <div style={{ fontSize: 12, color: 'var(--ink-4)', marginBottom: 12 }}>
-        Showing {active.length} active {active.length === 1 ? 'role' : 'roles'}. Resolved history lives in
-        the <span style={{ color: 'var(--accent-ij-ink)' }}>Table</span> view.
+        Showing {active.length} active {active.length === 1 ? 'role' : 'roles'}. Resolved history
+        lives in the <span style={{ color: 'var(--accent-ij-ink)' }}>Table</span> view.
       </div>
       <KanbanBoard initialRoles={active} />
     </div>

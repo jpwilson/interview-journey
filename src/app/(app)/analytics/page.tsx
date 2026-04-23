@@ -19,7 +19,10 @@ export default async function AnalyticsPage() {
   if (!user) redirect('/login')
 
   const [{ data: rolesData }, { data: eventsData }] = await Promise.all([
-    supabase.from('roles').select('*, company:companies(*)').order('created_at', { ascending: false }),
+    supabase
+      .from('roles')
+      .select('*, company:companies(*)')
+      .order('created_at', { ascending: false }),
     supabase.from('role_events').select('*').order('event_date', { ascending: true }),
   ])
 
@@ -44,10 +47,26 @@ export default async function AnalyticsPage() {
     r.stage === 'resolved' && r.resolution === 'hired'
 
   const funnelCounts = {
-    applied: roles.filter((r) => r.applied_at || ['applied','screening','interviewing','offer','negotiating','resolved'].includes(r.stage)).length,
-    screening: roles.filter((r) => ['screening', 'interviewing', 'offer', 'negotiating', 'resolved'].includes(r.stage)).length,
-    interviewing: roles.filter((r) => ['interviewing', 'offer', 'negotiating', 'resolved'].includes(r.stage)).length,
-    offer: roles.filter((r) => ['offer', 'negotiating', 'resolved'].includes(r.stage) && r.resolution !== 'rejected' && r.resolution !== 'withdrew' && r.resolution !== 'ghosted').length,
+    applied: roles.filter(
+      (r) =>
+        r.applied_at ||
+        ['applied', 'screening', 'interviewing', 'offer', 'negotiating', 'resolved'].includes(
+          r.stage
+        )
+    ).length,
+    screening: roles.filter((r) =>
+      ['screening', 'interviewing', 'offer', 'negotiating', 'resolved'].includes(r.stage)
+    ).length,
+    interviewing: roles.filter((r) =>
+      ['interviewing', 'offer', 'negotiating', 'resolved'].includes(r.stage)
+    ).length,
+    offer: roles.filter(
+      (r) =>
+        ['offer', 'negotiating', 'resolved'].includes(r.stage) &&
+        r.resolution !== 'rejected' &&
+        r.resolution !== 'withdrew' &&
+        r.resolution !== 'ghosted'
+    ).length,
     hired: roles.filter(stageToResolutionHired).length,
   }
 
@@ -57,10 +76,17 @@ export default async function AnalyticsPage() {
   const responseColor =
     responseRate > 5 ? 'text-green-600' : responseRate >= 2 ? 'text-yellow-600' : 'text-red-500'
   const responseBg =
-    responseRate > 5 ? 'bg-green-50 border-green-200' : responseRate >= 2 ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-200'
+    responseRate > 5
+      ? 'bg-green-50 border-green-200'
+      : responseRate >= 2
+        ? 'bg-yellow-50 border-yellow-200'
+        : 'bg-red-50 border-red-200'
 
   // ── Section 3: Source performance ──────────────────────────────────────────
-  const sourceMap: Record<string, { applied: number; screening: number; interview: number; offer: number }> = {}
+  const sourceMap: Record<
+    string,
+    { applied: number; screening: number; interview: number; offer: number }
+  > = {}
   for (const role of roles) {
     const src = role.source ?? 'unknown'
     if (!sourceMap[src]) sourceMap[src] = { applied: 0, screening: 0, interview: 0, offer: 0 }
@@ -69,7 +95,12 @@ export default async function AnalyticsPage() {
       sourceMap[src].screening++
     if (['interviewing', 'offer', 'negotiating', 'resolved'].includes(role.stage))
       sourceMap[src].interview++
-    if (['offer', 'negotiating', 'resolved'].includes(role.stage) && role.resolution !== 'rejected' && role.resolution !== 'withdrew' && role.resolution !== 'ghosted')
+    if (
+      ['offer', 'negotiating', 'resolved'].includes(role.stage) &&
+      role.resolution !== 'rejected' &&
+      role.resolution !== 'withdrew' &&
+      role.resolution !== 'ghosted'
+    )
       sourceMap[src].offer++
   }
 
@@ -114,9 +145,7 @@ export default async function AnalyticsPage() {
       : null
 
   // ── Section 5: Ghost rate ───────────────────────────────────────────────────
-  const ghosted = roles.filter(
-    (r) => r.stage === 'resolved' && r.resolution === 'ghosted'
-  )
+  const ghosted = roles.filter((r) => r.stage === 'resolved' && r.resolution === 'ghosted')
   const silentRoles = roles.filter((r) => {
     if (r.stage === 'resolved') return false
     const roleEvents = eventsByRole[r.id] ?? []
@@ -138,7 +167,7 @@ export default async function AnalyticsPage() {
         {/* Section 1: Funnel */}
         <Card className="border-slate-100 bg-white shadow-sm">
           <CardHeader>
-            <CardTitle className="text-slate-900 font-bold">Application funnel</CardTitle>
+            <CardTitle className="font-bold text-slate-900">Application funnel</CardTitle>
           </CardHeader>
           <CardContent>
             <AnalyticsFunnel counts={funnelCounts} />
@@ -148,10 +177,15 @@ export default async function AnalyticsPage() {
         {/* Section 2: Response rate */}
         <Card className="border-slate-100 bg-white shadow-sm">
           <CardHeader>
-            <CardTitle className="text-slate-900 font-bold">Response rate</CardTitle>
+            <CardTitle className="font-bold text-slate-900">Response rate</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={cn('inline-flex items-center rounded-xl border px-6 py-4 mb-4', responseBg)}>
+            <div
+              className={cn(
+                'mb-4 inline-flex items-center rounded-xl border px-6 py-4',
+                responseBg
+              )}
+            >
               <p className={cn('text-5xl font-extrabold', responseColor)}>{responseRate}%</p>
             </div>
             <p className="text-sm text-slate-500">
@@ -160,10 +194,10 @@ export default async function AnalyticsPage() {
             <p className="mt-1 text-xs text-slate-400">
               Industry average is 3–5%.{' '}
               {responseRate > 5
-                ? 'Great work — you\'re above average!'
+                ? "Great work — you're above average!"
                 : responseRate >= 2
-                ? 'You\'re near the average. Keep applying!'
-                : 'Below average — consider refining your resume or targeting different roles.'}
+                  ? "You're near the average. Keep applying!"
+                  : 'Below average — consider refining your resume or targeting different roles.'}
             </p>
           </CardContent>
         </Card>
@@ -171,27 +205,27 @@ export default async function AnalyticsPage() {
         {/* Section 3: Source performance */}
         <Card className="border-slate-100 bg-white shadow-sm">
           <CardHeader>
-            <CardTitle className="text-slate-900 font-bold">Source performance</CardTitle>
+            <CardTitle className="font-bold text-slate-900">Source performance</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 text-left text-xs uppercase text-slate-400">
-                    <th className="pb-3 pr-4 font-semibold">Source</th>
-                    <th className="pb-3 pr-4 font-semibold text-right">Applied</th>
-                    <th className="pb-3 pr-4 font-semibold text-right">Screening</th>
-                    <th className="pb-3 pr-4 font-semibold text-right">Interview</th>
-                    <th className="pb-3 pr-4 font-semibold text-right">Offer</th>
-                    <th className="pb-3 font-semibold text-right">Rate</th>
+                  <tr className="border-b border-slate-100 text-left text-xs text-slate-400 uppercase">
+                    <th className="pr-4 pb-3 font-semibold">Source</th>
+                    <th className="pr-4 pb-3 text-right font-semibold">Applied</th>
+                    <th className="pr-4 pb-3 text-right font-semibold">Screening</th>
+                    <th className="pr-4 pb-3 text-right font-semibold">Interview</th>
+                    <th className="pr-4 pb-3 text-right font-semibold">Offer</th>
+                    <th className="pb-3 text-right font-semibold">Rate</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
                   {sourceRows.map(([src, counts]) => {
                     const rate = Math.round((counts.screening / (counts.applied || 1)) * 100)
                     return (
-                      <tr key={src} className="text-slate-700 hover:bg-slate-50 transition-colors">
-                        <td className="py-3 pr-4 capitalize font-medium">{src}</td>
+                      <tr key={src} className="text-slate-700 transition-colors hover:bg-slate-50">
+                        <td className="py-3 pr-4 font-medium capitalize">{src}</td>
                         <td className="py-3 pr-4 text-right text-slate-500">{counts.applied}</td>
                         <td className="py-3 pr-4 text-right text-slate-500">{counts.screening}</td>
                         <td className="py-3 pr-4 text-right text-slate-500">{counts.interview}</td>
@@ -199,7 +233,11 @@ export default async function AnalyticsPage() {
                         <td
                           className={cn(
                             'py-3 text-right font-semibold',
-                            rate > 5 ? 'text-green-600' : rate >= 2 ? 'text-yellow-600' : 'text-red-500'
+                            rate > 5
+                              ? 'text-green-600'
+                              : rate >= 2
+                                ? 'text-yellow-600'
+                                : 'text-red-500'
                           )}
                         >
                           {rate}%
@@ -216,18 +254,21 @@ export default async function AnalyticsPage() {
         {/* Section 4: Time in stage */}
         <Card className="border-slate-100 bg-white shadow-sm">
           <CardHeader>
-            <CardTitle className="text-slate-900 font-bold">Time in stage</CardTitle>
+            <CardTitle className="font-bold text-slate-900">Time in stage</CardTitle>
           </CardHeader>
           <CardContent>
             {avgDaysToInterview === null && avgDaysToOffer === null ? (
               <p className="text-sm text-slate-500">
-                No resolved data yet — these stats appear once you have completed interview or offer events.
+                No resolved data yet — these stats appear once you have completed interview or offer
+                events.
               </p>
             ) : (
               <div className="flex gap-10">
                 {avgDaysToInterview !== null && (
                   <div>
-                    <p className="text-4xl font-extrabold text-[var(--accent-ij-ink)]">{avgDaysToInterview}d</p>
+                    <p className="text-4xl font-extrabold text-[var(--accent-ij-ink)]">
+                      {avgDaysToInterview}d
+                    </p>
                     <p className="mt-1 text-sm text-slate-500">Avg. applied → first interview</p>
                   </div>
                 )}
@@ -245,7 +286,7 @@ export default async function AnalyticsPage() {
         {/* Section 5: Ghost rate */}
         <Card className="border-slate-100 bg-white shadow-sm">
           <CardHeader>
-            <CardTitle className="text-slate-900 font-bold">Ghost rate</CardTitle>
+            <CardTitle className="font-bold text-slate-900">Ghost rate</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <p className="text-4xl font-extrabold text-slate-700">{ghostRate}%</p>

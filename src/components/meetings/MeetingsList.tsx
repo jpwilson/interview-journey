@@ -7,8 +7,17 @@ import { updateMeetingOutcome } from '@/lib/actions/meetings'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
-  Phone, Code2, Layout, Users, MessageSquare,
-  Trophy, Calendar, Clock, Monitor, Plus, ChevronDown,
+  Phone,
+  Code2,
+  Layout,
+  Users,
+  MessageSquare,
+  Trophy,
+  Calendar,
+  Clock,
+  Monitor,
+  Plus,
+  ChevronDown,
 } from 'lucide-react'
 
 interface MeetingsListProps {
@@ -99,10 +108,14 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
   }
 
   return (
-    <div className={`rounded-xl border p-4 space-y-3 bg-white shadow-sm ${upcoming ? 'border-[var(--accent-ij-wash)]' : 'border-slate-100'}`}>
+    <div
+      className={`space-y-3 rounded-xl border bg-white p-4 shadow-sm ${upcoming ? 'border-[var(--accent-ij-wash)]' : 'border-slate-100'}`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${upcoming ? 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]' : 'bg-slate-100 text-slate-500'}`}>
+          <div
+            className={`flex h-8 w-8 items-center justify-center rounded-lg ${upcoming ? 'bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]' : 'bg-slate-100 text-slate-500'}`}
+          >
             <TypeIcon type={meeting.type} />
           </div>
           <div>
@@ -114,20 +127,18 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
         </div>
 
         <div className="relative flex items-center gap-2">
-          <Badge className={`text-xs border ${badge.className}`}>
-            {badge.label}
-          </Badge>
+          <Badge className={`border text-xs ${badge.className}`}>{badge.label}</Badge>
           <button
             type="button"
             onClick={() => setShowOutcomeMenu((v) => !v)}
             disabled={updating}
-            className="text-slate-400 hover:text-slate-600 transition-colors"
+            className="text-slate-400 transition-colors hover:text-slate-600"
             title="Update outcome"
           >
             <ChevronDown className="h-4 w-4" />
           </button>
           {showOutcomeMenu && (
-            <div className="absolute right-0 top-7 z-10 min-w-[130px] rounded-xl border border-slate-100 bg-white py-1 shadow-lg">
+            <div className="absolute top-7 right-0 z-10 min-w-[130px] rounded-xl border border-slate-100 bg-white py-1 shadow-lg">
               {Object.entries(OUTCOME_BADGE).map(([key, { label: l }]) => (
                 <button
                   key={key}
@@ -163,7 +174,7 @@ function MeetingCard({ meeting, roleId }: MeetingCardProps) {
       </div>
 
       {meeting.prep_notes && (
-        <p className="text-xs text-slate-500 line-clamp-2 border-t border-slate-100 pt-2">
+        <p className="line-clamp-2 border-t border-slate-100 pt-2 text-xs text-slate-500">
           {meeting.prep_notes}
         </p>
       )}
@@ -193,13 +204,15 @@ export function MeetingsList({ meetings, roleId }: MeetingsListProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-500">
-          {meetings.length === 0 ? 'No meetings yet' : `${meetings.length} meeting${meetings.length !== 1 ? 's' : ''}`}
+          {meetings.length === 0
+            ? 'No meetings yet'
+            : `${meetings.length} meeting${meetings.length !== 1 ? 's' : ''}`}
         </p>
         {!showForm && (
           <Button
             size="sm"
             onClick={() => setShowForm(true)}
-            className="bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white rounded-full px-4 font-semibold shadow-md shadow-[var(--accent-ij-glow-a)] border-0 hover:opacity-90 transition-opacity"
+            className="rounded-full border-0 bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] px-4 font-semibold text-white shadow-[var(--accent-ij-glow-a)] shadow-md transition-opacity hover:opacity-90"
           >
             <Plus className="mr-1.5 h-4 w-4" />
             Add meeting
@@ -207,12 +220,10 @@ export function MeetingsList({ meetings, roleId }: MeetingsListProps) {
         )}
       </div>
 
-      {showForm && (
-        <AddMeetingForm roleId={roleId} onCancel={() => setShowForm(false)} />
-      )}
+      {showForm && <AddMeetingForm roleId={roleId} onCancel={() => setShowForm(false)} />}
 
       {sorted.length === 0 && !showForm && (
-        <div className="rounded-xl border border-dashed border-slate-200 py-12 text-center bg-white">
+        <div className="rounded-xl border border-dashed border-slate-200 bg-white py-12 text-center">
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-50">
             <Calendar className="h-6 w-6 text-slate-400" />
           </div>
@@ -221,7 +232,7 @@ export function MeetingsList({ meetings, roleId }: MeetingsListProps) {
             size="sm"
             variant="ghost"
             onClick={() => setShowForm(true)}
-            className="mt-3 text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] hover:bg-[var(--accent-ij-wash)]"
+            className="mt-3 text-[var(--accent-ij-ink)] hover:bg-[var(--accent-ij-wash)] hover:text-[var(--accent-ij-ink)]"
           >
             Schedule your first meeting
           </Button>

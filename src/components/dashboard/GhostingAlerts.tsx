@@ -13,15 +13,15 @@ function GhostingAlertRow({ role }: { role: AlertRole }) {
   const [isPending, startTransition] = useTransition()
 
   if (role._alertType === 'deadline') {
-    const deadlineDate = role.offer_deadline
-      ? format(new Date(role.offer_deadline), 'MMM d')
-      : ''
+    const deadlineDate = role.offer_deadline ? format(new Date(role.offer_deadline), 'MMM d') : ''
     const days = role._daysUntilDeadline ?? 0
 
     return (
       <div className="flex items-start justify-between gap-4 rounded-xl border border-orange-200 bg-orange-50 p-4">
         <div className="flex items-start gap-3">
-          <span className="mt-0.5 text-lg" aria-hidden="true">⏰</span>
+          <span className="mt-0.5 text-lg" aria-hidden="true">
+            ⏰
+          </span>
           <div>
             <p className="font-semibold text-orange-900">
               {role.company.name} — {role.role_title}
@@ -33,7 +33,7 @@ function GhostingAlertRow({ role }: { role: AlertRole }) {
         </div>
         <Link
           href={`/roles/${role.id}`}
-          className="shrink-0 rounded-lg bg-orange-100 border border-orange-200 px-3 py-1.5 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-200"
+          className="shrink-0 rounded-lg border border-orange-200 bg-orange-100 px-3 py-1.5 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-200"
         >
           View offer
         </Link>
@@ -46,7 +46,9 @@ function GhostingAlertRow({ role }: { role: AlertRole }) {
   return (
     <div className="flex items-start justify-between gap-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
       <div className="flex items-start gap-3">
-        <span className="mt-0.5 text-lg" aria-hidden="true">👻</span>
+        <span className="mt-0.5 text-lg" aria-hidden="true">
+          👻
+        </span>
         <div>
           <p className="font-semibold text-amber-900">
             {role.company.name} — {role.role_title}
@@ -80,7 +82,7 @@ export function GhostingAlerts({ roles }: GhostingAlertsProps) {
 
   return (
     <div className="mb-8">
-      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-amber-700">
+      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide text-amber-700 uppercase">
         <span aria-hidden="true">⚠️</span> Needs attention ({roles.length})
       </h2>
       <div className="space-y-2">

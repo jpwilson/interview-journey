@@ -7,7 +7,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Plus, Briefcase, MapPin, DollarSign, Download, Lock } from 'lucide-react'
 import Link from 'next/link'
@@ -26,7 +30,9 @@ const STAGE_COLORS: Record<string, string> = {
 
 export default async function RolesPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   const tier = user ? await getUserTier(user.id) : 'free'
 
   const { data } = await supabase
@@ -43,54 +49,94 @@ export default async function RolesPage() {
         <div className="flex items-center gap-2">
           {isPaidTier(tier) ? (
             <a href="/api/export/roles" download>
-              <Button variant="outline" className="border-slate-200 text-slate-600 hover:bg-slate-50">
+              <Button
+                variant="outline"
+                className="border-slate-200 text-slate-600 hover:bg-slate-50"
+              >
                 <Download className="mr-2 h-4 w-4" /> Export CSV
               </Button>
             </a>
           ) : (
             <Link href="/settings?upgrade=export" title="CSV export is a Pro feature">
-              <Button variant="outline" className="border-slate-200 text-slate-500 hover:bg-slate-50">
+              <Button
+                variant="outline"
+                className="border-slate-200 text-slate-500 hover:bg-slate-50"
+              >
                 <Lock className="mr-2 h-4 w-4" /> Export CSV
               </Button>
             </Link>
           )}
           <Dialog>
-          <DialogTrigger render={
-            <Button className="bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white rounded-full px-6 py-2.5 font-semibold shadow-lg shadow-[var(--accent-ij-glow-a)] border-0 hover:opacity-90 transition-opacity" />
-          }>
-            <Plus className="mr-2 h-4 w-4" /> Add role
-          </DialogTrigger>
-          <DialogContent className="border-slate-100 bg-white text-slate-900 shadow-xl">
-            <DialogHeader>
-              <DialogTitle className="text-slate-900 font-headline font-extrabold">Add new role</DialogTitle>
-            </DialogHeader>
-            <form action={createRole} className="space-y-4 pt-2">
-              <div className="space-y-2">
-                <Label htmlFor="company_name" className="text-slate-700">Company name *</Label>
-                <Input name="company_name" id="company_name" placeholder="Stripe" required
-                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="role_title" className="text-slate-700">Role *</Label>
-                <Input name="role_title" id="role_title" placeholder="Senior Software Engineer" required
-                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="job_url" className="text-slate-700">Job URL</Label>
-                <Input name="job_url" id="job_url" placeholder="https://..." type="url"
-                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="notes" className="text-slate-700">Notes</Label>
-                <Input name="notes" id="notes" placeholder="Optional notes..."
-                  className="border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]" />
-              </div>
-              <Button type="submit" className="w-full bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white rounded-full font-semibold shadow-lg shadow-[var(--accent-ij-glow-a)] border-0 hover:opacity-90 transition-opacity">
-                Add role
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+            <DialogTrigger
+              render={
+                <Button className="rounded-full border-0 bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] px-6 py-2.5 font-semibold text-white shadow-[var(--accent-ij-glow-a)] shadow-lg transition-opacity hover:opacity-90" />
+              }
+            >
+              <Plus className="mr-2 h-4 w-4" /> Add role
+            </DialogTrigger>
+            <DialogContent className="border-slate-100 bg-white text-slate-900 shadow-xl">
+              <DialogHeader>
+                <DialogTitle className="font-headline font-extrabold text-slate-900">
+                  Add new role
+                </DialogTitle>
+              </DialogHeader>
+              <form action={createRole} className="space-y-4 pt-2">
+                <div className="space-y-2">
+                  <Label htmlFor="company_name" className="text-slate-700">
+                    Company name *
+                  </Label>
+                  <Input
+                    name="company_name"
+                    id="company_name"
+                    placeholder="Stripe"
+                    required
+                    className="rounded-lg border-slate-200 bg-white text-slate-900 focus:border-[var(--accent-ij)] focus:ring-[var(--accent-ij)]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role_title" className="text-slate-700">
+                    Role *
+                  </Label>
+                  <Input
+                    name="role_title"
+                    id="role_title"
+                    placeholder="Senior Software Engineer"
+                    required
+                    className="rounded-lg border-slate-200 bg-white text-slate-900 focus:border-[var(--accent-ij)] focus:ring-[var(--accent-ij)]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="job_url" className="text-slate-700">
+                    Job URL
+                  </Label>
+                  <Input
+                    name="job_url"
+                    id="job_url"
+                    placeholder="https://..."
+                    type="url"
+                    className="rounded-lg border-slate-200 bg-white text-slate-900 focus:border-[var(--accent-ij)] focus:ring-[var(--accent-ij)]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="notes" className="text-slate-700">
+                    Notes
+                  </Label>
+                  <Input
+                    name="notes"
+                    id="notes"
+                    placeholder="Optional notes..."
+                    className="rounded-lg border-slate-200 bg-white text-slate-900 focus:border-[var(--accent-ij)] focus:ring-[var(--accent-ij)]"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full rounded-full border-0 bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] font-semibold text-white shadow-[var(--accent-ij-glow-a)] shadow-lg transition-opacity hover:opacity-90"
+                >
+                  Add role
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -108,7 +154,7 @@ export default async function RolesPage() {
         <div className="space-y-3">
           {roles.map((role) => (
             <Link key={role.id} href={`/roles/${role.id}`}>
-              <Card className="bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="cursor-pointer rounded-xl border border-slate-100 bg-white shadow-sm transition-shadow hover:shadow-md">
                 <CardContent className="flex items-center justify-between py-4">
                   <div className="flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent-ij-wash)]">
@@ -137,7 +183,9 @@ export default async function RolesPage() {
                         {role.remote_type}
                       </span>
                     )}
-                    <Badge className={`${STAGE_COLORS[role.stage] ?? 'bg-slate-100 text-slate-600'} text-xs font-medium border-0`}>
+                    <Badge
+                      className={`${STAGE_COLORS[role.stage] ?? 'bg-slate-100 text-slate-600'} border-0 text-xs font-medium`}
+                    >
                       {role.stage}
                     </Badge>
                     <span className="text-xs text-slate-400">

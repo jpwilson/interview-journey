@@ -23,15 +23,7 @@ const FILTER_PILLS: { key: FilterStatus; label: string }[] = [
   { key: 'past', label: 'Previous' },
 ]
 
-function SortIcon({
-  col,
-  activeKey,
-  dir,
-}: {
-  col: SortKey
-  activeKey: SortKey
-  dir: SortDir
-}) {
+function SortIcon({ col, activeKey, dir }: { col: SortKey; activeKey: SortKey; dir: SortDir }) {
   if (activeKey !== col) return <ArrowUpDown className="h-3 w-3 text-slate-300" />
   return dir === 'asc' ? (
     <ArrowUp className="h-3 w-3 text-[var(--accent-ij-ink)]" />
@@ -107,14 +99,14 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
       {/* Controls */}
       <div className="flex items-center justify-between gap-4">
         {/* Search */}
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <div className="relative max-w-sm flex-1">
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search companies..."
-            className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)]/20 focus:border-[var(--accent-ij)]"
+            className="w-full rounded-lg border border-slate-200 bg-white py-2 pr-4 pl-10 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--accent-ij)] focus:ring-2 focus:ring-[var(--accent-ij)]/20 focus:outline-none"
           />
         </div>
 
@@ -124,10 +116,10 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-1 ${
+              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-1 focus-visible:outline-none ${
                 filter === key
                   ? 'bg-[var(--accent-ij-ink)] text-white shadow-sm'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-[var(--accent-ij-wash)] hover:text-[var(--accent-ij-ink)]'
+                  : 'border border-slate-200 bg-white text-slate-600 hover:border-[var(--accent-ij-wash)] hover:text-[var(--accent-ij-ink)]'
               }`}
             >
               {label}
@@ -146,31 +138,48 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/50">
-              <th className="text-left py-3 px-4">
-                <button onClick={() => toggleSort('name')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900">
+              <th className="px-4 py-3 text-left">
+                <button
+                  onClick={() => toggleSort('name')}
+                  className="flex items-center gap-1.5 text-xs font-bold tracking-widest text-slate-500 uppercase hover:text-slate-900"
+                >
                   Company <SortIcon col="name" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
-              <th className="text-left py-3 px-4 hidden md:table-cell">
-                <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Industry</span>
+              <th className="hidden px-4 py-3 text-left md:table-cell">
+                <span className="text-xs font-bold tracking-widest text-slate-500 uppercase">
+                  Industry
+                </span>
               </th>
-              <th className="text-center py-3 px-4">
-                <button onClick={() => toggleSort('rolesCount')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 mx-auto">
+              <th className="px-4 py-3 text-center">
+                <button
+                  onClick={() => toggleSort('rolesCount')}
+                  className="mx-auto flex items-center gap-1.5 text-xs font-bold tracking-widest text-slate-500 uppercase hover:text-slate-900"
+                >
                   Roles <SortIcon col="rolesCount" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
-              <th className="text-center py-3 px-4">
-                <button onClick={() => toggleSort('activeCount')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 mx-auto">
+              <th className="px-4 py-3 text-center">
+                <button
+                  onClick={() => toggleSort('activeCount')}
+                  className="mx-auto flex items-center gap-1.5 text-xs font-bold tracking-widest text-slate-500 uppercase hover:text-slate-900"
+                >
                   Active <SortIcon col="activeCount" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
-              <th className="text-center py-3 px-4">
-                <button onClick={() => toggleSort('status')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 mx-auto">
+              <th className="px-4 py-3 text-center">
+                <button
+                  onClick={() => toggleSort('status')}
+                  className="mx-auto flex items-center gap-1.5 text-xs font-bold tracking-widest text-slate-500 uppercase hover:text-slate-900"
+                >
                   Status <SortIcon col="status" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
-              <th className="text-right py-3 px-4">
-                <button onClick={() => toggleSort('lastActivity')} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 ml-auto">
+              <th className="px-4 py-3 text-right">
+                <button
+                  onClick={() => toggleSort('lastActivity')}
+                  className="ml-auto flex items-center gap-1.5 text-xs font-bold tracking-widest text-slate-500 uppercase hover:text-slate-900"
+                >
                   Last Activity <SortIcon col="lastActivity" activeKey={sortKey} dir={sortDir} />
                 </button>
               </th>
@@ -189,33 +198,33 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
                   key={row.id}
                   className={`group transition-colors hover:bg-[var(--accent-ij-wash)]/40 ${i !== filtered.length - 1 ? 'border-b border-slate-100' : ''}`}
                 >
-                  <td className="py-3.5 px-4">
+                  <td className="px-4 py-3.5">
                     <Link
                       href={`/companies/${row.id}`}
-                      className="flex items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-2"
+                      className="flex items-center gap-3 rounded-md focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-2 focus-visible:outline-none"
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white text-xs font-bold">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-xs font-bold text-white">
                         {row.name.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-semibold text-slate-900 group-hover:text-[var(--accent-ij-ink)] transition-colors">{row.name}</p>
-                        {row.domain && (
-                          <p className="text-xs text-slate-400">{row.domain}</p>
-                        )}
+                        <p className="font-semibold text-slate-900 transition-colors group-hover:text-[var(--accent-ij-ink)]">
+                          {row.name}
+                        </p>
+                        {row.domain && <p className="text-xs text-slate-400">{row.domain}</p>}
                       </div>
                     </Link>
                   </td>
-                  <td className="py-3.5 px-4 hidden md:table-cell">
+                  <td className="hidden px-4 py-3.5 md:table-cell">
                     {row.industry ? (
                       <span className="text-xs text-slate-500 capitalize">{row.industry}</span>
                     ) : (
                       <span className="text-xs text-slate-300">—</span>
                     )}
                   </td>
-                  <td className="py-3.5 px-4 text-center">
+                  <td className="px-4 py-3.5 text-center">
                     <span className="text-sm font-semibold text-slate-900">{row.rolesCount}</span>
                   </td>
-                  <td className="py-3.5 px-4 text-center">
+                  <td className="px-4 py-3.5 text-center">
                     {row.activeCount > 0 ? (
                       <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-[var(--accent-ij-wash)] px-2 text-xs font-bold text-[var(--accent-ij-ink)]">
                         {row.activeCount}
@@ -224,12 +233,14 @@ export function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
                       <span className="text-xs text-slate-300">0</span>
                     )}
                   </td>
-                  <td className="py-3.5 px-4 text-center">
-                    <span className={`inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${STATUS_STYLES[row.status]}`}>
+                  <td className="px-4 py-3.5 text-center">
+                    <span
+                      className={`inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase ${STATUS_STYLES[row.status]}`}
+                    >
                       {row.statusLabel}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     {row.lastActivity ? (
                       <span className="text-xs text-slate-400">
                         {formatDistanceToNow(new Date(row.lastActivity), { addSuffix: true })}

@@ -28,18 +28,18 @@ export async function POST(request: Request) {
   // Sanitise HTML fallback
   const bodyText =
     TextBody ||
-    (HtmlBody ? HtmlBody.replace(/<[^>]+>/g, ' ').replace(/\s{2,}/g, ' ').trim() : '')
+    (HtmlBody
+      ? HtmlBody.replace(/<[^>]+>/g, ' ')
+          .replace(/\s{2,}/g, ' ')
+          .trim()
+      : '')
 
   const content = `Subject: ${Subject}\nFrom: ${From}\n\n${bodyText}`
 
   const service = createServiceClient()
 
   // Verify user exists
-  const { data: profile } = await service
-    .from('profiles')
-    .select('id')
-    .eq('id', userId)
-    .single()
+  const { data: profile } = await service.from('profiles').select('id').eq('id', userId).single()
 
   if (!profile) {
     return Response.json({ error: 'User not found' }, { status: 404 })

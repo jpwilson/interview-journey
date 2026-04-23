@@ -29,7 +29,11 @@ function fmt(value: number | null, currency = 'USD') {
 
 function fmtDate(iso: string | null) {
   if (!iso) return '—'
-  return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(iso).toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 function calcCashComp(offer: Offer) {
@@ -59,18 +63,18 @@ function OfferColumn({ offer }: OfferColumnProps) {
   ]
 
   return (
-    <div className="flex flex-col min-w-[240px] max-w-xs flex-1">
+    <div className="flex max-w-xs min-w-[240px] flex-1 flex-col">
       {/* Header */}
       <div className="rounded-t-xl border border-slate-100 bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] px-4 py-4">
-        <p className="font-bold text-white truncate">{company}</p>
-        <p className="text-sm text-[var(--accent-ij-wash)] truncate">{role}</p>
+        <p className="truncate font-bold text-white">{company}</p>
+        <p className="truncate text-sm text-[var(--accent-ij-wash)]">{role}</p>
       </div>
 
       {/* Rows */}
-      <div className="border-x border-slate-100 flex-1 divide-y divide-slate-50 bg-white">
+      <div className="flex-1 divide-y divide-slate-50 border-x border-slate-100 bg-white">
         {rows.map(({ label, value }) => (
           <div key={label} className="px-4 py-3">
-            <p className="text-xs text-slate-400 mb-0.5">{label}</p>
+            <p className="mb-0.5 text-xs text-slate-400">{label}</p>
             <p className="text-sm text-slate-900">{value}</p>
           </div>
         ))}
@@ -78,21 +82,19 @@ function OfferColumn({ offer }: OfferColumnProps) {
 
       {/* Year 1 cash comp total — highlighted in green */}
       <div className="border-x border-t border-slate-100 bg-green-50 px-4 py-4">
-        <p className="text-xs text-green-700 font-medium mb-0.5">Total Year 1</p>
+        <p className="mb-0.5 text-xs font-medium text-green-700">Total Year 1</p>
         <p className="text-lg font-bold text-green-800">{fmt(cashComp, offer.currency)}</p>
-        {offer.equity && (
-          <p className="text-xs text-green-600 mt-1">+ equity: {offer.equity}</p>
-        )}
+        {offer.equity && <p className="mt-1 text-xs text-green-600">+ equity: {offer.equity}</p>}
       </div>
 
       {/* Actions */}
-      <div className="rounded-b-xl border border-t-0 border-slate-100 bg-[#f8f9fa] px-4 py-3 flex gap-2">
+      <div className="flex gap-2 rounded-b-xl border border-t-0 border-slate-100 bg-[#f8f9fa] px-4 py-3">
         <div className="flex-1">
           <ConfirmDialog
             trigger={
               <Button
                 size="sm"
-                className="w-full bg-gradient-to-r from-[var(--accent-ij)] to-[var(--accent-ij-ink)] hover:from-[#005578] hover:to-[#3a8fbf] text-white border-0"
+                className="w-full border-0 bg-gradient-to-r from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white hover:from-[#005578] hover:to-[#3a8fbf]"
               >
                 Accept
               </Button>
@@ -128,7 +130,9 @@ function OfferColumn({ offer }: OfferColumnProps) {
 
 export default async function OffersPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   const tier = user ? await getUserTier(user.id) : 'free'
 
   const { data: offers } = await supabase
@@ -156,20 +160,28 @@ export default async function OffersPage() {
           <p className="text-sm text-slate-500">Compare pending offers side by side</p>
         </div>
         {pendingOffers.length > 0 && (
-          <Badge className="ml-auto bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)] border-0">
+          <Badge className="ml-auto border-0 bg-[var(--accent-ij-wash)] text-[var(--accent-ij-ink)]">
             {pendingOffers.length} pending
           </Badge>
         )}
         <div className={pendingOffers.length > 0 ? '' : 'ml-auto'}>
           {isPaidTier(tier) ? (
             <a href="/api/export/offers" download>
-              <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-slate-200 text-slate-600 hover:bg-slate-50"
+              >
                 <Download className="mr-2 h-4 w-4" /> Export CSV
               </Button>
             </a>
           ) : (
             <Link href="/settings?upgrade=export" title="CSV export is a Pro feature">
-              <Button variant="outline" size="sm" className="border-slate-200 text-slate-500 hover:bg-slate-50">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-slate-200 text-slate-500 hover:bg-slate-50"
+              >
                 <Lock className="mr-2 h-4 w-4" /> Export CSV
               </Button>
             </Link>
@@ -191,7 +203,7 @@ export default async function OffersPage() {
       {/* Comparison grid */}
       {pendingOffers.length > 0 && (
         <div className="overflow-x-auto">
-          <div className="flex gap-4 min-w-max pb-4">
+          <div className="flex min-w-max gap-4 pb-4">
             {pendingOffers.map((offer) => (
               <OfferColumn key={offer.id} offer={offer} />
             ))}

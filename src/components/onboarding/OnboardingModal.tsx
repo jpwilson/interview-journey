@@ -23,7 +23,12 @@ const STATUS_OPTS: {
 }[] = [
   { id: 'happy', label: 'Happy where I am', sub: 'Keep receipts, no nudges.', icon: HeartPulse },
   { id: 'open', label: 'Open to better', sub: 'Market pulse monthly. No pressure.', icon: Compass },
-  { id: 'active', label: 'Actively looking', sub: 'Full pipeline mode. Daily digest.', icon: Search },
+  {
+    id: 'active',
+    label: 'Actively looking',
+    sub: 'Full pipeline mode. Daily digest.',
+    icon: Search,
+  },
 ]
 
 export function OnboardingModal({
@@ -263,10 +268,18 @@ export function OnboardingModal({
                       <Icon size={16} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 14, fontWeight: 500, color: active ? 'var(--accent-ij-ink)' : 'var(--ink)' }}>
+                      <div
+                        style={{
+                          fontSize: 14,
+                          fontWeight: 500,
+                          color: active ? 'var(--accent-ij-ink)' : 'var(--ink)',
+                        }}
+                      >
                         {s.label}
                       </div>
-                      <div style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 2 }}>{s.sub}</div>
+                      <div style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 2 }}>
+                        {s.sub}
+                      </div>
                     </div>
                   </button>
                 )
@@ -275,7 +288,14 @@ export function OnboardingModal({
           )}
         </div>
 
-        <div style={{ marginTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div
+          style={{
+            marginTop: 20,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <button
             type="button"
             onClick={() => {
@@ -310,9 +330,7 @@ export function OnboardingModal({
                   setStep((step + 1) as 2 | 3)
                 }
               }}
-              style={primaryButton(
-                step === 1 && !notEmployed && employer.trim().length === 0,
-              )}
+              style={primaryButton(step === 1 && !notEmployed && employer.trim().length === 0)}
             >
               <Briefcase size={13} /> Continue
             </button>

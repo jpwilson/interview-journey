@@ -37,14 +37,14 @@ export default async function SettingsPage({
       </h1>
 
       {params.upgraded === 'true' && (
-        <div className="mb-6 flex items-center gap-2 rounded-xl bg-green-50 border border-green-200 p-4 text-green-700">
+        <div className="mb-6 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
           <CheckCircle className="h-5 w-5 shrink-0" />
           Welcome to Pro! Your account has been upgraded.
         </div>
       )}
 
       {params.upgrade && (
-        <div className="mb-6 rounded-xl bg-[var(--accent-ij-wash)] border border-[var(--accent-ij-wash)] p-4 text-[var(--accent-ij-ink)]">
+        <div className="mb-6 rounded-xl border border-[var(--accent-ij-wash)] bg-[var(--accent-ij-wash)] p-4 text-[var(--accent-ij-ink)]">
           This feature requires a Pro plan. Upgrade below to unlock it.
         </div>
       )}
@@ -52,15 +52,15 @@ export default async function SettingsPage({
       {/* Account */}
       <Card className="mb-6 border-slate-100 bg-white shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900 font-bold">Account</CardTitle>
+          <CardTitle className="font-bold text-slate-900">Account</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-400 mb-1">Email</p>
+            <p className="mb-1 text-xs font-medium tracking-wide text-slate-400 uppercase">Email</p>
             <p className="text-slate-900">{user.email}</p>
           </div>
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-400 mb-1">Name</p>
+            <p className="mb-1 text-xs font-medium tracking-wide text-slate-400 uppercase">Name</p>
             <p className="text-slate-900">{profile?.display_name ?? '—'}</p>
           </div>
         </CardContent>
@@ -70,13 +70,13 @@ export default async function SettingsPage({
       <Card className="mb-6 border-slate-100 bg-white shadow-sm">
         <CardHeader className="flex flex-row items-center gap-2">
           <Mail className="h-5 w-5 text-[var(--accent-ij-ink)]" />
-          <CardTitle className="text-slate-900 font-bold">Email forwarding</CardTitle>
+          <CardTitle className="font-bold text-slate-900">Email forwarding</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
             <p className="mb-2 text-sm text-slate-500">Your personal forwarding address</p>
-            <div className="flex items-center gap-3 rounded-lg bg-slate-50 border border-slate-200 px-4 py-3">
-              <code className="flex-1 select-all font-mono text-sm text-[var(--accent-ij-ink)]">
+            <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+              <code className="flex-1 font-mono text-sm text-[var(--accent-ij-ink)] select-all">
                 parse+{user.id}@interviewjourney.app
               </code>
               <CopyButton text={`parse+${user.id}@interviewjourney.app`} />
@@ -92,9 +92,9 @@ export default async function SettingsPage({
       {/* Billing */}
       <Card className="border-slate-100 bg-white shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-slate-900 font-bold">Plan</CardTitle>
+          <CardTitle className="font-bold text-slate-900">Plan</CardTitle>
           {isPro && (
-            <Badge className="bg-green-100 text-green-700 border-0">
+            <Badge className="border-0 bg-green-100 text-green-700">
               <Crown className="mr-1 h-3 w-3" /> Pro
             </Badge>
           )}

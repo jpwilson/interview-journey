@@ -25,7 +25,13 @@ const RANGE_OPTS: { id: Range; label: string }[] = [
   { id: 'all', label: 'All time' },
 ]
 
-export function FunnelBlock({ roles, defaultRange = '90d' }: { roles: FunnelRole[]; defaultRange?: Range }) {
+export function FunnelBlock({
+  roles,
+  defaultRange = '90d',
+}: {
+  roles: FunnelRole[]
+  defaultRange?: Range
+}) {
   const [range, setRange] = useState<Range>(defaultRange)
 
   const filtered = useMemo(() => {
@@ -66,7 +72,12 @@ export function FunnelBlock({ roles, defaultRange = '90d' }: { roles: FunnelRole
   }, [filtered, now])
 
   const stages = [
-    { key: 'Applied', n: counts.applied, hint: range === 'all' ? 'all time' : `in last ${range}`, positive: false },
+    {
+      key: 'Applied',
+      n: counts.applied,
+      hint: range === 'all' ? 'all time' : `in last ${range}`,
+      positive: false,
+    },
     { key: 'No reply', n: counts.silent, hint: 'silent 30+ days', positive: false },
     { key: 'Screening', n: counts.screen, hint: 'got a reply', positive: true },
     { key: 'Interviewing', n: counts.diligence, hint: 'in diligence', positive: true },
@@ -105,7 +116,14 @@ export function FunnelBlock({ roles, defaultRange = '90d' }: { roles: FunnelRole
           >
             {range === 'all' ? 'The funnel' : `${range} funnel`}
           </div>
-          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 15, marginTop: 4, color: 'var(--ink)' }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 15,
+              marginTop: 4,
+              color: 'var(--ink)',
+            }}
+          >
             {counts.applied} applications → {counts.replies} replies ({counts.replyPct}%) →{' '}
             <span style={{ color: 'var(--accent-ij-ink)', fontWeight: 500 }}>
               {counts.diligence + counts.offer} in diligence
@@ -147,7 +165,9 @@ export function FunnelBlock({ roles, defaultRange = '90d' }: { roles: FunnelRole
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${stages.length}, 1fr)`, gap: 10 }}>
+      <div
+        style={{ display: 'grid', gridTemplateColumns: `repeat(${stages.length}, 1fr)`, gap: 10 }}
+      >
         {stages.map((s) => {
           const pct = Math.max(4, (s.n / maxN) * 100)
           return (
@@ -173,7 +193,15 @@ export function FunnelBlock({ roles, defaultRange = '90d' }: { roles: FunnelRole
               >
                 {s.key}
               </div>
-              <div style={{ height: 4, borderRadius: 2, background: 'var(--paper-2)', marginTop: 6, overflow: 'hidden' }}>
+              <div
+                style={{
+                  height: 4,
+                  borderRadius: 2,
+                  background: 'var(--paper-2)',
+                  marginTop: 6,
+                  overflow: 'hidden',
+                }}
+              >
                 <div
                   style={{
                     height: '100%',

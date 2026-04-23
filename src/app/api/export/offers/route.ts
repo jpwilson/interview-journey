@@ -4,7 +4,9 @@ import { toCsv, csvResponse } from '@/lib/csv'
 
 export async function GET() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return new Response('Unauthorized', { status: 401 })
 
   const tier = await getUserTier(user.id)
@@ -14,7 +16,9 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('offers')
-    .select('id, base_salary, signing_bonus, equity, currency, start_date, deadline, status, notes, role:roles(role_title, company:companies(name))')
+    .select(
+      'id, base_salary, signing_bonus, equity, currency, start_date, deadline, status, notes, role:roles(role_title, company:companies(name))'
+    )
     .order('created_at', { ascending: false })
 
   if (error) return new Response('Failed to fetch offers', { status: 500 })
@@ -50,8 +54,16 @@ export async function GET() {
   })
 
   const csv = toCsv(rows, [
-    'company', 'role_title', 'status', 'base_salary', 'signing_bonus', 'equity',
-    'currency', 'start_date', 'deadline', 'notes',
+    'company',
+    'role_title',
+    'status',
+    'base_salary',
+    'signing_bonus',
+    'equity',
+    'currency',
+    'start_date',
+    'deadline',
+    'notes',
   ])
 
   const date = new Date().toISOString().slice(0, 10)

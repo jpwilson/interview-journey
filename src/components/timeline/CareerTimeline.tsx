@@ -58,17 +58,28 @@ const FILTER_LABELS: { key: FilterKey; label: string }[] = [
 
 function matchesFilter(role: RoleWithRelations, filter: FilterKey): boolean {
   switch (filter) {
-    case 'all': return true
-    case 'active': return role.stage !== 'resolved'
-    case 'hired': return role.resolution === 'hired'
-    case 'rejected': return role.resolution === 'rejected'
-    case 'withdrew': return role.resolution === 'withdrew'
-    case 'ghosted': return role.resolution === 'ghosted'
-    case 'exploring': return role.stage === 'exploring'
-    case 'interviewing': return role.stage === 'interviewing'
-    case 'offer': return role.stage === 'offer' || role.stage === 'negotiating'
-    case 'declined': return role.resolution === 'offer_declined'
-    default: return true
+    case 'all':
+      return true
+    case 'active':
+      return role.stage !== 'resolved'
+    case 'hired':
+      return role.resolution === 'hired'
+    case 'rejected':
+      return role.resolution === 'rejected'
+    case 'withdrew':
+      return role.resolution === 'withdrew'
+    case 'ghosted':
+      return role.resolution === 'ghosted'
+    case 'exploring':
+      return role.stage === 'exploring'
+    case 'interviewing':
+      return role.stage === 'interviewing'
+    case 'offer':
+      return role.stage === 'offer' || role.stage === 'negotiating'
+    case 'declined':
+      return role.resolution === 'offer_declined'
+    default:
+      return true
   }
 }
 
@@ -85,7 +96,9 @@ export function CareerTimeline({ roles }: Props) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
         <p className="text-slate-400">No roles to display yet.</p>
-        <p className="mt-1 text-sm text-slate-500">Your career timeline will appear here as you track roles.</p>
+        <p className="mt-1 text-sm text-slate-500">
+          Your career timeline will appear here as you track roles.
+        </p>
       </div>
     )
   }
@@ -99,8 +112,8 @@ export function CareerTimeline({ roles }: Props) {
           onClick={() => setFilter(key)}
           className={
             filter === key
-              ? 'rounded-full px-4 py-1.5 text-sm font-medium bg-[var(--accent-ij-ink)] text-white transition-colors'
-              : 'rounded-full px-4 py-1.5 text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:border-[var(--accent-ij-wash)] transition-colors'
+              ? 'rounded-full bg-[var(--accent-ij-ink)] px-4 py-1.5 text-sm font-medium text-white transition-colors'
+              : 'rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:border-[var(--accent-ij-wash)]'
           }
         >
           {label}
@@ -121,7 +134,9 @@ export function CareerTimeline({ roles }: Props) {
   }
 
   // Group by company id
-  const byCompany = filteredRoles.reduce<Record<string, { name: string; id: string; roles: RoleWithRelations[] }>>((acc, role) => {
+  const byCompany = filteredRoles.reduce<
+    Record<string, { name: string; id: string; roles: RoleWithRelations[] }>
+  >((acc, role) => {
     const key = role.company.id
     if (!acc[key]) acc[key] = { name: role.company.name, id: role.company.id, roles: [] }
     acc[key].roles.push(role)
@@ -130,10 +145,10 @@ export function CareerTimeline({ roles }: Props) {
 
   const companies = Object.values(byCompany)
 
-  const allDates = filteredRoles.flatMap((r) => [
-    r.applied_at ?? r.created_at,
-    ...r.role_events.map((e) => e.event_date),
-  ]).filter(Boolean).map((d) => parseISO(d!))
+  const allDates = filteredRoles
+    .flatMap((r) => [r.applied_at ?? r.created_at, ...r.role_events.map((e) => e.event_date)])
+    .filter(Boolean)
+    .map((d) => parseISO(d!))
 
   const minDate = new Date(Math.min(...allDates.map((d) => d.getTime())))
   const maxDate = new Date(Math.max(...allDates.map((d) => d.getTime())))
@@ -163,7 +178,7 @@ export function CareerTimeline({ roles }: Props) {
               <div className="w-36 shrink-0 pt-1 text-right">
                 <Link
                   href={`/companies/${companyId}`}
-                  className="truncate text-sm font-semibold text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] transition-colors block"
+                  className="block truncate text-sm font-semibold text-[var(--accent-ij-ink)] transition-colors hover:text-[var(--accent-ij-ink)]"
                 >
                   {companyName}
                 </Link>
@@ -172,7 +187,7 @@ export function CareerTimeline({ roles }: Props) {
               {/* Timeline row */}
               <div className="relative flex-1 py-2">
                 {/* Base line */}
-                <div className="absolute top-1/2 left-0 right-0 h-px -translate-y-1/2 bg-slate-200" />
+                <div className="absolute top-1/2 right-0 left-0 h-px -translate-y-1/2 bg-slate-200" />
 
                 {/* Role blocks */}
                 {companyRoles.map((role) => {
@@ -206,7 +221,7 @@ export function CareerTimeline({ roles }: Props) {
                           className="absolute -top-6 -translate-x-1/2 whitespace-nowrap"
                           style={{ left: `${left}%` }}
                         >
-                          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition-colors">
+                          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900">
                             {role.role_title}
                           </span>
                         </div>
@@ -217,9 +232,7 @@ export function CareerTimeline({ roles }: Props) {
                         className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
                         style={{ left: `${left}%` }}
                       >
-                        <Badge
-                          className={`${dotColor} text-white text-xs px-1 py-0`}
-                        >
+                        <Badge className={`${dotColor} px-1 py-0 text-xs text-white`}>
                           {role.stage}
                         </Badge>
                       </div>
@@ -236,7 +249,7 @@ export function CareerTimeline({ roles }: Props) {
           {Object.entries(STAGE_COLORS).map(([stage, color]) => (
             <div key={stage} className="flex items-center gap-1.5">
               <div className={`h-3 w-3 rounded-full ${color}`} />
-              <span className="text-xs capitalize text-slate-500">{stage}</span>
+              <span className="text-xs text-slate-500 capitalize">{stage}</span>
             </div>
           ))}
         </div>
