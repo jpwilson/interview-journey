@@ -952,7 +952,15 @@ export default function LandingPage() {
         }}
       >
         <Wordmark size={13} />
-        <div>&copy; {new Date().getFullYear()} · built quietly in sf</div>
+        <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
+          <Link href="/terms" style={{ color: 'var(--ink-4)', textDecoration: 'none' }}>
+            Terms
+          </Link>
+          <Link href="/privacy" style={{ color: 'var(--ink-4)', textDecoration: 'none' }}>
+            Privacy
+          </Link>
+          <span>&copy; {new Date().getFullYear()} · built quietly in sf</span>
+        </div>
       </footer>
     </div>
   )
