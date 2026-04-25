@@ -14,7 +14,7 @@ interface Props {
 export function TimelineTabs({ roles, allEvents }: Props) {
   return (
     <Tabs defaultValue="river" className="gap-0">
-      <TabsList className="mb-6 bg-white border border-slate-100 shadow-sm p-1 h-auto w-fit rounded-xl">
+      <TabsList className="mb-6 h-auto w-fit rounded-xl border border-slate-100 bg-white p-1 shadow-sm">
         <TabsTrigger
           value="river"
           className="h-auto rounded-lg px-5 py-2 text-sm font-medium data-active:bg-[var(--accent-ij-ink)] data-active:text-white"
@@ -28,7 +28,7 @@ export function TimelineTabs({ roles, allEvents }: Props) {
           Chronicle
         </TabsTrigger>
       </TabsList>
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+      <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
         <TabsContent value="river" className="mt-0">
           <CareerTimeline roles={roles} />
         </TabsContent>

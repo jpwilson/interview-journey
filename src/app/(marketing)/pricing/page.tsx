@@ -26,21 +26,33 @@ const PRO_FEATURES = [
 export default function PricingPage() {
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-slate-900">
-      <nav className="sticky top-0 z-40 flex items-center justify-between bg-white/70 backdrop-blur-xl border-b border-slate-200/60 px-8 py-4">
+      <nav className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200/60 bg-white/70 px-8 py-4 backdrop-blur-xl">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg editorial-gradient">
+          <div className="editorial-gradient flex h-8 w-8 items-center justify-center rounded-lg">
             <Briefcase className="h-4 w-4 text-white" />
           </div>
-          <span className="font-headline text-lg font-extrabold text-slate-900 tracking-tight">Interview Journey</span>
+          <span className="font-headline text-lg font-extrabold tracking-tight text-slate-900">
+            Interview Journey
+          </span>
         </Link>
         <div className="flex gap-3">
-          <Link href="/login"><Button variant="ghost" className="text-slate-600 hover:text-slate-900 font-medium">Sign in</Button></Link>
-          <Link href="/signup"><Button className="editorial-gradient text-white rounded-full px-6 font-semibold shadow-lg shadow-sky-200 border-0 hover:opacity-90">Get started</Button></Link>
+          <Link href="/login">
+            <Button variant="ghost" className="font-medium text-slate-600 hover:text-slate-900">
+              Sign in
+            </Button>
+          </Link>
+          <Link href="/signup">
+            <Button className="editorial-gradient rounded-full border-0 px-6 font-semibold text-white shadow-lg shadow-sky-200 hover:opacity-90">
+              Get started
+            </Button>
+          </Link>
         </div>
       </nav>
 
       <div className="mx-auto max-w-4xl px-6 py-28">
-        <h1 className="mb-4 text-center font-headline text-4xl font-extrabold text-slate-900">Simple, honest pricing</h1>
+        <h1 className="font-headline mb-4 text-center text-4xl font-extrabold text-slate-900">
+          Simple, honest pricing
+        </h1>
         <p className="mb-16 text-center text-lg text-slate-500">
           Free forever for casual job seekers. Pro for serious ones.
         </p>
@@ -58,12 +70,19 @@ export default function PricingPage() {
               ))}
             </ul>
             <Link href="/signup">
-              <Button variant="outline" className="w-full rounded-full border-slate-300 text-slate-700 font-medium hover:bg-slate-50">Get started free</Button>
+              <Button
+                variant="outline"
+                className="w-full rounded-full border-slate-300 font-medium text-slate-700 hover:bg-slate-50"
+              >
+                Get started free
+              </Button>
             </Link>
           </div>
 
-          <div className="rounded-xl border-2 border-sky-500 bg-white p-8 shadow-lg shadow-sky-100 relative">
-            <div className="absolute -top-3 left-6 rounded-full editorial-gradient px-3 py-0.5 text-[10px] font-bold text-white uppercase tracking-widest">Recommended</div>
+          <div className="relative rounded-xl border-2 border-sky-500 bg-white p-8 shadow-lg shadow-sky-100">
+            <div className="editorial-gradient absolute -top-3 left-6 rounded-full px-3 py-0.5 text-[10px] font-bold tracking-widest text-white uppercase">
+              Recommended
+            </div>
             <h2 className="text-xl font-bold text-slate-900">Pro</h2>
             <div className="my-4 text-5xl font-extrabold text-slate-900">
               $15<span className="text-xl font-normal text-slate-400">/mo</span>
@@ -77,14 +96,19 @@ export default function PricingPage() {
               ))}
             </ul>
             <Link href="/signup">
-              <Button className="w-full editorial-gradient text-white rounded-full font-semibold shadow-lg shadow-sky-200 border-0 hover:opacity-90">Start Pro</Button>
+              <Button className="editorial-gradient w-full rounded-full border-0 font-semibold text-white shadow-lg shadow-sky-200 hover:opacity-90">
+                Start Pro
+              </Button>
             </Link>
           </div>
         </div>
 
         <p className="mt-14 text-center text-sm text-slate-400">
           No contracts. Cancel anytime. Questions?{' '}
-          <a href="mailto:hello@interviewjourney.app" className="text-sky-600 hover:text-sky-500 font-medium">
+          <a
+            href="mailto:hello@interviewjourney.app"
+            className="font-medium text-sky-600 hover:text-sky-500"
+          >
             Get in touch
           </a>
         </p>

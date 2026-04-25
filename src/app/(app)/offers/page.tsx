@@ -29,7 +29,11 @@ function fmt(value: number | null, currency = 'USD') {
 
 function fmtDate(iso: string | null) {
   if (!iso) return '—'
-  return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(iso).toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 function calcCashComp(offer: Offer) {
@@ -60,8 +64,13 @@ function OfferColumn({ offer }: OfferColumnProps) {
 
   return (
     <div
-      className="flex flex-col min-w-[260px] max-w-xs flex-1"
-      style={{ border: '1px solid var(--paper-ink)', borderRadius: 6, overflow: 'hidden', background: 'var(--card)' }}
+      className="flex max-w-xs min-w-[260px] flex-1 flex-col"
+      style={{
+        border: '1px solid var(--paper-ink)',
+        borderRadius: 6,
+        overflow: 'hidden',
+        background: 'var(--card)',
+      }}
     >
       {/* Header */}
       <div
@@ -73,7 +82,12 @@ function OfferColumn({ offer }: OfferColumnProps) {
       >
         <p
           className="truncate"
-          style={{ fontFamily: 'var(--font-serif)', fontSize: 16, fontWeight: 500, letterSpacing: -0.2 }}
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 16,
+            fontWeight: 500,
+            letterSpacing: -0.2,
+          }}
         >
           {company}
         </p>
@@ -190,7 +204,11 @@ function OfferColumn({ offer }: OfferColumnProps) {
                 size="sm"
                 variant="outline"
                 className="w-full"
-                style={{ borderColor: 'var(--paper-ink)', background: 'var(--card)', color: 'var(--ink-3)' }}
+                style={{
+                  borderColor: 'var(--paper-ink)',
+                  background: 'var(--card)',
+                  color: 'var(--ink-3)',
+                }}
               >
                 Decline
               </Button>
@@ -209,7 +227,9 @@ function OfferColumn({ offer }: OfferColumnProps) {
 
 export default async function OffersPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   const tier = user ? await getUserTier(user.id) : 'free'
 
   const { data: offers } = await supabase
@@ -226,7 +246,11 @@ export default async function OffersPage() {
         <Button
           variant="outline"
           size="sm"
-          style={{ borderColor: 'var(--paper-ink)', background: 'var(--card)', color: 'var(--ink-3)' }}
+          style={{
+            borderColor: 'var(--paper-ink)',
+            background: 'var(--card)',
+            color: 'var(--ink-3)',
+          }}
         >
           <Download className="mr-2 h-4 w-4" /> Export CSV
         </Button>
@@ -236,7 +260,11 @@ export default async function OffersPage() {
         <Button
           variant="outline"
           size="sm"
-          style={{ borderColor: 'var(--paper-ink)', background: 'var(--card)', color: 'var(--ink-5)' }}
+          style={{
+            borderColor: 'var(--paper-ink)',
+            background: 'var(--card)',
+            color: 'var(--ink-5)',
+          }}
         >
           <Lock className="mr-2 h-4 w-4" /> Export CSV
         </Button>
@@ -288,7 +316,7 @@ export default async function OffersPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <div className="flex gap-4 min-w-max pb-4">
+            <div className="flex min-w-max gap-4 pb-4">
               {pendingOffers.map((offer) => (
                 <OfferColumn key={offer.id} offer={offer} />
               ))}

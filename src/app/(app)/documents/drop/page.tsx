@@ -9,7 +9,7 @@ export default async function DropPage() {
   const { data } = await supabase
     .from('documents')
     .select(
-      'id, file_name, classification_status, doc_type, extracted_summary, created_at, role:roles(role_title, company:companies(name))',
+      'id, file_name, classification_status, doc_type, extracted_summary, created_at, role:roles(role_title, company:companies(name))'
     )
     .order('created_at', { ascending: false })
     .limit(5)

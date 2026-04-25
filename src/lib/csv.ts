@@ -1,6 +1,6 @@
 export function toCsv<T extends Record<string, unknown>>(
   rows: T[],
-  columns: readonly (keyof T)[],
+  columns: readonly (keyof T)[]
 ): string {
   const escape = (val: unknown): string => {
     if (val === null || val === undefined) return ''

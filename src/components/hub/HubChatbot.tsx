@@ -16,7 +16,8 @@ export function HubChatbot() {
     {
       id: '0',
       role: 'assistant',
-      content: "Hi! I'm your career coach. Ask me anything about job searching, interviews, salary negotiation, or your career strategy.",
+      content:
+        "Hi! I'm your career coach. Ask me anything about job searching, interviews, salary negotiation, or your career strategy.",
     },
   ])
   const [input, setInput] = useState('')
@@ -70,9 +71,7 @@ export function HubChatbot() {
             try {
               const chunk = JSON.parse(line.slice(2))
               setMessages((prev) =>
-                prev.map((m) =>
-                  m.id === assistantId ? { ...m, content: m.content + chunk } : m
-                )
+                prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + chunk } : m))
               )
             } catch {
               // skip malformed chunks
@@ -97,7 +96,10 @@ export function HubChatbot() {
   return (
     <div className="flex h-full flex-col">
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto pb-2" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div
+        className="flex-1 overflow-y-auto pb-2"
+        style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
+      >
         {messages.map((msg) => (
           <div
             key={msg.id}

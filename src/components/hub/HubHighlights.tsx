@@ -61,13 +61,15 @@ export function HubHighlights() {
       if (pendingOffers.length > 0) {
         const best = pendingOffers.reduce<number>(
           (max, o) => Math.max(max, (o.base_salary ?? 0) + (o.signing_bonus ?? 0)),
-          0,
+          0
         )
         list.push({
           icon: Sparkles,
           kicker: 'Active offer' + (pendingOffers.length > 1 ? 's' : ''),
           title:
-            best > 0 ? `${pendingOffers.length} offer${pendingOffers.length > 1 ? 's' : ''} · up to $${Math.round(best / 1000)}k` : `${pendingOffers.length} offers pending`,
+            best > 0
+              ? `${pendingOffers.length} offer${pendingOffers.length > 1 ? 's' : ''} · up to $${Math.round(best / 1000)}k`
+              : `${pendingOffers.length} offers pending`,
           sub: 'Open the Offers page to compare',
         })
       }
@@ -98,7 +100,9 @@ export function HubHighlights() {
       }
 
       // Latest interview
-      const advancedRoles = roles.filter((r) => ['interviewing', 'offer', 'negotiating'].includes(r.stage))
+      const advancedRoles = roles.filter((r) =>
+        ['interviewing', 'offer', 'negotiating'].includes(r.stage)
+      )
       if (advancedRoles.length > 0) {
         list.push({
           icon: Clock,
@@ -121,7 +125,9 @@ export function HubHighlights() {
 
   if (highlights == null) {
     return (
-      <div style={{ fontSize: 12, color: 'var(--ink-4)', padding: '8px 2px' }}>Loading highlights…</div>
+      <div style={{ fontSize: 12, color: 'var(--ink-4)', padding: '8px 2px' }}>
+        Loading highlights…
+      </div>
     )
   }
 

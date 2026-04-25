@@ -27,8 +27,7 @@ export default function TermsPage() {
             letterSpacing: -0.3,
           }}
         >
-          Interview{' '}
-          <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em>
+          Interview <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em>
         </Link>
       </nav>
 
@@ -72,8 +71,8 @@ export default function TermsPage() {
           <p>
             These terms govern your use of Interview Journey (the &ldquo;Service&rdquo;), a personal
             CRM for tracking your career — applications, interviews, offers, documents, and the
-            companies you engage. By creating an account or using any part of the Service, you
-            agree to these terms.
+            companies you engage. By creating an account or using any part of the Service, you agree
+            to these terms.
           </p>
         </section>
 
@@ -102,11 +101,13 @@ export default function TermsPage() {
             <li>We don&apos;t sell your data. Ever.</li>
             <li>We don&apos;t share your documents, pipeline, or timeline with recruiters.</li>
             <li>
-              We don&apos;t train AI models on your content. Third-party AI providers (OpenRouter
-              → Gemini) process documents to classify them; we require providers to honor
+              We don&apos;t train AI models on your content. Third-party AI providers (OpenRouter →
+              Gemini) process documents to classify them; we require providers to honor
               zero-retention terms wherever available.
             </li>
-            <li>We don&apos;t run you through auto-apply bots or blast applications on your behalf.</li>
+            <li>
+              We don&apos;t run you through auto-apply bots or blast applications on your behalf.
+            </li>
           </ul>
         </section>
 
@@ -123,9 +124,9 @@ export default function TermsPage() {
         <section style={sectionStyle()}>
           <h2 style={sectionTitle()}>6. Pro subscriptions</h2>
           <p>
-            Pro plans auto-renew until canceled. You can cancel at any time; cancellation stops
-            the next renewal but doesn&apos;t refund the current billing period unless required by
-            law. Refunds for annual plans within the first 14 days are processed on request.
+            Pro plans auto-renew until canceled. You can cancel at any time; cancellation stops the
+            next renewal but doesn&apos;t refund the current billing period unless required by law.
+            Refunds for annual plans within the first 14 days are processed on request.
           </p>
         </section>
 
@@ -168,9 +169,14 @@ export default function TermsPage() {
             color: 'var(--ink-4)',
           }}
         >
-          See also: <Link href="/privacy" style={linkStyle()}>Privacy Policy</Link>
+          See also:{' '}
+          <Link href="/privacy" style={linkStyle()}>
+            Privacy Policy
+          </Link>
           {' · '}
-          <Link href="/" style={linkStyle()}>Back to home</Link>
+          <Link href="/" style={linkStyle()}>
+            Back to home
+          </Link>
         </div>
       </article>
     </div>

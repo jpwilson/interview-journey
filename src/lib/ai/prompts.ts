@@ -14,15 +14,32 @@ Return a single JSON object matching the schema exactly. No other text.`
 
 export const CLASSIFICATION_SCHEMA = {
   type: 'object',
-  required: ['doc_type', 'confidence', 'company_name', 'role_title', 'event_date', 'outcome', 'summary'],
+  required: [
+    'doc_type',
+    'confidence',
+    'company_name',
+    'role_title',
+    'event_date',
+    'outcome',
+    'summary',
+  ],
   additionalProperties: false,
   properties: {
     doc_type: {
       type: 'string',
       enum: [
-        'offer_letter', 'rejection_email', 'interview_confirmation',
-        'nda', 'screening_email', 'assessment', 'reference_request',
-        'application_confirmation', 'resume', 'cover_letter', 'other', 'unknown',
+        'offer_letter',
+        'rejection_email',
+        'interview_confirmation',
+        'nda',
+        'screening_email',
+        'assessment',
+        'reference_request',
+        'application_confirmation',
+        'resume',
+        'cover_letter',
+        'other',
+        'unknown',
       ],
     },
     confidence: { type: 'number', minimum: 0, maximum: 1 },
