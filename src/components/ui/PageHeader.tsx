@@ -63,11 +63,7 @@ export function PageHeader({
 }
 
 export function PageShell({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ minHeight: '100%', background: 'var(--paper)' }}>
-      {children}
-    </div>
-  )
+  return <div style={{ minHeight: '100%', background: 'var(--paper)' }}>{children}</div>
 }
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {

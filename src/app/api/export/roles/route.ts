@@ -4,7 +4,9 @@ import { toCsv, csvResponse } from '@/lib/csv'
 
 export async function GET() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return new Response('Unauthorized', { status: 401 })
 
   const tier = await getUserTier(user.id)
@@ -14,7 +16,9 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('roles')
-    .select('id, role_title, stage, resolution, location, remote_type, salary_min, salary_max, currency, job_url, applied_at, updated_at, notes, company:companies(name)')
+    .select(
+      'id, role_title, stage, resolution, location, remote_type, salary_min, salary_max, currency, job_url, applied_at, updated_at, notes, company:companies(name)'
+    )
     .order('updated_at', { ascending: false })
 
   if (error) return new Response('Failed to fetch roles', { status: 500 })
@@ -56,8 +60,19 @@ export async function GET() {
   })
 
   const csv = toCsv(rows, [
-    'company', 'role_title', 'stage', 'resolution', 'location', 'remote_type',
-    'salary_min', 'salary_max', 'currency', 'job_url', 'applied_at', 'updated_at', 'notes',
+    'company',
+    'role_title',
+    'stage',
+    'resolution',
+    'location',
+    'remote_type',
+    'salary_min',
+    'salary_max',
+    'currency',
+    'job_url',
+    'applied_at',
+    'updated_at',
+    'notes',
   ])
 
   const date = new Date().toISOString().slice(0, 10)

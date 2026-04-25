@@ -21,7 +21,7 @@ export function HubChangelog() {
       {CHANGELOG.map((entry) => (
         <div key={entry.version}>
           <div className="mb-2 flex items-center gap-2">
-            <span className="rounded bg-blue-600 px-2 py-0.5 text-xs font-mono text-white">
+            <span className="rounded bg-blue-600 px-2 py-0.5 font-mono text-xs text-white">
               v{entry.version}
             </span>
             <span className="text-xs text-slate-500">{entry.date}</span>

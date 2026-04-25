@@ -36,5 +36,7 @@ export function Chip({
   children?: React.ReactNode
   className?: string
 }) {
-  return <span className={cn('chip', `chip-${status}`, className)}>{children ?? LABELS[status]}</span>
+  return (
+    <span className={cn('chip', `chip-${status}`, className)}>{children ?? LABELS[status]}</span>
+  )
 }

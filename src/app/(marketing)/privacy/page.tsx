@@ -27,8 +27,7 @@ export default function PrivacyPage() {
             letterSpacing: -0.3,
           }}
         >
-          Interview{' '}
-          <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em>
+          Interview <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em>
         </Link>
       </nav>
 
@@ -68,7 +67,14 @@ export default function PrivacyPage() {
         <p style={{ color: 'var(--ink-4)', fontSize: 13 }}>Last updated: April 24, 2026</p>
 
         <section style={{ marginTop: 32 }}>
-          <p style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 18, color: 'var(--ink)' }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontStyle: 'italic',
+              fontSize: 18,
+              color: 'var(--ink)',
+            }}
+          >
             The short version: your pipeline, your documents, your timeline, your career — they
             belong to you. We store them for you, we don&apos;t sell them, and we don&apos;t train
             AI on them.
@@ -110,8 +116,8 @@ export default function PrivacyPage() {
             record so you can see what the classification said.
           </p>
           <p style={{ marginTop: 8 }}>
-            We request zero-retention processing from AI providers. We do not use your documents
-            to train any model, and we do not share them with recruiters, employers, or any third
+            We request zero-retention processing from AI providers. We do not use your documents to
+            train any model, and we do not share them with recruiters, employers, or any third
             party.
           </p>
         </section>
@@ -154,8 +160,8 @@ export default function PrivacyPage() {
         <section style={sectionStyle()}>
           <h2 style={sectionTitle()}>Your rights</h2>
           <p>
-            You can access, export, correct, or delete your data at any time from the Settings
-            page, or by emailing{' '}
+            You can access, export, correct, or delete your data at any time from the Settings page,
+            or by emailing{' '}
             <a href="mailto:privacy@interviewjourney.app" style={linkStyle()}>
               privacy@interviewjourney.app
             </a>
@@ -197,9 +203,14 @@ export default function PrivacyPage() {
             color: 'var(--ink-4)',
           }}
         >
-          See also: <Link href="/terms" style={linkStyle()}>Terms of Service</Link>
+          See also:{' '}
+          <Link href="/terms" style={linkStyle()}>
+            Terms of Service
+          </Link>
           {' · '}
-          <Link href="/" style={linkStyle()}>Back to home</Link>
+          <Link href="/" style={linkStyle()}>
+            Back to home
+          </Link>
         </div>
       </article>
     </div>

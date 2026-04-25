@@ -63,13 +63,28 @@ export default async function DashboardPage() {
   try {
     const { data } = await supabase
       .from('profiles')
-      .select('id, display_name, current_employer_id, current_title, employment_start_date, search_status, prefs')
+      .select(
+        'id, display_name, current_employer_id, current_title, employment_start_date, search_status, prefs'
+      )
       .eq('id', userId)
       .maybeSingle()
     profile = (data ?? null) as ProfileV2 | null
   } catch {
-    const { data } = await supabase.from('profiles').select('id, display_name').eq('id', userId).maybeSingle()
-    profile = data ? ({ ...data, current_employer_id: null, current_title: null, employment_start_date: null, search_status: null, prefs: null } as ProfileV2) : null
+    const { data } = await supabase
+      .from('profiles')
+      .select('id, display_name')
+      .eq('id', userId)
+      .maybeSingle()
+    profile = data
+      ? ({
+          ...data,
+          current_employer_id: null,
+          current_title: null,
+          employment_start_date: null,
+          search_status: null,
+          prefs: null,
+        } as ProfileV2)
+      : null
   }
 
   const needsOnboarding = !profile?.prefs?.onboardedAt
@@ -78,16 +93,26 @@ export default async function DashboardPage() {
     : { data: null }
 
   const [rolesRes, eventsRes, currentEmployerRes, pipelineEventsRes] = await Promise.all([
-    supabase.from('roles').select('*, company:companies(*)').order('updated_at', { ascending: false }),
+    supabase
+      .from('roles')
+      .select('*, company:companies(*)')
+      .order('updated_at', { ascending: false }),
     supabase
       .from('role_events')
       .select('*, role:roles(role_title, company:companies(name))')
       .order('event_date', { ascending: false })
       .limit(6),
     profile?.current_employer_id
-      ? supabase.from('companies').select('id, name').eq('id', profile.current_employer_id).maybeSingle()
+      ? supabase
+          .from('companies')
+          .select('id, name')
+          .eq('id', profile.current_employer_id)
+          .maybeSingle()
       : Promise.resolve({ data: null }),
-    supabase.from('role_events').select('role_id, event_date').order('event_date', { ascending: false }),
+    supabase
+      .from('role_events')
+      .select('role_id, event_date')
+      .order('event_date', { ascending: false }),
   ])
   const allRoles = (rolesRes.data ?? []) as RoleWithCompany[]
   const events = (eventsRes.data ?? []) as Array<{
@@ -96,7 +121,8 @@ export default async function DashboardPage() {
     event_date: string
     role: { role_title: string; company: { name: string } } | null
   }>
-  const currentEmployer = (currentEmployerRes as { data: { name: string } | null }).data?.name ?? null
+  const currentEmployer =
+    (currentEmployerRes as { data: { name: string } | null }).data?.name ?? null
 
   // Career timeline: current employment + resolved:hired as past roles
   const careerRoles: CareerRole[] = []
@@ -140,7 +166,9 @@ export default async function DashboardPage() {
 
   // Numbers for the at-a-glance grid
   const active = allRoles.filter((r) => r.stage !== 'resolved')
-  const inDiligence = allRoles.filter((r) => ['interviewing', 'offer', 'negotiating'].includes(r.stage)).length
+  const inDiligence = allRoles.filter((r) =>
+    ['interviewing', 'offer', 'negotiating'].includes(r.stage)
+  ).length
   const offersOut = allRoles.filter((r) => ['offer', 'negotiating'].includes(r.stage)).length
   const nowMs = Date.now()
   const ms30d = 30 * 24 * 3600 * 1000
@@ -164,19 +192,29 @@ export default async function DashboardPage() {
 
   // Match the V6 reference: accent-wash only on Applications / In diligence / Next event.
   const tiles = [
-    { k: 'Applications sent', v: String(allRoles.length), sub: `${active.length} active · ${allRoles.length - active.length} resolved`, accent: true },
+    {
+      k: 'Applications sent',
+      v: String(allRoles.length),
+      sub: `${active.length} active · ${allRoles.length - active.length} resolved`,
+      accent: true,
+    },
     { k: 'Reply rate', v: calcReplyRate(allRoles), sub: 'last 90 days' },
     { k: 'In diligence', v: String(inDiligence), sub: 'past recruiter screen', accent: true },
     { k: 'Auto-closing soon', v: String(silentSoon), sub: 'silent 23+ days' },
     {
       k: 'Last applied',
       v: latestApplied?.applied_at ? relative(latestApplied.applied_at) : '—',
-      sub: latestApplied ? `${latestApplied.company.name} · ${latestApplied.role_title}` : 'Log a new application',
+      sub: latestApplied
+        ? `${latestApplied.company.name} · ${latestApplied.role_title}`
+        : 'Log a new application',
     },
     {
       k: 'Next event',
       v: events[0] ? relative(events[0].event_date, { future: true }) : '—',
-      sub: events[0] && events[0].role ? `${events[0].role.company.name} · ${events[0].title}` : 'Nothing scheduled',
+      sub:
+        events[0] && events[0].role
+          ? `${events[0].role.company.name} · ${events[0].title}`
+          : 'Nothing scheduled',
       accent: true,
     },
     { k: 'Offers out', v: String(offersOut), sub: offersOut ? 'needs decision' : 'none yet' },
@@ -201,7 +239,14 @@ export default async function DashboardPage() {
         {/* Your career */}
         <section style={{ marginBottom: 28 }}>
           <div style={sectionLabelStyle()}>Your career</div>
-          <div style={{ background: 'var(--card)', border: '1px solid var(--paper-ink)', borderRadius: 6, padding: 16 }}>
+          <div
+            style={{
+              background: 'var(--card)',
+              border: '1px solid var(--paper-ink)',
+              borderRadius: 6,
+              padding: 16,
+            }}
+          >
             <CareerTimeline roles={careerRoles} />
           </div>
         </section>
@@ -210,20 +255,40 @@ export default async function DashboardPage() {
         {currentEmployer && (
           <section style={{ marginBottom: 28 }}>
             <div style={sectionLabelStyle()}>Holding · where you are now</div>
-            <div style={{ background: 'var(--card)', border: '1px solid var(--paper-ink)', borderRadius: 6, padding: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
+            <div
+              style={{
+                background: 'var(--card)',
+                border: '1px solid var(--paper-ink)',
+                borderRadius: 6,
+                padding: 16,
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  gap: 12,
+                  flexWrap: 'wrap',
+                }}
+              >
                 <div>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 18, color: 'var(--ink)' }}>
+                  <div
+                    style={{ fontFamily: 'var(--font-serif)', fontSize: 18, color: 'var(--ink)' }}
+                  >
                     {profile?.current_title ?? '—'}{' '}
                     <span style={{ fontSize: 13, color: 'var(--ink-4)' }}>· {currentEmployer}</span>
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 2 }}>
                     {profile?.employment_start_date
-                      ? `Since ${new Date(profile.employment_start_date).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })} · ${fmtTenure(profile.employment_start_date)}`
+                      ? `Since ${new Date(profile.employment_start_date).toLocaleDateString(
+                          'en-US',
+                          {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          }
+                        )} · ${fmtTenure(profile.employment_start_date)}`
                       : ''}
                   </div>
                 </div>
@@ -240,10 +305,24 @@ export default async function DashboardPage() {
                     fontWeight: 500,
                   }}
                 >
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-ij)' }} /> current
+                  <span
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      background: 'var(--accent-ij)',
+                    }}
+                  />{' '}
+                  current
                 </span>
               </div>
-              <hr style={{ border: 'none', borderTop: '1px solid var(--border-soft)', margin: '14px 0 14px' }} />
+              <hr
+                style={{
+                  border: 'none',
+                  borderTop: '1px solid var(--border-soft)',
+                  margin: '14px 0 14px',
+                }}
+              />
               <div
                 style={{
                   display: 'grid',
@@ -257,7 +336,15 @@ export default async function DashboardPage() {
                 <HoldingField label="Last review" value="—" />
                 <HoldingField label="Next review" value="—" />
               </div>
-              <div style={{ fontSize: 10, color: 'var(--ink-5)', marginTop: 10, fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
+              <div
+                style={{
+                  fontSize: 10,
+                  color: 'var(--ink-5)',
+                  marginTop: 10,
+                  fontFamily: 'var(--font-mono)',
+                  letterSpacing: '0.08em',
+                }}
+              >
                 Comp fields editable in settings (coming)
               </div>
             </div>
@@ -274,7 +361,13 @@ export default async function DashboardPage() {
         {/* At a glance */}
         <section style={{ marginBottom: 28 }}>
           <div style={sectionLabelStyle()}>At a glance</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 10 }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: 10,
+            }}
+          >
             {tiles.map((t) => (
               <div
                 key={t.k}
@@ -319,7 +412,10 @@ export default async function DashboardPage() {
           <FunnelBlock roles={funnelRoles} />
           <div style={{ fontSize: 11, color: 'var(--ink-4)', marginTop: 8, textAlign: 'right' }}>
             Full table on{' '}
-            <Link href="/pipeline" style={{ color: 'var(--accent-ij-ink)', textDecoration: 'none' }}>
+            <Link
+              href="/pipeline"
+              style={{ color: 'var(--accent-ij-ink)', textDecoration: 'none' }}
+            >
               Pipeline →
             </Link>
           </div>
@@ -328,7 +424,13 @@ export default async function DashboardPage() {
         {/* Watch list */}
         <section>
           <div style={sectionLabelStyle()}>Watching · past recruiter screen</div>
-          <div style={{ background: 'var(--card)', border: '1px solid var(--paper-ink)', borderRadius: 6 }}>
+          <div
+            style={{
+              background: 'var(--card)',
+              border: '1px solid var(--paper-ink)',
+              borderRadius: 6,
+            }}
+          >
             {watchRoles.length === 0 ? (
               <div style={{ padding: '20px 16px', color: 'var(--ink-4)', fontSize: 13 }}>
                 Nothing past the recruiter screen yet.{' '}
@@ -345,7 +447,8 @@ export default async function DashboardPage() {
                     display: 'flex',
                     padding: '12px 14px',
                     gap: 12,
-                    borderBottom: i < watchRoles.length - 1 ? '1px solid var(--border-soft)' : 'none',
+                    borderBottom:
+                      i < watchRoles.length - 1 ? '1px solid var(--border-soft)' : 'none',
                     textDecoration: 'none',
                     color: 'inherit',
                   }}
@@ -370,7 +473,9 @@ export default async function DashboardPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)' }}>
                       {r.company.name}{' '}
-                      <span style={{ fontWeight: 400, color: 'var(--ink-4)' }}>· {r.role_title}</span>
+                      <span style={{ fontWeight: 400, color: 'var(--ink-4)' }}>
+                        · {r.role_title}
+                      </span>
                     </div>
                     <div style={{ fontSize: 11, color: 'var(--ink-4)', marginTop: 2 }}>
                       {r.last_contact_at
@@ -434,7 +539,10 @@ function calcReplyRate(roles: RoleWithCompany[]) {
     return t >= cutoff
   })
   if (windowRoles.length === 0) return '—'
-  const replied = windowRoles.filter((r) => ['screening', 'interviewing', 'offer', 'negotiating'].includes(r.stage) || r.last_contact_at).length
+  const replied = windowRoles.filter(
+    (r) =>
+      ['screening', 'interviewing', 'offer', 'negotiating'].includes(r.stage) || r.last_contact_at
+  ).length
   return `${Math.round((replied / windowRoles.length) * 100)}%`
 }
 
@@ -448,7 +556,15 @@ function fmtTenure(iso: string) {
   return [y && `${y}y`, mm && `${mm}mo`].filter(Boolean).join(' ') || '0mo'
 }
 
-function HoldingField({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
+function HoldingField({
+  label,
+  value,
+  accent,
+}: {
+  label: string
+  value: string
+  accent?: boolean
+}) {
   return (
     <div>
       <div

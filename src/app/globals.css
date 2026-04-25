@@ -1,19 +1,19 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans-src), "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-serif-src), "Iowan Old Style", Georgia, serif;
-  --font-mono: var(--font-mono-src), "JetBrains Mono Fallback", ui-monospace, Menlo, monospace;
+  --font-sans: var(--font-sans-src), 'Geist Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif-src), 'Iowan Old Style', Georgia, serif;
+  --font-mono: var(--font-mono-src), 'JetBrains Mono Fallback', ui-monospace, Menlo, monospace;
   --font-heading: var(--font-serif);
-  --font-headline: var(--font-headline, "Plus Jakarta Sans", sans-serif);
-  --font-body: var(--font-body, "Inter", sans-serif);
-  --font-label: var(--font-body, "Inter", sans-serif);
+  --font-headline: var(--font-headline, 'Plus Jakarta Sans', sans-serif);
+  --font-body: var(--font-body, 'Inter', sans-serif);
+  --font-label: var(--font-body, 'Inter', sans-serif);
 
   /* Design system colors */
   --color-on-surface: #191c1d;
@@ -184,111 +184,293 @@
 */
 :root {
   /* Warm off-whites */
-  --paper:        #fafaf9;  /* main canvas background */
-  --paper-2:      #f5f5f4;  /* subtle surface (table header, chip bg) */
-  --paper-3:      #f0efed;  /* deeper surface */
-  --paper-ink:    #e7e5e4;  /* card borders, hairlines */
-  --border-soft:  #f5f5f4;  /* internal dividers */
-  --card:         #ffffff;  /* card background */
+  --paper: #fafaf9; /* main canvas background */
+  --paper-2: #f5f5f4; /* subtle surface (table header, chip bg) */
+  --paper-3: #f0efed; /* deeper surface */
+  --paper-ink: #e7e5e4; /* card borders, hairlines */
+  --border-soft: #f5f5f4; /* internal dividers */
+  --card: #ffffff; /* card background */
 
   /* Deep inks */
-  --ink:          #1c1917;  /* primary text */
-  --ink-2:        #44403c;  /* secondary text */
-  --ink-3:        #57534e;  /* ink-muted */
-  --ink-4:        #78716c;  /* muted, metadata, captions */
-  --ink-5:        #a8a29e;  /* muted-2, disabled / tertiary */
+  --ink: #1c1917; /* primary text */
+  --ink-2: #44403c; /* secondary text */
+  --ink-3: #57534e; /* ink-muted */
+  --ink-4: #78716c; /* muted, metadata, captions */
+  --ink-5: #a8a29e; /* muted-2, disabled / tertiary */
 
   /* Accent — moss (v2 default) */
-  --accent-ij:       #3e7a4f;  /* primary accent */
-  --accent-ij-ink:   #2f5d3d;  /* accent text on paper */
-  --accent-ij-wash:  #e7efe3;  /* accent chip / highlight bg */
-  --accent-ij-glow-a: rgba(62, 122, 79, 0.30);
+  --accent-ij: #3e7a4f; /* primary accent */
+  --accent-ij-ink: #2f5d3d; /* accent text on paper */
+  --accent-ij-wash: #e7efe3; /* accent chip / highlight bg */
+  --accent-ij-glow-a: rgba(62, 122, 79, 0.3);
   --accent-ij-glow-b: rgba(47, 93, 61, 0.26);
   --accent-ij-glow-c: rgba(76, 140, 95, 0.24);
 
   /* Semantic status (funnel, chips) */
-  --status-ok:    #16a34a;  /* positive */
-  --status-warn:  #d97706;  /* warning */
-  --status-go:    #2563eb;  /* keep going */
+  --status-ok: #16a34a; /* positive */
+  --status-warn: #d97706; /* warning */
+  --status-go: #2563eb; /* keep going */
 
   /* Stage palette (pipeline chips) */
-  --s-exploring:  #78716c;  /* stone-500 */
-  --s-applied:    #2563eb;  /* blue-600 */
-  --s-screening:  #d97706;  /* amber-600 */
-  --s-interview:  #7c3aed;  /* violet-600 */
-  --s-offer:      #3e7a4f;  /* moss */
-  --s-negotiate:  #0891b2;  /* cyan-600 */
-  --s-hired:      #16a34a;  /* green-600 */
-  --s-rejected:   #dc2626;  /* red-600 */
-  --s-withdrew:   #78716c;
-  --s-ghosted:    #a8a29e;
-  --s-declined:   #be185d;  /* pink-700 */
+  --s-exploring: #78716c; /* stone-500 */
+  --s-applied: #2563eb; /* blue-600 */
+  --s-screening: #d97706; /* amber-600 */
+  --s-interview: #7c3aed; /* violet-600 */
+  --s-offer: #3e7a4f; /* moss */
+  --s-negotiate: #0891b2; /* cyan-600 */
+  --s-hired: #16a34a; /* green-600 */
+  --s-rejected: #dc2626; /* red-600 */
+  --s-withdrew: #78716c;
+  --s-ghosted: #a8a29e;
+  --s-declined: #be185d; /* pink-700 */
 }
 
 /* Placeholder striped bg — for image slots */
 .ph-image {
-  background:
-    repeating-linear-gradient(135deg,
-      oklch(92% 0.012 74) 0 10px,
-      oklch(95% 0.010 76) 10px 20px);
-  display: flex; align-items: center; justify-content: center;
+  background: repeating-linear-gradient(
+    135deg,
+    oklch(92% 0.012 74) 0 10px,
+    oklch(95% 0.01 76) 10px 20px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--ink-3);
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
 }
 
 /* Status chip */
 .chip {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: .02em;
+  letter-spacing: 0.02em;
   padding: 3px 8px;
   border-radius: 999px;
   text-transform: lowercase;
 }
 .chip::before {
-  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
   background: currentColor;
 }
-.chip-exploring { color: var(--s-exploring); background: color-mix(in oklch, var(--s-exploring) 14%, var(--paper)); }
-.chip-applied   { color: var(--s-applied);   background: color-mix(in oklch, var(--s-applied) 14%, var(--paper)); }
-.chip-screening { color: var(--s-screening); background: color-mix(in oklch, var(--s-screening) 16%, var(--paper)); }
-.chip-interview { color: var(--s-interview); background: color-mix(in oklch, var(--s-interview) 16%, var(--paper)); }
-.chip-offer     { color: var(--s-offer);     background: color-mix(in oklch, var(--s-offer) 16%, var(--paper)); }
-.chip-negotiate { color: var(--s-negotiate); background: color-mix(in oklch, var(--s-negotiate) 16%, var(--paper)); }
-.chip-hired     { color: var(--s-hired);     background: color-mix(in oklch, var(--s-hired) 16%, var(--paper)); }
-.chip-rejected  { color: var(--s-rejected);  background: color-mix(in oklch, var(--s-rejected) 14%, var(--paper)); }
-.chip-withdrew  { color: var(--s-withdrew);  background: color-mix(in oklch, var(--s-withdrew) 18%, var(--paper)); }
-.chip-ghosted   { color: var(--s-ghosted);   background: color-mix(in oklch, var(--s-ghosted) 18%, var(--paper)); }
-.chip-declined  { color: var(--s-declined);  background: color-mix(in oklch, var(--s-declined) 14%, var(--paper)); }
+.chip-exploring {
+  color: var(--s-exploring);
+  background: color-mix(in oklch, var(--s-exploring) 14%, var(--paper));
+}
+.chip-applied {
+  color: var(--s-applied);
+  background: color-mix(in oklch, var(--s-applied) 14%, var(--paper));
+}
+.chip-screening {
+  color: var(--s-screening);
+  background: color-mix(in oklch, var(--s-screening) 16%, var(--paper));
+}
+.chip-interview {
+  color: var(--s-interview);
+  background: color-mix(in oklch, var(--s-interview) 16%, var(--paper));
+}
+.chip-offer {
+  color: var(--s-offer);
+  background: color-mix(in oklch, var(--s-offer) 16%, var(--paper));
+}
+.chip-negotiate {
+  color: var(--s-negotiate);
+  background: color-mix(in oklch, var(--s-negotiate) 16%, var(--paper));
+}
+.chip-hired {
+  color: var(--s-hired);
+  background: color-mix(in oklch, var(--s-hired) 16%, var(--paper));
+}
+.chip-rejected {
+  color: var(--s-rejected);
+  background: color-mix(in oklch, var(--s-rejected) 14%, var(--paper));
+}
+.chip-withdrew {
+  color: var(--s-withdrew);
+  background: color-mix(in oklch, var(--s-withdrew) 18%, var(--paper));
+}
+.chip-ghosted {
+  color: var(--s-ghosted);
+  background: color-mix(in oklch, var(--s-ghosted) 18%, var(--paper));
+}
+.chip-declined {
+  color: var(--s-declined);
+  background: color-mix(in oklch, var(--s-declined) 14%, var(--paper));
+}
 
 /* Hairlines */
-.hairline { border: none; height: 1px; background: var(--paper-ink); margin: 0; }
+.hairline {
+  border: none;
+  height: 1px;
+  background: var(--paper-ink);
+  margin: 0;
+}
 
 /* Landing ambient blob drift */
-@keyframes ij-drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px,-40px) scale(1.1); } }
-@keyframes ij-drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-80px,60px) scale(.95); } }
-@keyframes ij-drift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,-80px) scale(1.08); } }
-@keyframes ij-pulse  { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
-@keyframes ij-marquee { from { transform: translateX(0); } to { transform: translateX(-33.333%); } }
-@keyframes ij-drop-in {
-  0%   { transform: translate(-180px, -140px) rotate(-14deg) scale(1.1); opacity: 0; }
-  18%  { opacity: 1; }
-  50%  { transform: translate(0,0) rotate(0) scale(1); opacity: 1; }
-  72%  { transform: translate(0,0) rotate(0) scale(1); opacity: 1; }
-  100% { transform: translate(0, 28px) rotate(0) scale(.4); opacity: 0; }
+@keyframes ij-drift1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(60px, -40px) scale(1.1);
+  }
 }
-@keyframes ij-ping { 0% { r: 0; opacity: 0; } 30% { r: 0; opacity: 0; } 55% { r: 14; opacity: .5; } 100% { r: 5; opacity: 1; } }
-@keyframes ij-drop0 { 0% { transform: translate(-170%, -200%) rotate(-18deg); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-50%, -50%) rotate(-6deg); } 80% { opacity: 1; } 100% { transform: translate(-50%, -50%) rotate(-6deg); opacity: 0; } }
-@keyframes ij-drop1 { 0% { transform: translate(80%, -220%) rotate(24deg); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-50%, -50%) rotate(2deg); } 80% { opacity: 1; } 100% { transform: translate(-50%, -50%) rotate(2deg); opacity: 0; } }
-@keyframes ij-drop2 { 0% { transform: translate(-50%, -240%) rotate(-4deg); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-50%, -50%) rotate(10deg); } 80% { opacity: 1; } 100% { transform: translate(-50%, -50%) rotate(10deg); opacity: 0; } }
-@keyframes ij-draw { to { stroke-dashoffset: 0; } }
-@keyframes ij-fade-in { to { opacity: 1; } }
-@keyframes ij-blink { 50% { opacity: 0; } }
+@keyframes ij-drift2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-80px, 60px) scale(0.95);
+  }
+}
+@keyframes ij-drift3 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(40px, -80px) scale(1.08);
+  }
+}
+@keyframes ij-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes ij-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.333%);
+  }
+}
+@keyframes ij-drop-in {
+  0% {
+    transform: translate(-180px, -140px) rotate(-14deg) scale(1.1);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(0, 0) rotate(0) scale(1);
+    opacity: 1;
+  }
+  72% {
+    transform: translate(0, 0) rotate(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 28px) rotate(0) scale(0.4);
+    opacity: 0;
+  }
+}
+@keyframes ij-ping {
+  0% {
+    r: 0;
+    opacity: 0;
+  }
+  30% {
+    r: 0;
+    opacity: 0;
+  }
+  55% {
+    r: 14;
+    opacity: 0.5;
+  }
+  100% {
+    r: 5;
+    opacity: 1;
+  }
+}
+@keyframes ij-drop0 {
+  0% {
+    transform: translate(-170%, -200%) rotate(-18deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(-6deg);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-6deg);
+    opacity: 0;
+  }
+}
+@keyframes ij-drop1 {
+  0% {
+    transform: translate(80%, -220%) rotate(24deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(2deg);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(2deg);
+    opacity: 0;
+  }
+}
+@keyframes ij-drop2 {
+  0% {
+    transform: translate(-50%, -240%) rotate(-4deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(10deg);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(10deg);
+    opacity: 0;
+  }
+}
+@keyframes ij-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes ij-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ij-blink {
+  50% {
+    opacity: 0;
+  }
+}
 
 /* Editorial scrollbar */
 ::-webkit-scrollbar {

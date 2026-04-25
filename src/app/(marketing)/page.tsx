@@ -28,9 +28,16 @@ const ACCENT_WASH = 'var(--accent-ij-wash)'
 
 function Wordmark({ size = 16 }: { size?: number }) {
   return (
-    <span style={{ fontFamily: FONT_SERIF, fontWeight: 500, fontSize: size, letterSpacing: -0.3, color: 'var(--ink)' }}>
-      Interview{' '}
-      <em style={{ fontStyle: 'italic', color: ACCENT_INK }}>Journey</em>
+    <span
+      style={{
+        fontFamily: FONT_SERIF,
+        fontWeight: 500,
+        fontSize: size,
+        letterSpacing: -0.3,
+        color: 'var(--ink)',
+      }}
+    >
+      Interview <em style={{ fontStyle: 'italic', color: ACCENT_INK }}>Journey</em>
     </span>
   )
 }
@@ -43,7 +50,14 @@ function RotatingWord({ words, interval = 2600 }: { words: string[]; interval?: 
   }, [words.length, interval])
   const widest = words.reduce((a, b) => (b.length > a.length ? b : a), '')
   return (
-    <span style={{ position: 'relative', display: 'inline-block', verticalAlign: 'baseline', whiteSpace: 'nowrap' }}>
+    <span
+      style={{
+        position: 'relative',
+        display: 'inline-block',
+        verticalAlign: 'baseline',
+        whiteSpace: 'nowrap',
+      }}
+    >
       <em style={{ fontStyle: 'italic', fontWeight: 400, visibility: 'hidden' }}>{widest}</em>
       {words.map((w, j) => {
         const nextIdx = (j + 1) % words.length
@@ -59,8 +73,14 @@ function RotatingWord({ words, interval = 2600 }: { words: string[]; interval?: 
               color: ACCENT_INK,
               whiteSpace: 'nowrap',
               opacity: i === j ? 1 : 0,
-              transform: i === j ? 'translateY(0)' : i === nextIdx ? 'translateY(-18px)' : 'translateY(18px)',
-              transition: 'opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1)',
+              transform:
+                i === j
+                  ? 'translateY(0)'
+                  : i === nextIdx
+                    ? 'translateY(-18px)'
+                    : 'translateY(18px)',
+              transition:
+                'opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1)',
               filter: i === j ? 'blur(0)' : 'blur(4px)',
             }}
           >
@@ -111,10 +131,30 @@ function AmbientBg() {
     ...pos,
   })
   return (
-    <div aria-hidden style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
-      <div style={blob({ left: '10%', top: '8%' }, 520, 'var(--accent-ij-glow-a)', 'ij-drift1 22s')} />
-      <div style={blob({ right: '-8%', top: '30%' }, 620, 'var(--accent-ij-glow-b)', 'ij-drift2 28s')} />
-      <div style={blob({ left: '25%', bottom: '-10%' }, 680, 'var(--accent-ij-glow-c)', 'ij-drift3 34s')} />
+    <div
+      aria-hidden
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}
+    >
+      <div
+        style={blob({ left: '10%', top: '8%' }, 520, 'var(--accent-ij-glow-a)', 'ij-drift1 22s')}
+      />
+      <div
+        style={blob({ right: '-8%', top: '30%' }, 620, 'var(--accent-ij-glow-b)', 'ij-drift2 28s')}
+      />
+      <div
+        style={blob(
+          { left: '25%', bottom: '-10%' },
+          680,
+          'var(--accent-ij-glow-c)',
+          'ij-drift3 34s'
+        )}
+      />
     </div>
   )
 }
@@ -176,10 +216,15 @@ function FlyingDocsDemo() {
         <span style={{ width: 6, height: 6, borderRadius: '50%', background: d.color }} />
         {d.label}
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} style={{ position: 'absolute', inset: 0, maxWidth: '100%' }}>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        width={W}
+        height={H}
+        style={{ position: 'absolute', inset: 0, maxWidth: '100%' }}
+      >
         {[0, 1, 2, 3, 4].map((r) => {
           const y = rowY(r)
-          const firstX = padL + 10 + (r * 13) % 40
+          const firstX = padL + 10 + ((r * 13) % 40)
           const endX = W - padR - (r === 4 ? 40 : r === 3 ? 20 : r * 8)
           const color = rowColors[r]
           return (
@@ -216,7 +261,13 @@ function FlyingDocsDemo() {
                 />
               ))}
               {r === d.row && (
-                <circle cx={targetX} cy={y} r="5" fill={d.color} style={{ animation: 'ij-ping 3.2s 2.6s forwards' }} />
+                <circle
+                  cx={targetX}
+                  cy={y}
+                  r="5"
+                  fill={d.color}
+                  style={{ animation: 'ij-ping 3.2s 2.6s forwards' }}
+                />
               )}
             </g>
           )
@@ -239,7 +290,14 @@ function CompanyMarquee() {
         WebkitMaskImage: mask,
       }}
     >
-      <div style={{ display: 'flex', gap: 48, width: 'max-content', animation: 'ij-marquee 40s linear infinite' }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 48,
+          width: 'max-content',
+          animation: 'ij-marquee 40s linear infinite',
+        }}
+      >
         {doubled.map((c, i) => (
           <div
             key={i}
@@ -281,7 +339,16 @@ function CompanyMarquee() {
 
 function DropVisual() {
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       {[0, 1, 2].map((i) => (
         <div
           key={i}
@@ -299,10 +366,24 @@ function DropVisual() {
             animation: `ij-drop${i} 4s ${i * 0.8}s ease-in-out infinite`,
           }}
         >
-          <div style={{ height: 8, width: 50, background: 'var(--paper-3)', margin: '14px 10px 8px', borderRadius: 1 }} />
-          <div style={{ height: 4, width: 60, background: 'var(--paper-3)', margin: '0 10px 4px' }} />
-          <div style={{ height: 4, width: 40, background: 'var(--paper-3)', margin: '0 10px 4px' }} />
-          <div style={{ height: 4, width: 55, background: 'var(--paper-3)', margin: '0 10px 4px' }} />
+          <div
+            style={{
+              height: 8,
+              width: 50,
+              background: 'var(--paper-3)',
+              margin: '14px 10px 8px',
+              borderRadius: 1,
+            }}
+          />
+          <div
+            style={{ height: 4, width: 60, background: 'var(--paper-3)', margin: '0 10px 4px' }}
+          />
+          <div
+            style={{ height: 4, width: 40, background: 'var(--paper-3)', margin: '0 10px 4px' }}
+          />
+          <div
+            style={{ height: 4, width: 55, background: 'var(--paper-3)', margin: '0 10px 4px' }}
+          />
         </div>
       ))}
       <div
@@ -319,7 +400,9 @@ function DropVisual() {
           textTransform: 'uppercase',
         }}
       >
-        <span style={{ background: ACCENT_WASH, padding: '3px 8px', borderRadius: 999 }}>classifying…</span>
+        <span style={{ background: ACCENT_WASH, padding: '3px 8px', borderRadius: 999 }}>
+          classifying…
+        </span>
       </div>
     </div>
   )
@@ -350,7 +433,11 @@ function RiverVisual() {
               strokeWidth="1.6"
               opacity="0.75"
               strokeLinecap="round"
-              style={{ strokeDasharray: 400, strokeDashoffset: 400, animation: `ij-draw 2.5s ${i * 0.15}s ease-out forwards` }}
+              style={{
+                strokeDasharray: 400,
+                strokeDashoffset: 400,
+                animation: `ij-draw 2.5s ${i * 0.15}s ease-out forwards`,
+              }}
             />
             {[0, 1, 2].map((j) => (
               <circle
@@ -361,7 +448,10 @@ function RiverVisual() {
                 fill="var(--paper)"
                 stroke={colors[i]}
                 strokeWidth="1.2"
-                style={{ opacity: 0, animation: `ij-fade-in .3s ${i * 0.15 + 1.2 + j * 0.15}s forwards` }}
+                style={{
+                  opacity: 0,
+                  animation: `ij-fade-in .3s ${i * 0.15 + 1.2 + j * 0.15}s forwards`,
+                }}
               />
             ))}
           </g>
@@ -373,7 +463,14 @@ function RiverVisual() {
 
 function SparkleIcon() {
   return (
-    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.3">
+    <svg
+      viewBox="0 0 16 16"
+      width="14"
+      height="14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+    >
       <path d="M8 2v3M8 11v3M2 8h3M11 8h3M4 4l2 2M10 10l2 2M12 4l-2 2M6 10l-2 2" />
     </svg>
   )
@@ -381,8 +478,28 @@ function SparkleIcon() {
 
 function CoachVisual() {
   return (
-    <div style={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 8, height: '100%', justifyContent: 'center' }}>
-      <div style={{ padding: '8px 12px', background: 'var(--ink)', color: 'var(--paper)', borderRadius: 8, alignSelf: 'flex-end', maxWidth: '80%', fontSize: 11, fontFamily: FONT_SANS }}>
+    <div
+      style={{
+        padding: 18,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8,
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
+      <div
+        style={{
+          padding: '8px 12px',
+          background: 'var(--ink)',
+          color: 'var(--paper)',
+          borderRadius: 8,
+          alignSelf: 'flex-end',
+          maxWidth: '80%',
+          fontSize: 11,
+          fontFamily: FONT_SANS,
+        }}
+      >
         Should I counter Stripe&apos;s offer?
       </div>
       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
@@ -435,7 +552,15 @@ function CoachVisual() {
 
 function ArrowRightIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    >
       <path d="M2 7h10M8 3l4 4-4 4" />
     </svg>
   )
@@ -492,7 +617,14 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div style={{ background: 'var(--paper)', fontFamily: FONT_SANS, overflowX: 'hidden', color: 'var(--ink)' }}>
+    <div
+      style={{
+        background: 'var(--paper)',
+        fontFamily: FONT_SANS,
+        overflowX: 'hidden',
+        color: 'var(--ink)',
+      }}
+    >
       {/* Top nav */}
       <nav
         style={{
@@ -510,11 +642,27 @@ export default function LandingPage() {
       >
         <Wordmark size={16} />
         <div style={{ flex: 1 }} />
-        <div style={{ display: 'flex', gap: 22, fontSize: 13, color: 'var(--ink-2)', alignItems: 'center' }}>
-          <a href="#how-it-works" style={navLinkStyle}>How it works</a>
-          <a href="#timeline" style={navLinkStyle}>The timeline</a>
-          <Link href="/pricing" style={navLinkStyle}>Pricing</Link>
-          <Link href="/login" style={navLinkStyle}>Sign in</Link>
+        <div
+          style={{
+            display: 'flex',
+            gap: 22,
+            fontSize: 13,
+            color: 'var(--ink-2)',
+            alignItems: 'center',
+          }}
+        >
+          <a href="#how-it-works" style={navLinkStyle}>
+            How it works
+          </a>
+          <a href="#timeline" style={navLinkStyle}>
+            The timeline
+          </a>
+          <Link href="/pricing" style={navLinkStyle}>
+            Pricing
+          </Link>
+          <Link href="/login" style={navLinkStyle}>
+            Sign in
+          </Link>
         </div>
         <Link href="/signup" style={{ ...navCta, marginLeft: 18 }}>
           Start your journey
@@ -522,7 +670,15 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section ref={heroRef} style={{ position: 'relative', padding: '100px 40px 20px', maxWidth: 1200, margin: '0 auto' }}>
+      <section
+        ref={heroRef}
+        style={{
+          position: 'relative',
+          padding: '100px 40px 20px',
+          maxWidth: 1200,
+          margin: '0 auto',
+        }}
+      >
         <AmbientBg />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <Reveal delay={120}>
@@ -560,14 +716,22 @@ export default function LandingPage() {
               }}
             >
               Drop any email, offer, NDA, or rejection into{' '}
-              <em style={{ color: ACCENT_INK }}>Interview Journey</em>. It reads it, files it, and plots every thread of
-              your search on one living timeline. No spreadsheets. No lost threads. Just the story of your career, as it
-              unfolds.
+              <em style={{ color: ACCENT_INK }}>Interview Journey</em>. It reads it, files it, and
+              plots every thread of your search on one living timeline. No spreadsheets. No lost
+              threads. Just the story of your career, as it unfolds.
             </p>
           </Reveal>
 
           <Reveal delay={360}>
-            <div style={{ marginTop: 40, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            <div
+              style={{
+                marginTop: 40,
+                display: 'flex',
+                gap: 12,
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
               <Link href="/signup" style={ctaPrimary}>
                 Begin your journey — free
                 <ArrowRightIcon />
@@ -605,7 +769,14 @@ export default function LandingPage() {
                 </span>
                 Watch the 90-second tour
               </button>
-              <span style={{ marginLeft: 10, fontSize: 12, color: 'var(--ink-4)', fontFamily: FONT_MONO }}>
+              <span
+                style={{
+                  marginLeft: 10,
+                  fontSize: 12,
+                  color: 'var(--ink-4)',
+                  fontFamily: FONT_MONO,
+                }}
+              >
                 used by 11,000+ candidates · no card required
               </span>
             </div>
@@ -615,7 +786,10 @@ export default function LandingPage() {
 
       {/* Live demo */}
       <Reveal delay={500}>
-        <section id="timeline" style={{ padding: '40px 40px 60px', maxWidth: 1200, margin: '0 auto' }}>
+        <section
+          id="timeline"
+          style={{ padding: '40px 40px 60px', maxWidth: 1200, margin: '0 auto' }}
+        >
           <div
             style={{
               position: 'relative',
@@ -685,7 +859,10 @@ export default function LandingPage() {
       </Reveal>
 
       {/* Three promises */}
-      <section id="how-it-works" style={{ padding: '100px 40px 100px', maxWidth: 1180, margin: '0 auto' }}>
+      <section
+        id="how-it-works"
+        style={{ padding: '100px 40px 100px', maxWidth: 1180, margin: '0 auto' }}
+      >
         <Reveal>
           <div style={{ marginBottom: 60, maxWidth: 720 }}>
             <div
@@ -716,7 +893,13 @@ export default function LandingPage() {
             </h2>
           </div>
         </Reveal>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 44 }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: 44,
+          }}
+        >
           {[
             {
               k: '01',
@@ -751,7 +934,15 @@ export default function LandingPage() {
               >
                 {p.visual}
               </div>
-              <div style={{ fontFamily: FONT_MONO, fontStyle: 'italic', fontSize: 13, color: ACCENT_INK, marginBottom: 10 }}>
+              <div
+                style={{
+                  fontFamily: FONT_MONO,
+                  fontStyle: 'italic',
+                  fontSize: 13,
+                  color: ACCENT_INK,
+                  marginBottom: 10,
+                }}
+              >
                 — {p.k}
               </div>
               <h3
@@ -767,7 +958,15 @@ export default function LandingPage() {
               >
                 {p.t}
               </h3>
-              <p style={{ marginTop: 12, fontFamily: FONT_SERIF, fontSize: 16, lineHeight: 1.6, color: 'var(--ink-2)' }}>
+              <p
+                style={{
+                  marginTop: 12,
+                  fontFamily: FONT_SERIF,
+                  fontSize: 16,
+                  lineHeight: 1.6,
+                  color: 'var(--ink-2)',
+                }}
+              >
                 {p.body}
               </p>
             </Reveal>
@@ -842,7 +1041,13 @@ export default function LandingPage() {
       </Reveal>
 
       {/* Pull quote */}
-      <section style={{ padding: '110px 40px', background: 'var(--paper-2)', borderBottom: '1px solid var(--paper-ink)' }}>
+      <section
+        style={{
+          padding: '110px 40px',
+          background: 'var(--paper-2)',
+          borderBottom: '1px solid var(--paper-ink)',
+        }}
+      >
         <Reveal>
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <div
@@ -869,10 +1074,20 @@ export default function LandingPage() {
                 fontWeight: 300,
               }}
             >
-              It&apos;s the first thing I&apos;ve used that makes a job search feel less like drowning. The timeline alone is
-              worth it — I can finally <em style={{ color: ACCENT_INK }}>see my own effort</em>.
+              It&apos;s the first thing I&apos;ve used that makes a job search feel less like
+              drowning. The timeline alone is worth it — I can finally{' '}
+              <em style={{ color: ACCENT_INK }}>see my own effort</em>.
             </div>
-            <div style={{ marginTop: 32, display: 'flex', alignItems: 'center', gap: 14, fontSize: 13, color: 'var(--ink-3)' }}>
+            <div
+              style={{
+                marginTop: 32,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 14,
+                fontSize: 13,
+                color: 'var(--ink-3)',
+              }}
+            >
               <div
                 style={{
                   width: 40,
@@ -882,8 +1097,12 @@ export default function LandingPage() {
                 }}
               />
               <div>
-                <div style={{ color: 'var(--ink)', fontWeight: 500, fontSize: 14 }}>Riley Okonkwo</div>
-                <div style={{ fontFamily: FONT_MONO, fontSize: 11 }}>Staff Engineer · 3 offers in 9 weeks</div>
+                <div style={{ color: 'var(--ink)', fontWeight: 500, fontSize: 14 }}>
+                  Riley Okonkwo
+                </div>
+                <div style={{ fontFamily: FONT_MONO, fontSize: 11 }}>
+                  Staff Engineer · 3 offers in 9 weeks
+                </div>
               </div>
             </div>
           </div>
@@ -891,7 +1110,14 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section style={{ padding: '140px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section
+        style={{
+          padding: '140px 40px',
+          textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
         <AmbientBg />
         <Reveal>
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -908,7 +1134,8 @@ export default function LandingPage() {
             >
               Your next chapter
               <br />
-              deserves a <em style={{ fontStyle: 'italic', color: ACCENT_INK }}>better notebook</em>.
+              deserves a <em style={{ fontStyle: 'italic', color: ACCENT_INK }}>better notebook</em>
+              .
             </h2>
             <div style={{ marginTop: 44 }}>
               <Link

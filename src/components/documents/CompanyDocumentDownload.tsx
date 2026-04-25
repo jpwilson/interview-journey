@@ -13,9 +13,7 @@ export function CompanyDocumentDownload({ storagePath }: Props) {
   const supabase = createClient()
 
   async function handleDownload() {
-    const { data } = await supabase.storage
-      .from('documents')
-      .createSignedUrl(storagePath, 60)
+    const { data } = await supabase.storage.from('documents').createSignedUrl(storagePath, 60)
     if (data?.signedUrl) {
       window.open(data.signedUrl, '_blank')
     } else {
