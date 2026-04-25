@@ -33,6 +33,9 @@ export function FunnelBlock({
   defaultRange?: Range
 }) {
   const [range, setRange] = useState<Range>(defaultRange)
+  // Pin "now" once on mount so funnel cutoffs don't drift between renders
+  // and useMemo stays pure (react-hooks/purity).
+  const [nowMs] = useState(() => Date.now())
 
   const filtered = useMemo(() => {
     if (range === 'all') return roles
@@ -50,7 +53,6 @@ export function FunnelBlock({
     let screen = 0
     let diligence = 0
     let offer = 0
-    const now = Date.now()
     const ms30d = 30 * 24 * 3600 * 1000
 
     for (const r of filtered) {
@@ -61,13 +63,13 @@ export function FunnelBlock({
       else if ((r.stage === 'applied' || r.stage === 'exploring') && !r.last_contact_at) {
         // Silent: applied/exploring with no contact in 30+ days
         const last = new Date(r.last_contact_at ?? r.applied_at ?? r.created_at).getTime()
-        if (now - last > ms30d) silent += 1
+        if (nowMs - last > ms30d) silent += 1
       }
     }
     const replies = applied - silent
     const replyPct = applied > 0 ? Math.round((replies / applied) * 100) : 0
     return { applied, silent, screen, diligence, offer, replies, replyPct }
-  }, [filtered])
+  }, [filtered, nowMs])
 
   const stages = [
     {

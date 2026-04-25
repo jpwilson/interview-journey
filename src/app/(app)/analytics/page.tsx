@@ -79,14 +79,6 @@ export default async function AnalyticsPage() {
   // ── Section 2: Response rate ────────────────────────────────────────────────
   const appliedCount = funnelCounts.applied || 1
   const responseRate = Math.round((funnelCounts.screening / appliedCount) * 100)
-  const responseColor =
-    responseRate > 5 ? 'text-green-600' : responseRate >= 2 ? 'text-yellow-600' : 'text-red-500'
-  const responseBg =
-    responseRate > 5
-      ? 'bg-green-50 border-green-200'
-      : responseRate >= 2
-        ? 'bg-yellow-50 border-yellow-200'
-        : 'bg-red-50 border-red-200'
 
   // ── Section 3: Source performance ──────────────────────────────────────────
   const sourceMap: Record<

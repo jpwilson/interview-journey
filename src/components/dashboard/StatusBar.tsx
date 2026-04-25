@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -229,7 +230,7 @@ export function StatusBar({
             })}
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
-            <a
+            <Link
               href="/documents/drop"
               style={{
                 padding: '5px 10px',
@@ -245,8 +246,8 @@ export function StatusBar({
               }}
             >
               <Plus size={12} /> Drop a doc
-            </a>
-            <a
+            </Link>
+            <Link
               href="/roles/new"
               style={{
                 padding: '5px 10px',
@@ -263,7 +264,7 @@ export function StatusBar({
               }}
             >
               <Plus size={12} /> New application
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -3,12 +3,12 @@ import { classifyDocument, docTypeToEventType, inferStageAdvance } from '@/lib/a
 import type { ClassificationResult } from '@/lib/ai/classify'
 
 // Langfuse is optional — only init if real keys are present
-function maybeGetLangfuse() {
+async function maybeGetLangfuse() {
   const pk = process.env.LANGFUSE_PUBLIC_KEY
   const sk = process.env.LANGFUSE_SECRET_KEY
   if (!pk || !sk || pk.includes('placeholder')) return null
   try {
-    const { Langfuse } = require('langfuse')
+    const { Langfuse } = await import('langfuse')
     return new Langfuse({
       publicKey: pk,
       secretKey: sk,
@@ -53,7 +53,7 @@ async function processDocument(
   userId: string,
   service: ReturnType<typeof createServiceClient>
 ) {
-  const langfuse = maybeGetLangfuse()
+  const langfuse = await maybeGetLangfuse()
   const trace = langfuse?.trace({
     name: 'document-classification',
     userId,
