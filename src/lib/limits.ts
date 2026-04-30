@@ -1,7 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 
+// Free is the "Keeper" tier — unlimited organizing, intelligence (AI + storage) gated.
+// See docs/research/launch-brief.md §7: the organizing surface is a commodity;
+// intelligence is what pays. Removing the roles cap lets every user treat this
+// as their career archive forever, which is what drives retention.
 const LIMITS = {
-  free: { roles: 10, documents_total: 25, ai_per_month: 20 },
+  free: { roles: Infinity, documents_total: 100, ai_per_month: 30 },
   pro: { roles: Infinity, documents_total: Infinity, ai_per_month: Infinity },
 } as const
 
@@ -16,7 +20,9 @@ export async function checkLimits(userId: string, key: LimitKey): Promise<void> 
     .eq('user_id', userId)
     .single()
 
-  const tier = (sub?.tier ?? 'free') as 'free' | 'pro'
+  const rawTier = (sub?.tier ?? 'free') as 'free' | 'pro' | 'lifetime'
+  // Lifetime gets Pro limits.
+  const tier: 'free' | 'pro' = rawTier === 'free' ? 'free' : 'pro'
   const limit = LIMITS[tier][key]
   if (limit === Infinity) return
 
@@ -55,12 +61,17 @@ export async function checkLimits(userId: string, key: LimitKey): Promise<void> 
   }
 }
 
-export async function getUserTier(userId: string): Promise<'free' | 'pro'> {
+export async function getUserTier(userId: string): Promise<'free' | 'pro' | 'lifetime'> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('subscriptions')
     .select('tier')
     .eq('user_id', userId)
     .single()
-  return (data?.tier ?? 'free') as 'free' | 'pro'
+  return (data?.tier ?? 'free') as 'free' | 'pro' | 'lifetime'
+}
+
+/** Lifetime has the same feature set as Pro — this helper makes gates read cleanly. */
+export function isPaidTier(tier: 'free' | 'pro' | 'lifetime'): boolean {
+  return tier === 'pro' || tier === 'lifetime'
 }
