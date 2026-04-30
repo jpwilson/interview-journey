@@ -52,7 +52,7 @@ export type DocumentType =
   | 'unknown'
 
 export type ClassificationStatus = 'pending' | 'processing' | 'classified' | 'failed'
-export type SubscriptionTier = 'free' | 'pro'
+export type SubscriptionTier = 'free' | 'pro' | 'lifetime'
 export type SubscriptionStatus = 'active' | 'past_due' | 'canceled' | 'trialing'
 
 export interface Database {

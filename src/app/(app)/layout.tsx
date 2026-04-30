@@ -15,11 +15,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const [{ count: pipelineCount }, { count: docsPending }, { count: activeOffers }] =
     await Promise.all([
-      supabase
-        .from('roles')
-        .select('*', { count: 'exact', head: true })
-        .neq('stage', 'resolved')
-        .is('deleted_at', null),
+      supabase.from('roles').select('*', { count: 'exact', head: true }).neq('stage', 'resolved'),
       supabase
         .from('documents')
         .select('*', { count: 'exact', head: true })

@@ -17,6 +17,7 @@ import {
   Settings,
   LogOut,
   Upload,
+  MessageSquare,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -34,6 +35,7 @@ const primaryNav: NavItem[] = [
   { href: '/companies', label: 'Companies', icon: Building2 },
   { href: '/timeline', label: 'Career Timeline', icon: GitBranch },
   { href: '/offers', label: 'Offers', icon: Sparkle, conditional: 'has-active-offer' },
+  { href: '/coach', label: 'Career Coach', icon: MessageSquare },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/documents', label: 'Documents', icon: FileText },
 ]

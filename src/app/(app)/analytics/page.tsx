@@ -3,11 +3,7 @@ import { redirect } from 'next/navigation'
 import { differenceInDays } from 'date-fns'
 import type { RoleWithCompany, RoleEvent } from '@/lib/supabase/types'
 import { AnalyticsFunnel } from '@/components/analytics/AnalyticsFunnel'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
-function cn(...classes: (string | undefined | false)[]) {
-  return classes.filter(Boolean).join(' ')
-}
+import { PageHeader, PageShell, EditorialCard, SectionLabel } from '@/components/ui/PageHeader'
 
 export default async function AnalyticsPage() {
   const supabase = await createClient()
@@ -29,14 +25,26 @@ export default async function AnalyticsPage() {
 
   if (roles.length < 2) {
     return (
-      <div className="flex h-full items-center justify-center p-8">
-        <div className="text-center">
-          <p className="text-lg font-semibold text-slate-900">Not enough data</p>
-          <p className="mt-2 text-sm text-slate-500">
-            Track at least 5 roles to see analytics. You have {roles.length} so far.
-          </p>
+      <PageShell>
+        <PageHeader kicker="Analytics" title="Not enough data yet" />
+        <div style={{ padding: '22px 22px 80px', maxWidth: 720, margin: '0 auto' }}>
+          <EditorialCard style={{ textAlign: 'center', padding: '40px 24px' }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 18,
+                fontWeight: 500,
+                color: 'var(--ink)',
+              }}
+            >
+              Need a few more data points
+            </p>
+            <p style={{ marginTop: 6, fontSize: 13, color: 'var(--ink-4)' }}>
+              Track at least 5 roles to see meaningful analytics. You have {roles.length} so far.
+            </p>
+          </EditorialCard>
         </div>
-      </div>
+      </PageShell>
     )
   }
 
@@ -71,14 +79,6 @@ export default async function AnalyticsPage() {
   // ── Section 2: Response rate ────────────────────────────────────────────────
   const appliedCount = funnelCounts.applied || 1
   const responseRate = Math.round((funnelCounts.screening / appliedCount) * 100)
-  const responseColor =
-    responseRate > 5 ? 'text-green-600' : responseRate >= 2 ? 'text-yellow-600' : 'text-red-500'
-  const responseBg =
-    responseRate > 5
-      ? 'bg-green-50 border-green-200'
-      : responseRate >= 2
-        ? 'bg-yellow-50 border-yellow-200'
-        : 'bg-red-50 border-red-200'
 
   // ── Section 3: Source performance ──────────────────────────────────────────
   const sourceMap: Record<
@@ -152,91 +152,167 @@ export default async function AnalyticsPage() {
   })
   const ghostRate = Math.round(((ghosted.length + silentRoles.length) / roles.length) * 100)
 
+  const responseHint =
+    responseRate > 5
+      ? 'Above industry average — nicely done.'
+      : responseRate >= 2
+        ? 'Near the 3-5% industry average. Keep going.'
+        : 'Below 2%. Consider refining resume or targeting.'
+
   return (
-    <div className="min-h-full bg-[#f8f9fa] p-8">
-      <h1
-        className="mb-8 text-3xl font-extrabold text-slate-900"
-        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+    <PageShell>
+      <PageHeader
+        kicker="Analytics"
+        title="Patterns in your search"
+        subtitle={`Across ${roles.length} roles tracked. These stats sharpen as you log more events.`}
+      />
+      <div
+        style={{
+          padding: '22px 22px 80px',
+          maxWidth: 1100,
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 22,
+        }}
       >
-        Analytics
-      </h1>
-
-      <div className="space-y-6">
-        {/* Section 1: Funnel */}
-        <Card className="border-slate-100 bg-white shadow-sm">
-          <CardHeader>
-            <CardTitle className="font-bold text-slate-900">Application funnel</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <section>
+          <SectionLabel>Application funnel</SectionLabel>
+          <EditorialCard>
             <AnalyticsFunnel counts={funnelCounts} />
-          </CardContent>
-        </Card>
+          </EditorialCard>
+        </section>
 
-        {/* Section 2: Response rate */}
-        <Card className="border-slate-100 bg-white shadow-sm">
-          <CardHeader>
-            <CardTitle className="font-bold text-slate-900">Response rate</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div
-              className={cn(
-                'mb-4 inline-flex items-center rounded-xl border px-6 py-4',
-                responseBg
-              )}
-            >
-              <p className={cn('text-5xl font-extrabold', responseColor)}>{responseRate}%</p>
+        <section>
+          <SectionLabel>Response rate</SectionLabel>
+          <EditorialCard>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, flexWrap: 'wrap' }}>
+              <p
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: 44,
+                  fontWeight: 500,
+                  color: 'var(--accent-ij-ink)',
+                  letterSpacing: -1,
+                }}
+              >
+                {responseRate}%
+              </p>
+              <div>
+                <p style={{ fontSize: 13, color: 'var(--ink-3)' }}>
+                  Screenings per application — industry average is 3–5%.
+                </p>
+                <p style={{ fontSize: 11, color: 'var(--ink-4)', marginTop: 2 }}>{responseHint}</p>
+              </div>
             </div>
-            <p className="text-sm text-slate-500">
-              Your application response rate (screenings / applied)
-            </p>
-            <p className="mt-1 text-xs text-slate-400">
-              Industry average is 3–5%.{' '}
-              {responseRate > 5
-                ? "Great work — you're above average!"
-                : responseRate >= 2
-                  ? "You're near the average. Keep applying!"
-                  : 'Below average — consider refining your resume or targeting different roles.'}
-            </p>
-          </CardContent>
-        </Card>
+          </EditorialCard>
+        </section>
 
-        {/* Section 3: Source performance */}
-        <Card className="border-slate-100 bg-white shadow-sm">
-          <CardHeader>
-            <CardTitle className="font-bold text-slate-900">Source performance</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <section>
+          <SectionLabel>Source performance</SectionLabel>
+          <EditorialCard style={{ padding: 0 }}>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr className="border-b border-slate-100 text-left text-xs text-slate-400 uppercase">
-                    <th className="pr-4 pb-3 font-semibold">Source</th>
-                    <th className="pr-4 pb-3 text-right font-semibold">Applied</th>
-                    <th className="pr-4 pb-3 text-right font-semibold">Screening</th>
-                    <th className="pr-4 pb-3 text-right font-semibold">Interview</th>
-                    <th className="pr-4 pb-3 text-right font-semibold">Offer</th>
-                    <th className="pb-3 text-right font-semibold">Rate</th>
+                  <tr
+                    style={{
+                      background: 'var(--paper-2)',
+                      borderBottom: '1px solid var(--paper-ink)',
+                    }}
+                  >
+                    {['Source', 'Applied', 'Screening', 'Interview', 'Offer', 'Rate'].map(
+                      (h, i) => (
+                        <th
+                          key={h}
+                          style={{
+                            textAlign: i === 0 ? 'left' : 'right',
+                            padding: '10px 14px',
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: 10,
+                            letterSpacing: '0.1em',
+                            textTransform: 'uppercase',
+                            color: 'var(--ink-4)',
+                            fontWeight: 500,
+                          }}
+                        >
+                          {h}
+                        </th>
+                      )
+                    )}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-50">
-                  {sourceRows.map(([src, counts]) => {
+                <tbody>
+                  {sourceRows.map(([src, counts], idx) => {
                     const rate = Math.round((counts.screening / (counts.applied || 1)) * 100)
+                    const rateColor =
+                      rate > 5
+                        ? 'var(--status-ok)'
+                        : rate >= 2
+                          ? 'var(--status-warn)'
+                          : 'var(--s-rejected)'
                     return (
-                      <tr key={src} className="text-slate-700 transition-colors hover:bg-slate-50">
-                        <td className="py-3 pr-4 font-medium capitalize">{src}</td>
-                        <td className="py-3 pr-4 text-right text-slate-500">{counts.applied}</td>
-                        <td className="py-3 pr-4 text-right text-slate-500">{counts.screening}</td>
-                        <td className="py-3 pr-4 text-right text-slate-500">{counts.interview}</td>
-                        <td className="py-3 pr-4 text-right text-slate-500">{counts.offer}</td>
+                      <tr
+                        key={src}
+                        style={{ borderTop: idx === 0 ? 'none' : '1px solid var(--border-soft)' }}
+                      >
                         <td
-                          className={cn(
-                            'py-3 text-right font-semibold',
-                            rate > 5
-                              ? 'text-green-600'
-                              : rate >= 2
-                                ? 'text-yellow-600'
-                                : 'text-red-500'
-                          )}
+                          style={{
+                            padding: '10px 14px',
+                            color: 'var(--ink)',
+                            fontWeight: 500,
+                            textTransform: 'capitalize',
+                          }}
+                        >
+                          {src}
+                        </td>
+                        <td
+                          style={{
+                            padding: '10px 14px',
+                            textAlign: 'right',
+                            color: 'var(--ink-3)',
+                            fontFamily: 'var(--font-mono)',
+                          }}
+                        >
+                          {counts.applied}
+                        </td>
+                        <td
+                          style={{
+                            padding: '10px 14px',
+                            textAlign: 'right',
+                            color: 'var(--ink-3)',
+                            fontFamily: 'var(--font-mono)',
+                          }}
+                        >
+                          {counts.screening}
+                        </td>
+                        <td
+                          style={{
+                            padding: '10px 14px',
+                            textAlign: 'right',
+                            color: 'var(--ink-3)',
+                            fontFamily: 'var(--font-mono)',
+                          }}
+                        >
+                          {counts.interview}
+                        </td>
+                        <td
+                          style={{
+                            padding: '10px 14px',
+                            textAlign: 'right',
+                            color: 'var(--ink-3)',
+                            fontFamily: 'var(--font-mono)',
+                          }}
+                        >
+                          {counts.offer}
+                        </td>
+                        <td
+                          style={{
+                            padding: '10px 14px',
+                            textAlign: 'right',
+                            color: rateColor,
+                            fontWeight: 500,
+                            fontFamily: 'var(--font-mono)',
+                          }}
                         >
                           {rate}%
                         </td>
@@ -246,55 +322,78 @@ export default async function AnalyticsPage() {
                 </tbody>
               </table>
             </div>
-          </CardContent>
-        </Card>
+          </EditorialCard>
+        </section>
 
-        {/* Section 4: Time in stage */}
-        <Card className="border-slate-100 bg-white shadow-sm">
-          <CardHeader>
-            <CardTitle className="font-bold text-slate-900">Time in stage</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <section>
+          <SectionLabel>Time in stage</SectionLabel>
+          <EditorialCard>
             {avgDaysToInterview === null && avgDaysToOffer === null ? (
-              <p className="text-sm text-slate-500">
-                No resolved data yet — these stats appear once you have completed interview or offer
+              <p style={{ fontSize: 13, color: 'var(--ink-4)' }}>
+                No resolved data yet — stats appear once you log completed interview or offer
                 events.
               </p>
             ) : (
-              <div className="flex gap-10">
+              <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
                 {avgDaysToInterview !== null && (
                   <div>
-                    <p className="text-4xl font-extrabold text-[var(--accent-ij-ink)]">
+                    <p
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: 36,
+                        fontWeight: 500,
+                        color: 'var(--accent-ij-ink)',
+                      }}
+                    >
                       {avgDaysToInterview}d
                     </p>
-                    <p className="mt-1 text-sm text-slate-500">Avg. applied → first interview</p>
+                    <p style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 4 }}>
+                      Avg. applied → first interview
+                    </p>
                   </div>
                 )}
                 {avgDaysToOffer !== null && (
                   <div>
-                    <p className="text-4xl font-extrabold text-purple-600">{avgDaysToOffer}d</p>
-                    <p className="mt-1 text-sm text-slate-500">Avg. applied → offer</p>
+                    <p
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: 36,
+                        fontWeight: 500,
+                        color: 'var(--ink)',
+                      }}
+                    >
+                      {avgDaysToOffer}d
+                    </p>
+                    <p style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 4 }}>
+                      Avg. applied → offer
+                    </p>
                   </div>
                 )}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </EditorialCard>
+        </section>
 
-        {/* Section 5: Ghost rate */}
-        <Card className="border-slate-100 bg-white shadow-sm">
-          <CardHeader>
-            <CardTitle className="font-bold text-slate-900">Ghost rate</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p className="text-4xl font-extrabold text-slate-700">{ghostRate}%</p>
-            <p className="text-sm text-slate-500">
+        <section>
+          <SectionLabel>Ghost rate</SectionLabel>
+          <EditorialCard>
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 36,
+                fontWeight: 500,
+                color: 'var(--ink)',
+              }}
+            >
+              {ghostRate}%
+            </p>
+            <p style={{ fontSize: 13, color: 'var(--ink-4)', marginTop: 4 }}>
               {ghosted.length + silentRoles.length} of your {roles.length} applications received no
               response ({ghosted.length} confirmed ghosted, {silentRoles.length} with no activity).
             </p>
-          </CardContent>
-        </Card>
+          </EditorialCard>
+        </section>
       </div>
-    </div>
+    </PageShell>
   )
 }

@@ -1,9 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { FileText, AlertCircle, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
+import { PageHeader, PageShell } from '@/components/ui/PageHeader'
+import { Button } from '@/components/ui/button'
 import type { Document } from '@/lib/supabase/types'
 
 type DocumentWithRole = Document & {
@@ -23,90 +23,229 @@ export default async function DocumentsPage() {
   )
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] p-8">
-      <h1 className="font-headline mb-8 text-2xl font-extrabold text-slate-900">Documents</h1>
+    <PageShell>
+      <PageHeader
+        kicker="Documents"
+        title={`${documents.length} ${documents.length === 1 ? 'document' : 'documents'}`}
+        subtitle="Every file the AI has classified or routed. Drop anything anywhere in the app — recruiter email, offer PDF, NDA, screenshot — and it lands on the right role."
+        right={
+          <Link href="/documents/drop">
+            <Button
+              size="sm"
+              className="border-0 text-white"
+              style={{ background: 'var(--accent-ij-ink)' }}
+            >
+              Open drop flow →
+            </Button>
+          </Link>
+        }
+      />
 
-      {needsReview.length > 0 && (
-        <div className="mb-8">
-          <div className="mb-4 flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-amber-600" />
-            <h2 className="font-semibold text-amber-700">Needs review ({needsReview.length})</h2>
-          </div>
-          <div className="space-y-2">
-            {needsReview.map((doc) => (
-              <Card key={doc.id} className="border-amber-200 bg-amber-50 shadow-sm">
-                <CardContent className="flex items-center justify-between py-3">
-                  <div className="flex items-center gap-3">
-                    <FileText className="h-5 w-5 text-amber-600" />
-                    <div>
-                      <p className="text-sm font-medium text-slate-900">{doc.file_name}</p>
+      <div style={{ padding: '22px 22px 80px', maxWidth: 1100, margin: '0 auto' }}>
+        {needsReview.length > 0 && (
+          <section style={{ marginBottom: 22 }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '4px 12px',
+                borderRadius: 999,
+                background: 'color-mix(in srgb, var(--status-warn) 10%, var(--paper))',
+                color: 'var(--status-warn)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                marginBottom: 10,
+              }}
+            >
+              <AlertCircle size={12} /> Needs review · {needsReview.length}
+            </div>
+            <div
+              style={{
+                border: '1px solid var(--paper-ink)',
+                borderRadius: 6,
+                background: 'var(--card)',
+                overflow: 'hidden',
+              }}
+            >
+              {needsReview.map((doc, i) => (
+                <div
+                  key={doc.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '12px 14px',
+                    borderTop: i === 0 ? 'none' : '1px solid var(--border-soft)',
+                    gap: 12,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                    <FileText size={16} style={{ color: 'var(--status-warn)', flexShrink: 0 }} />
+                    <div style={{ minWidth: 0 }}>
+                      <p
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 500,
+                          color: 'var(--ink)',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {doc.file_name}
+                      </p>
                       {doc.extracted_summary && (
-                        <p className="text-xs text-slate-500">{doc.extracted_summary}</p>
+                        <p style={{ fontSize: 11, color: 'var(--ink-4)' }}>
+                          {doc.extracted_summary}
+                        </p>
                       )}
                     </div>
                   </div>
-                  <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-700">
-                    {doc.classification_status === 'failed' ? 'Failed' : 'Review needed'}
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="space-y-3">
-        {documents.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100">
-              <FileText className="h-8 w-8 text-slate-400" />
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 10,
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                      padding: '3px 8px',
+                      borderRadius: 4,
+                      background: 'color-mix(in srgb, var(--status-warn) 12%, var(--paper))',
+                      color: 'var(--status-warn)',
+                    }}
+                  >
+                    {doc.classification_status === 'failed' ? 'Failed' : 'Review'}
+                  </span>
+                </div>
+              ))}
             </div>
-            <p className="mb-2 text-lg font-semibold text-slate-900">No documents yet</p>
-            <p className="text-sm text-slate-500">Drop any file anywhere in the app to upload it</p>
+          </section>
+        )}
+
+        {documents.length === 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 6,
+              border: '1px dashed var(--paper-ink)',
+              background: 'var(--card)',
+              padding: '64px 24px',
+              textAlign: 'center',
+            }}
+          >
+            <FileText className="mb-3 h-10 w-10" style={{ color: 'var(--ink-5)' }} />
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 18,
+                fontWeight: 500,
+                color: 'var(--ink)',
+              }}
+            >
+              No documents yet
+            </p>
+            <p style={{ marginTop: 6, fontSize: 13, color: 'var(--ink-4)' }}>
+              Drop any file anywhere in the app to upload it.
+            </p>
           </div>
         ) : (
-          documents.map((doc) => (
-            <Card
-              key={doc.id}
-              className="rounded-xl border border-slate-100 bg-white shadow-sm transition-shadow hover:shadow-md"
-            >
-              <CardContent className="flex items-center justify-between py-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50">
-                    <FileText className="h-5 w-5 text-slate-400" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-slate-900">{doc.file_name}</p>
+          <div
+            style={{
+              border: '1px solid var(--paper-ink)',
+              borderRadius: 6,
+              background: 'var(--card)',
+              overflow: 'hidden',
+            }}
+          >
+            {documents.map((doc, i) => (
+              <div
+                key={doc.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 14px',
+                  borderTop: i === 0 ? 'none' : '1px solid var(--border-soft)',
+                  gap: 12,
+                }}
+              >
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}
+                >
+                  <FileText size={16} style={{ color: 'var(--ink-4)', flexShrink: 0 }} />
+                  <div style={{ minWidth: 0 }}>
+                    <p
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: 'var(--ink)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {doc.file_name}
+                    </p>
                     {doc.role ? (
                       <Link
                         href={`/roles/${doc.role_id}`}
-                        className="text-xs font-medium text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)]"
+                        style={{
+                          fontSize: 11,
+                          color: 'var(--accent-ij-ink)',
+                          textDecoration: 'none',
+                          fontWeight: 500,
+                        }}
                       >
                         {doc.role.role_title} @ {doc.role.company.name}
                       </Link>
                     ) : (
-                      <span className="text-xs text-slate-400">Not linked to a role</span>
+                      <span style={{ fontSize: 11, color: 'var(--ink-5)' }}>
+                        Not linked to a role
+                      </span>
                     )}
-                    <p className="text-xs text-slate-400">
+                    <p
+                      style={{
+                        fontSize: 10,
+                        color: 'var(--ink-5)',
+                        fontFamily: 'var(--font-mono)',
+                        marginTop: 2,
+                      }}
+                    >
                       {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   {doc.doc_type && (
-                    <Badge variant="outline" className="border-slate-200 text-xs text-slate-500">
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 10,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        padding: '3px 8px',
+                        borderRadius: 4,
+                        background: 'var(--paper-2)',
+                        color: 'var(--ink-3)',
+                      }}
+                    >
                       {doc.doc_type.replace(/_/g, ' ')}
-                    </Badge>
+                    </span>
                   )}
                   {doc.classification_status === 'pending' && (
-                    <Clock className="h-4 w-4 text-yellow-500" />
+                    <Clock size={14} style={{ color: 'var(--status-warn)' }} />
                   )}
                 </div>
-              </CardContent>
-            </Card>
-          ))
+              </div>
+            ))}
+          </div>
         )}
       </div>
-    </div>
+    </PageShell>
   )
 }
