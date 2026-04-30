@@ -231,7 +231,7 @@ export function StatusBar({
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
             <Link
-              href="/roles/new"
+              href="/documents/drop"
               style={{
                 padding: '5px 10px',
                 fontSize: 12,
@@ -245,10 +245,10 @@ export function StatusBar({
                 gap: 4,
               }}
             >
-              <Plus size={12} /> Log event
+              <Plus size={12} /> Drop a doc
             </Link>
-            <a
-              href="/pipeline?new=1"
+            <Link
+              href="/roles/new"
               style={{
                 padding: '5px 10px',
                 fontSize: 12,
@@ -264,7 +264,7 @@ export function StatusBar({
               }}
             >
               <Plus size={12} /> New application
-            </a>
+            </Link>
           </div>
         </div>
       </div>

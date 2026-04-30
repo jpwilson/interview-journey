@@ -15,6 +15,14 @@ import {
   Clipboard,
 } from 'lucide-react'
 
+export type RecentDrop = {
+  id: string
+  filename: string
+  routed: string
+  status: 'attached' | 'pending' | 'processing' | 'failed'
+  when: string
+}
+
 type ExtractionKind = 'advance' | 'reject' | 'offer' | 'nda' | 'outbound'
 
 type WorkedExample = {
@@ -210,12 +218,12 @@ const EXAMPLES: WorkedExample[] = [
   },
 ]
 
-export function DropShowcase() {
+export function DropShowcase({ recent = [] }: { recent?: RecentDrop[] }) {
   return (
     <div style={{ minHeight: '100%', background: 'var(--paper)' }}>
       <Header />
       <div style={{ padding: '22px 22px 80px', maxWidth: 1200, margin: '0 auto' }}>
-        <StepOne />
+        <StepOne recent={recent} />
         <StepTwo />
         <StepThree />
         <SettingsFooter />
@@ -312,13 +320,13 @@ function SectionLabel({ n, title }: { n: number; title: string }) {
   )
 }
 
-function StepOne() {
+function StepOne({ recent }: { recent: RecentDrop[] }) {
   return (
     <section style={{ marginBottom: 40 }}>
       <SectionLabel n={1} title="Drop" />
       <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 16 }}>
         <DropZone />
-        <RecentDrops />
+        <RecentDrops recent={recent} />
       </div>
     </section>
   )
@@ -433,12 +441,7 @@ function FormatTag({ icon, label }: { icon: React.ReactNode; label: string }) {
   )
 }
 
-function RecentDrops() {
-  const recent = [
-    { filename: 'Stripe — offer.pdf', routed: 'Stripe · Senior SWE', status: 'attached' },
-    { filename: 'Vercel — HM call.eml', routed: 'Vercel · Sr Frontend', status: 'to-do' },
-    { filename: 'Figma — rejection.eml', routed: 'Figma · Frontend Eng', status: 'closed' },
-  ]
+function RecentDrops({ recent }: { recent: RecentDrop[] }) {
   return (
     <div
       style={{
@@ -446,6 +449,8 @@ function RecentDrops() {
         borderRadius: 6,
         background: 'var(--card)',
         padding: 14,
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <div
@@ -458,39 +463,65 @@ function RecentDrops() {
           marginBottom: 10,
         }}
       >
-        Recent drops · today
+        Your recent drops
       </div>
-      {recent.map((r, i) => (
+      {recent.length === 0 ? (
         <div
-          key={i}
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            padding: '8px 0',
-            borderTop: i === 0 ? 'none' : '1px solid var(--border-soft)',
+            flex: 1,
+            fontSize: 12,
+            color: 'var(--ink-4)',
+            lineHeight: 1.5,
+            padding: '14px 6px',
           }}
         >
-          <FileText size={14} color="var(--ink-4)" />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              style={{
-                fontSize: 12,
-                color: 'var(--ink)',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {r.filename}
-            </div>
-            <div style={{ fontSize: 10, color: 'var(--ink-4)', fontFamily: 'var(--font-mono)' }}>
-              → {r.routed}
-            </div>
-          </div>
-          <StatusPill status={r.status} />
+          Nothing dropped yet. Try the zone on the left — or drag a file anywhere in the app.
         </div>
-      ))}
+      ) : (
+        recent.map((r, i) => (
+          <Link
+            key={r.id}
+            href="/documents"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '8px 0',
+              borderTop: i === 0 ? 'none' : '1px solid var(--border-soft)',
+              textDecoration: 'none',
+              color: 'inherit',
+            }}
+          >
+            <FileText size={14} color="var(--ink-4)" />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div
+                style={{
+                  fontSize: 12,
+                  color: 'var(--ink)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {r.filename}
+              </div>
+              <div
+                style={{
+                  fontSize: 10,
+                  color: 'var(--ink-4)',
+                  fontFamily: 'var(--font-mono)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                → {r.routed} · {r.when}
+              </div>
+            </div>
+            <StatusPill status={r.status} />
+          </Link>
+        ))
+      )}
     </div>
   )
 }
@@ -499,7 +530,16 @@ function StatusPill({ status }: { status: string }) {
   const style = {
     'to-do': { bg: 'var(--accent-ij-wash)', color: 'var(--accent-ij-ink)' },
     closed: { bg: 'var(--paper-2)', color: 'var(--ink-5)' },
-    attached: { bg: 'var(--paper-2)', color: 'var(--ink-3)' },
+    attached: { bg: 'var(--accent-ij-wash)', color: 'var(--accent-ij-ink)' },
+    processing: {
+      bg: 'color-mix(in srgb, var(--status-warn) 14%, var(--paper))',
+      color: 'var(--status-warn)',
+    },
+    pending: { bg: 'var(--paper-2)', color: 'var(--ink-4)' },
+    failed: {
+      bg: 'color-mix(in srgb, var(--s-rejected) 14%, var(--paper))',
+      color: 'var(--s-rejected)',
+    },
   }[status] ?? { bg: 'var(--paper-2)', color: 'var(--ink-4)' }
   return (
     <span
@@ -523,9 +563,30 @@ function StepTwo() {
   return (
     <section style={{ marginBottom: 40 }}>
       <SectionLabel n={2} title="Extract" />
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '3px 10px',
+          borderRadius: 999,
+          background: 'var(--paper-2)',
+          color: 'var(--ink-4)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: 10,
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          marginBottom: 10,
+        }}
+      >
+        Examples · not your data
+      </div>
       <div style={{ fontSize: 12, color: 'var(--ink-4)', marginBottom: 16 }}>
-        Five worked examples of real-world documents the AI has classified. Company and role matches
-        link back to your pipeline; low-confidence routes drop into the Needs Review queue.
+        Five walkthroughs of how the AI handles different document types. Your own drops land in the{' '}
+        <Link href="/documents" style={{ color: 'var(--accent-ij-ink)' }}>
+          Documents
+        </Link>{' '}
+        list — with the same extraction format applied to your data.
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
         {EXAMPLES.map((ex) => (
@@ -747,6 +808,24 @@ function StepThree() {
   return (
     <section style={{ marginBottom: 40 }}>
       <SectionLabel n={3} title="Routed" />
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '3px 10px',
+          borderRadius: 999,
+          background: 'var(--paper-2)',
+          color: 'var(--ink-4)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: 10,
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          marginBottom: 10,
+        }}
+      >
+        Examples · not your data
+      </div>
       <div style={{ fontSize: 12, color: 'var(--ink-4)', marginBottom: 16 }}>
         For each classification, an outcome: a to-do created, a role closed, an offer attached. At
         &lt;85% confidence the route drops into Needs Review instead of auto-applying.

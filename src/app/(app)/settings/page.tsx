@@ -1,11 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { UpgradeButton } from '@/components/settings/UpgradeButton'
 import { CopyButton } from '@/components/settings/CopyButton'
-import { isPaidTier } from '@/lib/limits'
 import { CheckCircle, Crown, Mail } from 'lucide-react'
+import { PageHeader, PageShell, EditorialCard, SectionLabel } from '@/components/ui/PageHeader'
 
 export default async function SettingsPage({
   searchParams,
@@ -24,116 +22,211 @@ export default async function SettingsPage({
     supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
   ])
 
-  const tier = (sub?.tier ?? 'free') as 'free' | 'pro' | 'lifetime'
-  const isPro = isPaidTier(tier)
+  const isPro = sub?.tier === 'pro'
 
   return (
-    <div className="min-h-full bg-[#f8f9fa] p-8">
-      <h1
-        className="mb-8 text-3xl font-extrabold text-slate-900"
-        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+    <PageShell>
+      <PageHeader kicker="Settings" title="Your account" />
+
+      <div
+        style={{
+          padding: '22px 22px 80px',
+          maxWidth: 760,
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 22,
+        }}
       >
-        Settings
-      </h1>
-
-      {params.upgraded === 'true' && (
-        <div className="mb-6 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
-          <CheckCircle className="h-5 w-5 shrink-0" />
-          Welcome to Pro! Your account has been upgraded.
-        </div>
-      )}
-
-      {params.upgrade && (
-        <div className="mb-6 rounded-xl border border-[var(--accent-ij-wash)] bg-[var(--accent-ij-wash)] p-4 text-[var(--accent-ij-ink)]">
-          This feature requires a Pro plan. Upgrade below to unlock it.
-        </div>
-      )}
-
-      {/* Account */}
-      <Card className="mb-6 border-slate-100 bg-white shadow-sm">
-        <CardHeader>
-          <CardTitle className="font-bold text-slate-900">Account</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <p className="mb-1 text-xs font-medium tracking-wide text-slate-400 uppercase">Email</p>
-            <p className="text-slate-900">{user.email}</p>
+        {params.upgraded === 'true' && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              borderRadius: 6,
+              background: 'color-mix(in srgb, var(--status-ok) 12%, var(--paper))',
+              border: '1px solid color-mix(in srgb, var(--status-ok) 30%, var(--paper))',
+              padding: 14,
+              color: 'var(--status-ok)',
+              fontSize: 13,
+            }}
+          >
+            <CheckCircle className="h-5 w-5 shrink-0" />
+            Welcome to Pro — your account has been upgraded.
           </div>
-          <div>
-            <p className="mb-1 text-xs font-medium tracking-wide text-slate-400 uppercase">Name</p>
-            <p className="text-slate-900">{profile?.display_name ?? '—'}</p>
-          </div>
-        </CardContent>
-      </Card>
+        )}
 
-      {/* Email forwarding */}
-      <Card className="mb-6 border-slate-100 bg-white shadow-sm">
-        <CardHeader className="flex flex-row items-center gap-2">
-          <Mail className="h-5 w-5 text-[var(--accent-ij-ink)]" />
-          <CardTitle className="font-bold text-slate-900">Email forwarding</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <p className="mb-2 text-sm text-slate-500">Your personal forwarding address</p>
-            <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
-              <code className="flex-1 font-mono text-sm text-[var(--accent-ij-ink)] select-all">
+        {params.upgrade && (
+          <div
+            style={{
+              borderRadius: 6,
+              background: 'var(--accent-ij-wash)',
+              border: '1px solid color-mix(in srgb, var(--accent-ij) 30%, var(--paper))',
+              padding: 14,
+              color: 'var(--accent-ij-ink)',
+              fontSize: 13,
+            }}
+          >
+            This feature requires a Pro plan. Upgrade below to unlock it.
+          </div>
+        )}
+
+        <section>
+          <SectionLabel>Account</SectionLabel>
+          <EditorialCard>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 10,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: 'var(--ink-4)',
+                    marginBottom: 4,
+                  }}
+                >
+                  Email
+                </p>
+                <p style={{ color: 'var(--ink)', fontSize: 14 }}>{user.email}</p>
+              </div>
+              <div>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 10,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: 'var(--ink-4)',
+                    marginBottom: 4,
+                  }}
+                >
+                  Name
+                </p>
+                <p style={{ color: 'var(--ink)', fontSize: 14 }}>{profile?.display_name ?? '—'}</p>
+              </div>
+            </div>
+          </EditorialCard>
+        </section>
+
+        <section>
+          <SectionLabel>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <Mail size={11} /> Email forwarding
+            </span>
+          </SectionLabel>
+          <EditorialCard>
+            <p style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 10 }}>
+              Your personal forwarding address
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                border: '1px solid var(--paper-ink)',
+                background: 'var(--paper-2)',
+                borderRadius: 4,
+                padding: '10px 12px',
+              }}
+            >
+              <code
+                style={{
+                  flex: 1,
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 13,
+                  color: 'var(--accent-ij-ink)',
+                  userSelect: 'all',
+                }}
+              >
                 parse+{user.id}@interviewjourney.app
               </code>
               <CopyButton text={`parse+${user.id}@interviewjourney.app`} />
             </div>
-          </div>
-          <p className="text-sm text-slate-400">
-            Forward any email from recruiters, interview invitations, or offer letters to this
-            address. We&apos;ll automatically classify and update your roles.
-          </p>
-        </CardContent>
-      </Card>
+            <p style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 10, lineHeight: 1.5 }}>
+              Forward any recruiter email, interview invitation, or offer letter to this address.
+              The AI classifies it and updates your roles automatically.
+            </p>
+          </EditorialCard>
+        </section>
 
-      {/* Billing */}
-      <Card className="border-slate-100 bg-white shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="font-bold text-slate-900">Plan</CardTitle>
-          {isPro && (
-            <Badge className="border-0 bg-green-100 text-green-700">
-              <Crown className="mr-1 h-3 w-3" /> Pro
-            </Badge>
-          )}
-        </CardHeader>
-        <CardContent>
-          {isPro ? (
-            <div className="space-y-3">
-              <p className="text-slate-500">You&apos;re on the Pro plan — unlimited everything.</p>
-              {sub?.current_period_end && (
-                <p className="text-sm text-slate-400">
-                  Renews {new Date(sub.current_period_end).toLocaleDateString()}
-                </p>
+        <section>
+          <SectionLabel>
+            <span
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <span>Plan</span>
+              {isPro && (
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    padding: '2px 8px',
+                    borderRadius: 999,
+                    background: 'var(--accent-ij-wash)',
+                    color: 'var(--accent-ij-ink)',
+                    fontSize: 10,
+                    fontWeight: 500,
+                    textTransform: 'none',
+                    letterSpacing: 0,
+                  }}
+                >
+                  <Crown size={11} /> Pro
+                </span>
               )}
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <p className="text-slate-500">
-                You&apos;re on the Free plan (10 applications, 25 document uploads).
-              </p>
-              <div className="space-y-2 text-sm text-slate-500">
-                {[
-                  'Unlimited applications',
-                  'Unlimited document uploads',
-                  'Career timeline',
-                  'Multi-company timeline view',
-                  'CSV/JSON export',
-                  'Priority AI processing',
-                ].map((f) => (
-                  <div key={f} className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-[var(--accent-ij-ink)]" />
-                    {f}
-                  </div>
-                ))}
+            </span>
+          </SectionLabel>
+          <EditorialCard>
+            {isPro ? (
+              <div>
+                <p style={{ fontSize: 14, color: 'var(--ink-2)' }}>
+                  You&apos;re on the Pro plan — unlimited everything.
+                </p>
+                {sub?.current_period_end && (
+                  <p style={{ marginTop: 6, fontSize: 12, color: 'var(--ink-4)' }}>
+                    Renews {new Date(sub.current_period_end).toLocaleDateString()}
+                  </p>
+                )}
               </div>
-              <UpgradeButton />
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <p style={{ fontSize: 14, color: 'var(--ink-2)' }}>
+                  You&apos;re on the Free plan. Unlimited tracking is included; Pro unlocks
+                  intelligence.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {[
+                    'Unlimited AI classifications',
+                    'Unlimited document storage',
+                    'Career timeline (Pro)',
+                    'Multi-company timeline view',
+                    'CSV / PDF export',
+                    'Priority AI processing',
+                    'Monthly market-pulse digest',
+                  ].map((f) => (
+                    <div
+                      key={f}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        fontSize: 13,
+                        color: 'var(--ink-3)',
+                      }}
+                    >
+                      <CheckCircle size={14} style={{ color: 'var(--accent-ij-ink)' }} />
+                      {f}
+                    </div>
+                  ))}
+                </div>
+                <UpgradeButton />
+              </div>
+            )}
+          </EditorialCard>
+        </section>
+      </div>
+    </PageShell>
   )
 }
