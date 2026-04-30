@@ -11,6 +11,7 @@ export default async function PipelinePage({
   const { data } = await supabase
     .from('roles')
     .select('*, company:companies(*)')
+    .is('deleted_at', null)
     .order('kanban_order', { ascending: true })
 
   const roles = (data ?? []) as RoleWithCompany[]

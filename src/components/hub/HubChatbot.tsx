@@ -96,21 +96,51 @@ export function HubChatbot() {
   return (
     <div className="flex h-full flex-col">
       {/* Messages */}
-      <div className="flex-1 space-y-3 overflow-y-auto pb-2">
+      <div
+        className="flex-1 overflow-y-auto pb-2"
+        style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
+      >
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+            style={{
+              display: 'flex',
+              gap: 8,
+              flexDirection: msg.role === 'user' ? 'row-reverse' : 'row',
+              alignItems: 'flex-start',
+            }}
           >
             {msg.role === 'assistant' && (
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600">
-                <Bot className="h-3 w-3 text-white" />
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 4,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  background: 'var(--accent-ij-wash)',
+                  color: 'var(--accent-ij-ink)',
+                  marginTop: 2,
+                }}
+              >
+                <Bot size={13} />
               </div>
             )}
             <div
-              className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
-                msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-200'
-              }`}
+              style={{
+                maxWidth: '85%',
+                padding: '8px 12px',
+                borderRadius: 8,
+                fontSize: 13,
+                lineHeight: 1.5,
+                background: msg.role === 'user' ? 'var(--accent-ij-ink)' : 'var(--paper-2)',
+                color: msg.role === 'user' ? '#fff' : 'var(--ink)',
+                border: msg.role === 'user' ? 'none' : '1px solid var(--paper-ink)',
+                fontFamily: msg.role === 'assistant' ? 'var(--font-serif)' : 'var(--font-sans)',
+                fontStyle: msg.role === 'assistant' ? 'italic' : 'normal',
+              }}
             >
               {msg.content || (isLoading && msg.role === 'assistant' ? '…' : '')}
             </div>
@@ -120,19 +150,38 @@ export function HubChatbot() {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="flex gap-2 border-t border-slate-700 pt-2">
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: 'flex',
+          gap: 8,
+          paddingTop: 10,
+          borderTop: '1px solid var(--paper-ink)',
+          marginTop: 10,
+        }}
+      >
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask your career coach…"
           disabled={isLoading}
-          className="border-slate-600 bg-slate-700 text-sm text-white placeholder:text-slate-500"
+          style={{
+            borderColor: 'var(--paper-ink)',
+            background: 'var(--paper)',
+            color: 'var(--ink)',
+            fontSize: 13,
+            fontFamily: 'var(--font-sans)',
+          }}
         />
         <Button
           type="submit"
           size="sm"
           disabled={isLoading || !input.trim()}
-          className="bg-blue-600 hover:bg-blue-500"
+          className="border-0"
+          style={{
+            background: 'var(--accent-ij-ink)',
+            color: '#fff',
+          }}
         >
           <Send className="h-4 w-4" />
         </Button>

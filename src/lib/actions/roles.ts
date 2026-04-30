@@ -241,6 +241,10 @@ export async function addRoleEvent(formData: FormData) {
   revalidatePath(`/roles/${parsed.data.role_id}`)
 }
 
+/**
+ * Soft-delete: the row stays in the database with deleted_at set, so the user
+ * can restore from /archive. Use purgeRole() to actually drop it forever.
+ */
 export async function deleteRole(roleId: string) {
   const supabase = await createClient()
   const {
@@ -248,11 +252,55 @@ export async function deleteRole(roleId: string) {
   } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  await supabase.from('roles').delete().eq('id', roleId).eq('user_id', user.id)
+  const { error } = await supabase
+    .from('roles')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('id', roleId)
+    .eq('user_id', user.id)
+    .is('deleted_at', null)
+
+  if (error) throw new Error(`Failed to delete role: ${error.message}`)
 
   revalidatePath('/roles')
   revalidatePath('/pipeline')
+  revalidatePath('/archive')
   redirect('/roles')
+}
+
+/** Restore a soft-deleted role. No-op if it wasn't deleted. */
+export async function restoreRole(roleId: string) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const { error } = await supabase
+    .from('roles')
+    .update({ deleted_at: null })
+    .eq('id', roleId)
+    .eq('user_id', user.id)
+
+  if (error) throw new Error(`Failed to restore role: ${error.message}`)
+
+  revalidatePath('/archive')
+  revalidatePath('/roles')
+  revalidatePath('/pipeline')
+}
+
+/** Hard-delete. Cascades to role_events/documents/meetings via FK on delete cascade. */
+export async function purgeRole(roleId: string) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const { error } = await supabase.from('roles').delete().eq('id', roleId).eq('user_id', user.id)
+
+  if (error) throw new Error(`Failed to permanently delete role: ${error.message}`)
+
+  revalidatePath('/archive')
 }
 
 // ---------------------------------------------------------------------------

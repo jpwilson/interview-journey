@@ -52,7 +52,7 @@ export type DocumentType =
   | 'unknown'
 
 export type ClassificationStatus = 'pending' | 'processing' | 'classified' | 'failed'
-export type SubscriptionTier = 'free' | 'pro'
+export type SubscriptionTier = 'free' | 'pro' | 'lifetime'
 export type SubscriptionStatus = 'active' | 'past_due' | 'canceled' | 'trialing'
 
 export interface Database {
@@ -182,6 +182,7 @@ export interface Database {
           excitement_score: number | null
           last_contact_at: string | null
           referrer_contact_id: string | null
+          deleted_at: string | null
           created_at: string
           updated_at: string
         }
@@ -208,6 +209,7 @@ export interface Database {
           excitement_score?: number | null
           last_contact_at?: string | null
           referrer_contact_id?: string | null
+          deleted_at?: string | null
         }
         Update: {
           role_title?: string
@@ -230,6 +232,7 @@ export interface Database {
           excitement_score?: number | null
           last_contact_at?: string | null
           referrer_contact_id?: string | null
+          deleted_at?: string | null
         }
         Relationships: []
       }

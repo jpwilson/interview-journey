@@ -115,7 +115,7 @@ export function PipelineTabs({
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 30,
+              fontSize: 26,
               fontWeight: 500,
               color: 'var(--ink)',
               marginTop: 4,
@@ -475,7 +475,7 @@ function TableRow({
   const color = STAGE_COLOR[eff]
   const silentCol =
     eff === 'silent' && silent != null ? (
-      <span style={{ color: silent >= 45 ? 'var(--s-rejected)' : 'var(--ink-3)' }}>{silent}d</span>
+      <span style={{ color: 'var(--ink-3)', fontWeight: silent >= 45 ? 600 : 400 }}>{silent}d</span>
     ) : eff === 'applied' && silent != null && silent > 0 ? (
       <span style={{ color: 'var(--ink-4)' }}>{silent}d</span>
     ) : (

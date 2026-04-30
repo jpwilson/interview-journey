@@ -30,7 +30,7 @@ export default function SignupPage() {
     if (error) {
       toast.error(error.message)
     } else {
-      toast.success('Account created! Check your email to confirm.')
+      toast.success('Account created — check your email to confirm.')
       router.push('/dashboard')
     }
     setLoading(false)
@@ -44,22 +44,45 @@ export default function SignupPage() {
   }
 
   return (
-    <Card className="border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
+    <Card
+      className="border shadow-xl"
+      style={{
+        borderColor: 'var(--paper-ink)',
+        background: 'var(--card)',
+        boxShadow: '0 20px 60px rgba(28,25,23,0.08), 0 2px 8px rgba(28,25,23,0.04)',
+      }}
+    >
       <CardHeader className="text-center">
-        <div className="editorial-gradient mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl">
+        <div
+          className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl"
+          style={{ background: 'linear-gradient(135deg, var(--accent-ij), var(--accent-ij-ink))' }}
+        >
           <Briefcase className="h-6 w-6 text-white" />
         </div>
-        <CardTitle className="font-headline text-2xl font-extrabold text-slate-900">
+        <CardTitle
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 500,
+            fontSize: 24,
+            letterSpacing: -0.3,
+            color: 'var(--ink)',
+          }}
+        >
           Start your journey
         </CardTitle>
-        <CardDescription className="text-slate-500">
+        <CardDescription style={{ color: 'var(--ink-4)' }}>
           Track every step of your career — free forever
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Button
           variant="outline"
-          className="w-full border-slate-200 bg-white font-medium text-slate-700 hover:bg-slate-50"
+          className="w-full font-medium"
+          style={{
+            borderColor: 'var(--paper-ink)',
+            background: 'var(--card)',
+            color: 'var(--ink-2)',
+          }}
           onClick={handleGoogleSignup}
         >
           <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -85,16 +108,26 @@ export default function SignupPage() {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-slate-200" />
+            <span className="w-full border-t" style={{ borderColor: 'var(--paper-ink)' }} />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-slate-400">Or</span>
+            <span
+              className="px-2"
+              style={{
+                background: 'var(--card)',
+                color: 'var(--ink-5)',
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.14em',
+              }}
+            >
+              Or
+            </span>
           </div>
         </div>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-xs font-medium text-slate-600">
+            <Label htmlFor="name" style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}>
               Full name
             </Label>
             <Input
@@ -103,11 +136,16 @@ export default function SignupPage() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Jane Smith"
               required
-              className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500/20"
+              className="focus:border-[var(--accent-ij)] focus:ring-[var(--accent-ij-wash)]"
+              style={{
+                borderColor: 'var(--paper-ink)',
+                background: 'var(--card)',
+                color: 'var(--ink)',
+              }}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-xs font-medium text-slate-600">
+            <Label htmlFor="email" style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}>
               Email
             </Label>
             <Input
@@ -117,11 +155,19 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500/20"
+              className="focus:border-[var(--accent-ij)] focus:ring-[var(--accent-ij-wash)]"
+              style={{
+                borderColor: 'var(--paper-ink)',
+                background: 'var(--card)',
+                color: 'var(--ink)',
+              }}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-xs font-medium text-slate-600">
+            <Label
+              htmlFor="password"
+              style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}
+            >
               Password
             </Label>
             <Input
@@ -132,21 +178,30 @@ export default function SignupPage() {
               placeholder="••••••••"
               required
               minLength={8}
-              className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:ring-sky-500/20"
+              className="focus:border-[var(--accent-ij)] focus:ring-[var(--accent-ij-wash)]"
+              style={{
+                borderColor: 'var(--paper-ink)',
+                background: 'var(--card)',
+                color: 'var(--ink)',
+              }}
             />
           </div>
           <Button
             type="submit"
-            className="editorial-gradient w-full rounded-full border-0 font-semibold text-white shadow-lg shadow-sky-200 hover:opacity-90"
+            className="w-full rounded-full border-0 font-semibold text-white hover:opacity-90"
+            style={{
+              background: 'var(--accent-ij-ink)',
+              boxShadow: '0 4px 16px var(--accent-ij-glow-a)',
+            }}
             disabled={loading}
           >
-            {loading ? 'Creating account...' : 'Create free account'}
+            {loading ? 'Creating account…' : 'Create free account'}
           </Button>
         </form>
 
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm" style={{ color: 'var(--ink-4)' }}>
           Already have an account?{' '}
-          <Link href="/login" className="font-medium text-sky-600 hover:text-sky-500">
+          <Link href="/login" style={{ color: 'var(--accent-ij-ink)', fontWeight: 500 }}>
             Sign in
           </Link>
         </p>
