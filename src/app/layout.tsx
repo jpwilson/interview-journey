@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           jetbrainsMono.variable,
           plusJakarta.variable,
           inter.variable,
-          'font-body bg-background text-on-surface antialiased min-h-full',
+          'font-body bg-background text-on-surface min-h-full antialiased'
         )}
       >
         <QueryProvider>

@@ -47,9 +47,11 @@ export function HubAnalytics() {
       })
     }
     load()
+    // supabase client is a stable singleton; run once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!stats) return <p className="text-center text-sm text-slate-400 py-8">Loading stats…</p>
+  if (!stats) return <p className="py-8 text-center text-sm text-slate-400">Loading stats…</p>
 
   return (
     <div className="space-y-4">
@@ -58,9 +60,17 @@ export function HubAnalytics() {
           { label: 'Roles tracked', value: stats.totalRoles },
           { label: 'Documents', value: stats.totalDocs },
           { label: 'AI classified', value: stats.classified },
-          { label: 'Active', value: stats.byStage.filter(s => s.stage !== 'resolved').reduce((a, b) => a + b.count, 0) },
+          {
+            label: 'Active',
+            value: stats.byStage
+              .filter((s) => s.stage !== 'resolved')
+              .reduce((a, b) => a + b.count, 0),
+          },
         ].map(({ label, value }) => (
-          <div key={label} className="rounded-lg bg-[#f8f9fa] border border-slate-100 p-3 text-center">
+          <div
+            key={label}
+            className="rounded-lg border border-slate-100 bg-[#f8f9fa] p-3 text-center"
+          >
             <p className="text-2xl font-bold text-slate-900">{value}</p>
             <p className="text-xs text-slate-500">{label}</p>
           </div>
@@ -75,7 +85,12 @@ export function HubAnalytics() {
               <XAxis dataKey="stage" tick={{ fontSize: 9, fill: '#94a3b8' }} />
               <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} allowDecimals={false} />
               <Tooltip
-                contentStyle={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+                contentStyle={{
+                  background: '#fff',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: 8,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                }}
                 labelStyle={{ color: '#0f172a' }}
                 itemStyle={{ color: '#64748b' }}
               />

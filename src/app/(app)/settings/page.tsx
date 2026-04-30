@@ -28,7 +28,16 @@ export default async function SettingsPage({
     <PageShell>
       <PageHeader kicker="Settings" title="Your account" />
 
-      <div style={{ padding: '22px 22px 80px', maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 22 }}>
+      <div
+        style={{
+          padding: '22px 22px 80px',
+          maxWidth: 760,
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 22,
+        }}
+      >
         {params.upgraded === 'true' && (
           <div
             style={{
@@ -68,13 +77,31 @@ export default async function SettingsPage({
           <EditorialCard>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-4)', marginBottom: 4 }}>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 10,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: 'var(--ink-4)',
+                    marginBottom: 4,
+                  }}
+                >
                   Email
                 </p>
                 <p style={{ color: 'var(--ink)', fontSize: 14 }}>{user.email}</p>
               </div>
               <div>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-4)', marginBottom: 4 }}>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 10,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: 'var(--ink-4)',
+                    marginBottom: 4,
+                  }}
+                >
                   Name
                 </p>
                 <p style={{ color: 'var(--ink)', fontSize: 14 }}>{profile?.display_name ?? '—'}</p>
@@ -104,7 +131,15 @@ export default async function SettingsPage({
                 padding: '10px 12px',
               }}
             >
-              <code style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--accent-ij-ink)', userSelect: 'all' }}>
+              <code
+                style={{
+                  flex: 1,
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 13,
+                  color: 'var(--accent-ij-ink)',
+                  userSelect: 'all',
+                }}
+              >
                 parse+{user.id}@interviewjourney.app
               </code>
               <CopyButton text={`parse+${user.id}@interviewjourney.app`} />
@@ -118,7 +153,9 @@ export default async function SettingsPage({
 
         <section>
           <SectionLabel>
-            <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
               <span>Plan</span>
               {isPro && (
                 <span
@@ -156,7 +193,8 @@ export default async function SettingsPage({
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <p style={{ fontSize: 14, color: 'var(--ink-2)' }}>
-                  You&apos;re on the Free plan. Unlimited tracking is included; Pro unlocks intelligence.
+                  You&apos;re on the Free plan. Unlimited tracking is included; Pro unlocks
+                  intelligence.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {[
@@ -168,7 +206,16 @@ export default async function SettingsPage({
                     'Priority AI processing',
                     'Monthly market-pulse digest',
                   ].map((f) => (
-                    <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--ink-3)' }}>
+                    <div
+                      key={f}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        fontSize: 13,
+                        color: 'var(--ink-3)',
+                      }}
+                    >
                       <CheckCircle size={14} style={{ color: 'var(--accent-ij-ink)' }} />
                       {f}
                     </div>

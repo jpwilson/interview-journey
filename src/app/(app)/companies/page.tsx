@@ -76,7 +76,14 @@ export default async function CompaniesPage() {
             }}
           >
             <Building2 className="mb-3 h-10 w-10" style={{ color: 'var(--ink-5)' }} />
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 18, fontWeight: 500, color: 'var(--ink)' }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 18,
+                fontWeight: 500,
+                color: 'var(--ink)',
+              }}
+            >
               No companies yet
             </p>
             <p style={{ marginTop: 6, fontSize: 13, color: 'var(--ink-4)' }}>

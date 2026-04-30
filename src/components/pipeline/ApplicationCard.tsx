@@ -37,8 +37,14 @@ function companyColorClass(name: string) {
 }
 
 export function ApplicationCard({ application: app, isDragging }: Props) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging: isSortableDragging } =
-    useSortable({ id: app.id })
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging: isSortableDragging,
+  } = useSortable({ id: app.id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -50,7 +56,7 @@ export function ApplicationCard({ application: app, isDragging }: Props) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        'group relative rounded-xl border border-slate-100 bg-white p-3 shadow-sm hover:shadow-md transition-shadow',
+        'group relative rounded-xl border border-slate-100 bg-white p-3 shadow-sm transition-shadow hover:shadow-md',
         (isDragging || isSortableDragging) && 'opacity-50 ring-2 ring-[var(--accent-ij)]'
       )}
     >
@@ -58,17 +64,22 @@ export function ApplicationCard({ application: app, isDragging }: Props) {
       <div
         {...attributes}
         {...listeners}
-        className="absolute right-2 top-2 cursor-grab opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
+        className="absolute top-2 right-2 cursor-grab opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
       >
         <GripVertical className="h-4 w-4 text-slate-400" />
       </div>
 
       <Link
         href={`/roles/${app.id}`}
-        className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-2"
+        className="block rounded-lg focus-visible:ring-2 focus-visible:ring-[var(--accent-ij)] focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         <div className="flex items-start gap-2 pr-6">
-          <div className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-xs font-bold', companyColorClass(app.company.name))}>
+          <div
+            className={cn(
+              'flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-xs font-bold',
+              companyColorClass(app.company.name)
+            )}
+          >
             {getInitials(app.company.name)}
           </div>
           <div className="min-w-0">
@@ -83,9 +94,7 @@ export function ApplicationCard({ application: app, isDragging }: Props) {
               <MapPin className="h-3 w-3" /> {app.location}
             </span>
           )}
-          {app.remote_type && (
-            <span className="capitalize">{app.remote_type}</span>
-          )}
+          {app.remote_type && <span className="capitalize">{app.remote_type}</span>}
         </div>
 
         {(app.salary_min || app.salary_max) && (

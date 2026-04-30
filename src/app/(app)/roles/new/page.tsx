@@ -36,7 +36,11 @@ export default async function NewRolePage() {
             <Button
               variant="outline"
               size="sm"
-              style={{ borderColor: 'var(--paper-ink)', background: 'var(--card)', color: 'var(--ink-3)' }}
+              style={{
+                borderColor: 'var(--paper-ink)',
+                background: 'var(--card)',
+                color: 'var(--ink-3)',
+              }}
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to pipeline
             </Button>
@@ -48,10 +52,7 @@ export default async function NewRolePage() {
         <EditorialCard>
           <form action={createRole} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div>
-              <Label
-                htmlFor="company_name"
-                style={fieldLabelStyle()}
-              >
+              <Label htmlFor="company_name" style={fieldLabelStyle()}>
                 Company *
               </Label>
               <Input

@@ -22,36 +22,29 @@ const STAGE_DOT: Record<string, string> = {
   resolved: 'var(--s-hired)',
 }
 
-export default async function RoleDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default async function RoleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
 
-  const [{ data: roleData }, { data: events }, { data: documents }, { data: meetings }] = await Promise.all([
-    supabase
-      .from('roles')
-      .select('*, company:companies(*)')
-      .eq('id', id)
-      .single(),
-    supabase
-      .from('role_events')
-      .select('*')
-      .eq('role_id', id)
-      .order('event_date', { ascending: false }),
-    supabase
-      .from('documents')
-      .select('*')
-      .eq('role_id', id)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('meetings')
-      .select('*')
-      .eq('role_id', id)
-      .order('scheduled_at', { ascending: true }),
-  ])
+  const [{ data: roleData }, { data: events }, { data: documents }, { data: meetings }] =
+    await Promise.all([
+      supabase.from('roles').select('*, company:companies(*)').eq('id', id).single(),
+      supabase
+        .from('role_events')
+        .select('*')
+        .eq('role_id', id)
+        .order('event_date', { ascending: false }),
+      supabase
+        .from('documents')
+        .select('*')
+        .eq('role_id', id)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('meetings')
+        .select('*')
+        .eq('role_id', id)
+        .order('scheduled_at', { ascending: true }),
+    ])
 
   if (!roleData) notFound()
 
@@ -62,33 +55,97 @@ export default async function RoleDetailPage({
   return (
     <PageShell>
       {/* Editorial page header */}
-      <header style={{ padding: '24px 22px 18px', borderBottom: '1px solid var(--paper-ink)', background: 'var(--card)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
+      <header
+        style={{
+          padding: '24px 22px 18px',
+          borderBottom: '1px solid var(--paper-ink)',
+          background: 'var(--card)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: 16,
+            flexWrap: 'wrap',
+          }}
+        >
           <div style={{ flex: '1 1 480px', minWidth: 0 }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-4)' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'var(--ink-4)',
+              }}
+            >
               Role · {role.company.name}
             </div>
-            <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, color: 'var(--ink)', marginTop: 4, letterSpacing: -0.3 }}>
+            <h1
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 26,
+                fontWeight: 500,
+                color: 'var(--ink)',
+                marginTop: 4,
+                letterSpacing: -0.3,
+              }}
+            >
               {role.role_title}
             </h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 10, fontSize: 12, color: 'var(--ink-4)', flexWrap: 'wrap' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase', color: stageDot }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 14,
+                marginTop: 10,
+                fontSize: 12,
+                color: 'var(--ink-4)',
+                flexWrap: 'wrap',
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: stageDot,
+                }}
+              >
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: stageDot }} />
                 {role.stage}
               </span>
               {role.resolution && (
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 10,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                  }}
+                >
                   · {role.resolution}
                 </span>
               )}
               {role.location && <span>· {role.location}</span>}
               {role.remote_type && (
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10 }}>· {role.remote_type}</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10 }}>
+                  · {role.remote_type}
+                </span>
               )}
               {(role.salary_min || role.salary_max) && (
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-2)' }}>
+                <span
+                  style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-2)' }}
+                >
                   · ${role.salary_min ? (role.salary_min / 1000).toFixed(0) : '?'}k
-                  {role.salary_max ? `–${(role.salary_max / 1000).toFixed(0)}k` : '+'} {role.currency}
+                  {role.salary_max ? `–${(role.salary_max / 1000).toFixed(0)}k` : '+'}{' '}
+                  {role.currency}
                 </span>
               )}
             </div>
@@ -99,7 +156,11 @@ export default async function RoleDetailPage({
                 <Button
                   variant="outline"
                   size="sm"
-                  style={{ borderColor: 'var(--paper-ink)', background: 'var(--card)', color: 'var(--ink-3)' }}
+                  style={{
+                    borderColor: 'var(--paper-ink)',
+                    background: 'var(--card)',
+                    color: 'var(--ink-3)',
+                  }}
                 >
                   <ExternalLink className="mr-2 h-4 w-4" /> Job listing
                 </Button>
@@ -128,49 +189,52 @@ export default async function RoleDetailPage({
 
       <div style={{ padding: '22px 22px 80px', maxWidth: 1200, margin: '0 auto' }}>
         <Tabs defaultValue="timeline">
-          <TabsList className="mb-6 bg-transparent border-b rounded-none w-full justify-start gap-0 p-0 h-auto" style={{ borderColor: 'var(--paper-ink)' }}>
-          <TabsTrigger
-            value="timeline"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
+          <TabsList
+            className="mb-6 h-auto w-full justify-start gap-0 rounded-none border-b bg-transparent p-0"
+            style={{ borderColor: 'var(--paper-ink)' }}
           >
-            Timeline ({events?.length ?? 0})
-          </TabsTrigger>
-          <TabsTrigger
-            value="meetings"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
-          >
-            Meetings ({meetings?.length ?? 0})
-          </TabsTrigger>
-          <TabsTrigger
-            value="documents"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
-          >
-            Documents ({documents?.length ?? 0})
-          </TabsTrigger>
-          <TabsTrigger
-            value="add-event"
-            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-slate-500 font-medium data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:text-[var(--accent-ij-ink)] data-[state=active]:bg-transparent hover:text-slate-900 transition-colors"
-          >
-            Add event
-          </TabsTrigger>
-        </TabsList>
+            <TabsTrigger
+              value="timeline"
+              className="rounded-none border-b-2 border-transparent px-4 pt-0 pb-3 font-medium text-slate-500 transition-colors hover:text-slate-900 data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--accent-ij-ink)]"
+            >
+              Timeline ({events?.length ?? 0})
+            </TabsTrigger>
+            <TabsTrigger
+              value="meetings"
+              className="rounded-none border-b-2 border-transparent px-4 pt-0 pb-3 font-medium text-slate-500 transition-colors hover:text-slate-900 data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--accent-ij-ink)]"
+            >
+              Meetings ({meetings?.length ?? 0})
+            </TabsTrigger>
+            <TabsTrigger
+              value="documents"
+              className="rounded-none border-b-2 border-transparent px-4 pt-0 pb-3 font-medium text-slate-500 transition-colors hover:text-slate-900 data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--accent-ij-ink)]"
+            >
+              Documents ({documents?.length ?? 0})
+            </TabsTrigger>
+            <TabsTrigger
+              value="add-event"
+              className="rounded-none border-b-2 border-transparent px-4 pt-0 pb-3 font-medium text-slate-500 transition-colors hover:text-slate-900 data-[state=active]:border-[var(--accent-ij-ink)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--accent-ij-ink)]"
+            >
+              Add event
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="timeline">
-          <ApplicationTimeline events={events ?? []} />
-        </TabsContent>
+          <TabsContent value="timeline">
+            <ApplicationTimeline events={events ?? []} />
+          </TabsContent>
 
-        <TabsContent value="meetings">
-          <MeetingsList meetings={meetings ?? []} roleId={role.id} />
-        </TabsContent>
+          <TabsContent value="meetings">
+            <MeetingsList meetings={meetings ?? []} roleId={role.id} />
+          </TabsContent>
 
-        <TabsContent value="documents">
-          <DocumentVault documents={documents ?? []} roleId={role.id} />
-        </TabsContent>
+          <TabsContent value="documents">
+            <DocumentVault documents={documents ?? []} roleId={role.id} />
+          </TabsContent>
 
-        <TabsContent value="add-event">
-          <AddEventForm roleId={role.id} />
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="add-event">
+            <AddEventForm roleId={role.id} />
+          </TabsContent>
+        </Tabs>
       </div>
     </PageShell>
   )

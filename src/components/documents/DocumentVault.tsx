@@ -44,14 +44,12 @@ interface Props {
   roleId: string
 }
 
-export function DocumentVault({ documents, roleId }: Props) {
+export function DocumentVault({ documents }: Props) {
   const [docs, setDocs] = useState(documents)
   const supabase = createClient()
 
   async function handleDownload(doc: Document) {
-    const { data } = await supabase.storage
-      .from('documents')
-      .createSignedUrl(doc.storage_path, 60)
+    const { data } = await supabase.storage.from('documents').createSignedUrl(doc.storage_path, 60)
     if (data?.signedUrl) {
       window.open(data.signedUrl, '_blank')
     } else {
@@ -112,7 +110,7 @@ export function DocumentVault({ documents, roleId }: Props) {
         const statusColor = STATUS_COLORS[doc.classification_status]
 
         return (
-          <Card key={doc.id} className="bg-white rounded-xl border border-slate-100 shadow-sm">
+          <Card key={doc.id} className="rounded-xl border border-slate-100 bg-white shadow-sm">
             <CardContent className="flex items-center justify-between py-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50">
@@ -122,9 +120,7 @@ export function DocumentVault({ documents, roleId }: Props) {
                   <p className="font-medium text-slate-900">{doc.file_name}</p>
                   <div className="mt-1 flex items-center gap-2">
                     <StatusIcon className={`h-3 w-3 ${statusColor}`} />
-                    <span className={`text-xs ${statusColor}`}>
-                      {doc.classification_status}
-                    </span>
+                    <span className={`text-xs ${statusColor}`}>{doc.classification_status}</span>
                     {doc.doc_type && (
                       <Badge variant="outline" className="border-slate-200 text-xs text-slate-500">
                         {DOC_TYPE_LABELS[doc.doc_type]}
@@ -150,7 +146,7 @@ export function DocumentVault({ documents, roleId }: Props) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-amber-500 hover:text-amber-600 hover:bg-amber-50"
+                    className="text-amber-500 hover:bg-amber-50 hover:text-amber-600"
                     onClick={() => handleRetry(doc)}
                   >
                     <RefreshCw className="h-4 w-4" />
@@ -159,7 +155,7 @@ export function DocumentVault({ documents, roleId }: Props) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[var(--accent-ij-ink)] hover:text-[var(--accent-ij-ink)] hover:bg-[var(--accent-ij-wash)]"
+                  className="text-[var(--accent-ij-ink)] hover:bg-[var(--accent-ij-wash)] hover:text-[var(--accent-ij-ink)]"
                   onClick={() => handleDownload(doc)}
                 >
                   <Download className="h-4 w-4" />

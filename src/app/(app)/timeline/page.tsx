@@ -9,7 +9,9 @@ import type { RoleEvent } from '@/lib/supabase/types'
 
 export default async function TimelinePage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const tier = await getUserTier(user.id)
@@ -19,11 +21,13 @@ export default async function TimelinePage() {
 
   const { data } = await supabase
     .from('roles')
-    .select(`
+    .select(
+      `
       *,
       company:companies(*),
       role_events(*)
-    `)
+    `
+    )
     .order('applied_at', { ascending: true })
 
   const roles = data ?? []
@@ -73,11 +77,33 @@ function TimelinePaywall() {
         subtitle="Every role, every interview, every offer, plotted. Two lenses — River for flow, Chronicle for feed. Pro only."
       />
       <div style={{ padding: '22px 22px 80px', maxWidth: 900, margin: '0 auto' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 999, background: 'var(--accent-ij-wash)', color: 'var(--accent-ij-ink)', fontSize: 11, fontFamily: 'var(--font-mono)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 18 }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 10px',
+            borderRadius: 999,
+            background: 'var(--accent-ij-wash)',
+            color: 'var(--accent-ij-ink)',
+            fontSize: 11,
+            fontFamily: 'var(--font-mono)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            marginBottom: 18,
+          }}
+        >
           <Lock size={11} /> Pro feature
         </div>
 
-        <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', marginBottom: 24 }}>
+        <div
+          style={{
+            display: 'grid',
+            gap: 12,
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            marginBottom: 24,
+          }}
+        >
           {perks.map(({ icon: Icon, title, body }) => (
             <div
               key={title}
@@ -88,10 +114,30 @@ function TimelinePaywall() {
                 padding: 16,
               }}
             >
-              <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 4, background: 'var(--accent-ij-wash)', color: 'var(--accent-ij-ink)', marginBottom: 10 }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 32,
+                  height: 32,
+                  borderRadius: 4,
+                  background: 'var(--accent-ij-wash)',
+                  color: 'var(--accent-ij-ink)',
+                  marginBottom: 10,
+                }}
+              >
                 <Icon size={16} />
               </div>
-              <p style={{ fontFamily: 'var(--font-serif)', fontSize: 15, fontWeight: 500, color: 'var(--ink)', marginBottom: 4 }}>
+              <p
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: 'var(--ink)',
+                  marginBottom: 4,
+                }}
+              >
                 {title}
               </p>
               <p style={{ fontSize: 12, color: 'var(--ink-4)', lineHeight: 1.5 }}>{body}</p>
@@ -112,11 +158,19 @@ function TimelinePaywall() {
           }}
         >
           <div style={{ flex: 1, minWidth: 220 }}>
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 17, fontWeight: 500, color: 'var(--ink)' }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 17,
+                fontWeight: 500,
+                color: 'var(--ink)',
+              }}
+            >
               Unlock the timeline with Pro
             </p>
             <p style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>
-              $12/month or $144/year. Cancel anytime. Includes unlimited roles, uploads, and AI classifications.
+              $12/month or $144/year. Cancel anytime. Includes unlimited roles, uploads, and AI
+              classifications.
             </p>
           </div>
           <Link

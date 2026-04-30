@@ -5,7 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Plus, Briefcase, MapPin, DollarSign, Download, Lock } from 'lucide-react'
 import Link from 'next/link'
@@ -25,7 +29,9 @@ const STAGE_DOT: Record<string, string> = {
 
 export default async function RolesPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   const tier = user ? await getUserTier(user.id) : 'free'
 
   const { data } = await supabase
@@ -42,7 +48,11 @@ export default async function RolesPage() {
           <Button
             variant="outline"
             size="sm"
-            style={{ borderColor: 'var(--paper-ink)', background: 'var(--card)', color: 'var(--ink-3)' }}
+            style={{
+              borderColor: 'var(--paper-ink)',
+              background: 'var(--card)',
+              color: 'var(--ink-3)',
+            }}
           >
             <Download className="mr-2 h-4 w-4" /> Export CSV
           </Button>
@@ -52,7 +62,11 @@ export default async function RolesPage() {
           <Button
             variant="outline"
             size="sm"
-            style={{ borderColor: 'var(--paper-ink)', background: 'var(--card)', color: 'var(--ink-5)' }}
+            style={{
+              borderColor: 'var(--paper-ink)',
+              background: 'var(--card)',
+              color: 'var(--ink-5)',
+            }}
           >
             <Lock className="mr-2 h-4 w-4" /> Export CSV
           </Button>
@@ -63,7 +77,7 @@ export default async function RolesPage() {
           render={
             <Button
               size="sm"
-              className="text-white border-0 hover:opacity-90"
+              className="border-0 text-white hover:opacity-90"
               style={{ background: 'var(--accent-ij-ink)' }}
             />
           }
@@ -86,25 +100,42 @@ export default async function RolesPage() {
           </DialogHeader>
           <form action={createRole} className="space-y-4 pt-2">
             <div className="space-y-2">
-              <Label htmlFor="company_name" style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}>
+              <Label
+                htmlFor="company_name"
+                style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}
+              >
                 Company name *
               </Label>
               <Input name="company_name" id="company_name" placeholder="Stripe" required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="role_title" style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}>
+              <Label
+                htmlFor="role_title"
+                style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}
+              >
                 Role *
               </Label>
-              <Input name="role_title" id="role_title" placeholder="Senior Software Engineer" required />
+              <Input
+                name="role_title"
+                id="role_title"
+                placeholder="Senior Software Engineer"
+                required
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="job_url" style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}>
+              <Label
+                htmlFor="job_url"
+                style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}
+              >
                 Job URL
               </Label>
               <Input name="job_url" id="job_url" placeholder="https://..." type="url" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="notes" style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}>
+              <Label
+                htmlFor="notes"
+                style={{ color: 'var(--ink-3)', fontSize: 11, fontWeight: 500 }}
+              >
                 Notes
               </Label>
               <Input name="notes" id="notes" placeholder="Optional notes..." />
@@ -185,7 +216,9 @@ export default async function RolesPage() {
                   gap: 16,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1 }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1 }}
+                >
                   <div
                     style={{
                       width: 28,
@@ -204,11 +237,22 @@ export default async function RolesPage() {
                     {role.company.name[0]}
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)' }}>{role.role_title}</p>
+                    <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)' }}>
+                      {role.role_title}
+                    </p>
                     <p style={{ fontSize: 11, color: 'var(--ink-4)' }}>{role.company.name}</p>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 11, color: 'var(--ink-4)', flexWrap: 'wrap' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 14,
+                    fontSize: 11,
+                    color: 'var(--ink-4)',
+                    flexWrap: 'wrap',
+                  }}
+                >
                   {role.location && (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                       <MapPin size={11} /> {role.location}
@@ -230,7 +274,13 @@ export default async function RolesPage() {
                     </span>
                   )}
                   {role.remote_type && (
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-4)' }}>
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: 10,
+                        color: 'var(--ink-4)',
+                      }}
+                    >
                       {role.remote_type}
                     </span>
                   )}
@@ -256,7 +306,9 @@ export default async function RolesPage() {
                     />
                     {role.stage}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-5)' }}>
+                  <span
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-5)' }}
+                  >
                     {formatDistanceToNow(new Date(role.updated_at), { addSuffix: true })}
                   </span>
                 </div>

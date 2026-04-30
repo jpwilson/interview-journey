@@ -3,8 +3,16 @@
 import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import {
-  CheckCircle, XCircle, Calendar, FileText, MessageSquare,
-  TrendingUp, ArrowRight, Clock, Star, AlertCircle
+  CheckCircle,
+  XCircle,
+  Calendar,
+  FileText,
+  MessageSquare,
+  TrendingUp,
+  ArrowRight,
+  Clock,
+  Star,
+  AlertCircle,
 } from 'lucide-react'
 import type { RoleEvent } from '@/lib/supabase/types'
 
@@ -60,7 +68,9 @@ export function ApplicationTimeline({ events }: Props) {
           <Clock className="h-7 w-7 text-slate-400" />
         </div>
         <p className="text-slate-500">No events yet.</p>
-        <p className="mt-1 text-sm text-slate-400">Add an event or drop a document to get started.</p>
+        <p className="mt-1 text-sm text-slate-400">
+          Add an event or drop a document to get started.
+        </p>
       </div>
     )
   }
@@ -68,7 +78,7 @@ export function ApplicationTimeline({ events }: Props) {
   return (
     <div className="relative space-y-4 pl-8">
       {/* Vertical line */}
-      <div className="absolute left-3 top-2 bottom-2 w-px bg-slate-200" />
+      <div className="absolute top-2 bottom-2 left-3 w-px bg-slate-200" />
 
       {events.map((event) => {
         const Icon = EVENT_ICONS[event.event_type] ?? Clock
@@ -79,7 +89,7 @@ export function ApplicationTimeline({ events }: Props) {
           <div key={event.id} className="relative flex gap-4">
             {/* Dot */}
             <div
-              className={`absolute -left-5 flex h-6 w-6 items-center justify-center rounded-full ${color} shrink-0 ring-2 ring-white shadow-sm`}
+              className={`absolute -left-5 flex h-6 w-6 items-center justify-center rounded-full ${color} shrink-0 shadow-sm ring-2 ring-white`}
             >
               <Icon className="h-3 w-3 text-white" />
             </div>
@@ -111,10 +121,17 @@ export function ApplicationTimeline({ events }: Props) {
                   {/* Offer details */}
                   {!!metadata.offer_details && (
                     <div className="mt-2 space-y-1 text-xs">
-                      {(metadata.offer_details as Record<string, number | string | null>).base_salary && (
-                        <p className="text-green-600 font-medium">
-                          ${((metadata.offer_details as Record<string, number>).base_salary / 1000).toFixed(0)}k base
-                          {String((metadata.offer_details as Record<string, unknown>).currency ?? '')}
+                      {(metadata.offer_details as Record<string, number | string | null>)
+                        .base_salary && (
+                        <p className="font-medium text-green-600">
+                          $
+                          {(
+                            (metadata.offer_details as Record<string, number>).base_salary / 1000
+                          ).toFixed(0)}
+                          k base
+                          {String(
+                            (metadata.offer_details as Record<string, unknown>).currency ?? ''
+                          )}
                         </p>
                       )}
                       {(metadata.offer_details as Record<string, string>).start_date && (
@@ -131,7 +148,7 @@ export function ApplicationTimeline({ events }: Props) {
                   )}
                 </div>
 
-                <div className="flex flex-col items-end gap-1 shrink-0">
+                <div className="flex shrink-0 flex-col items-end gap-1">
                   <Badge
                     variant="outline"
                     className="border-slate-200 text-xs text-slate-500 capitalize"
@@ -139,7 +156,9 @@ export function ApplicationTimeline({ events }: Props) {
                     {event.event_type.replace(/_/g, ' ')}
                   </Badge>
                   {event.source === 'ai_parsed' && (
-                    <Badge className="bg-[var(--accent-ij-wash)] text-xs text-[var(--accent-ij-ink)] border-0">AI</Badge>
+                    <Badge className="border-0 bg-[var(--accent-ij-wash)] text-xs text-[var(--accent-ij-ink)]">
+                      AI
+                    </Badge>
                   )}
                 </div>
               </div>

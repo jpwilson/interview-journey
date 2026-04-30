@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -25,11 +26,20 @@ function fmtTenure(startISO: string | null | undefined) {
 
 function fmtStartDate(startISO: string | null | undefined) {
   if (!startISO) return null
-  return new Date(startISO).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(startISO).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 function fmtDateLong(d: Date) {
-  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+  return d.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 export function StatusBar({
@@ -54,7 +64,10 @@ export function StatusBar({
   async function updateStatus(next: SearchStatus) {
     setStatus(next) // optimistic
     startTransition(async () => {
-      const { error } = await supabase.from('profiles').update({ search_status: next }).eq('id', userId)
+      const { error } = await supabase
+        .from('profiles')
+        .update({ search_status: next })
+        .eq('id', userId)
       if (error) {
         // Column may not exist yet if migration not applied — swallow silently, keep optimistic
         console.warn('search_status update skipped:', error.message)
@@ -75,13 +88,40 @@ export function StatusBar({
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
         <div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-4)' }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--ink-4)',
+            }}
+          >
             {fmtDateLong(new Date())}
           </div>
-          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 500, color: 'var(--ink)', marginTop: 4, letterSpacing: -0.3 }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 22,
+              fontWeight: 500,
+              color: 'var(--ink)',
+              marginTop: 4,
+              letterSpacing: -0.3,
+            }}
+          >
             {displayName}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6, fontSize: 12, color: 'var(--ink-3)', flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              marginTop: 6,
+              fontSize: 12,
+              color: 'var(--ink-3)',
+              flexWrap: 'wrap',
+            }}
+          >
             {currentEmployer ? (
               <>
                 <span
@@ -97,15 +137,30 @@ export function StatusBar({
                     fontWeight: 500,
                   }}
                 >
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-ij)' }} />
+                  <span
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      background: 'var(--accent-ij)',
+                    }}
+                  />
                   At {currentEmployer}
                   {startPretty && ` since ${startPretty}`}
                 </span>
                 {currentTitle && (
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)' }}>· {currentTitle}</span>
+                  <span
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)' }}
+                  >
+                    · {currentTitle}
+                  </span>
                 )}
                 {tenure && (
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)' }}>· {tenure} tenure</span>
+                  <span
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)' }}
+                  >
+                    · {tenure} tenure
+                  </span>
                 )}
               </>
             ) : (
@@ -128,7 +183,15 @@ export function StatusBar({
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-4)' }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--ink-4)',
+            }}
+          >
             Search status
           </div>
           <div
@@ -167,7 +230,7 @@ export function StatusBar({
             })}
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
-            <a
+            <Link
               href="/documents/drop"
               style={{
                 padding: '5px 10px',
@@ -183,8 +246,8 @@ export function StatusBar({
               }}
             >
               <Plus size={12} /> Drop a doc
-            </a>
-            <a
+            </Link>
+            <Link
               href="/roles/new"
               style={{
                 padding: '5px 10px',
@@ -201,7 +264,7 @@ export function StatusBar({
               }}
             >
               <Plus size={12} /> New application
-            </a>
+            </Link>
           </div>
         </div>
       </div>

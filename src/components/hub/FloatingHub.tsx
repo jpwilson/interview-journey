@@ -49,7 +49,7 @@ export function FloatingHub() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110 focus-visible:outline-none"
+        className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110 focus-visible:outline-none"
         aria-label="Open hub"
         style={{
           background: 'linear-gradient(135deg, var(--accent-ij), var(--accent-ij-ink))',
@@ -67,7 +67,7 @@ export function FloatingHub() {
       className={cn(
         'fixed z-50 rounded-xl border border-slate-200 bg-white shadow-xl',
         'inset-x-4 bottom-4 sm:inset-x-auto sm:w-96',
-        isMinimised ? 'h-12' : 'h-[min(520px,calc(100vh-2rem))] sm:h-[520px]',
+        isMinimised ? 'h-12' : 'h-[min(520px,calc(100vh-2rem))] sm:h-[520px]'
       )}
       style={isDesktop ? { bottom: position.y, right: position.x } : undefined}
     >
@@ -75,7 +75,7 @@ export function FloatingHub() {
       <div
         className={cn(
           'flex items-center justify-between rounded-t-xl border-b border-slate-100 bg-white px-4 py-3',
-          isDesktop && 'cursor-move',
+          isDesktop && 'cursor-move'
         )}
         onMouseDown={handleMouseDown}
       >
@@ -90,7 +90,8 @@ export function FloatingHub() {
               letterSpacing: -0.2,
             }}
           >
-            Interview <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em> Hub
+            Interview{' '}
+            <em style={{ fontStyle: 'italic', color: 'var(--accent-ij-ink)' }}>Journey</em> Hub
           </span>
         </div>
         <div className="flex items-center gap-1">
@@ -115,7 +116,7 @@ export function FloatingHub() {
 
       {!isMinimised && (
         <Tabs defaultValue="chat" className="flex h-[calc(100%-48px)] flex-col">
-          <TabsList className="mx-3 mt-3 bg-slate-100 border border-slate-200">
+          <TabsList className="mx-3 mt-3 border border-slate-200 bg-slate-100">
             <TabsTrigger
               value="chat"
               className="flex-1 gap-1 text-slate-600 data-[state=active]:bg-[var(--accent-ij-ink)] data-[state=active]:text-white"
@@ -136,7 +137,7 @@ export function FloatingHub() {
             </TabsTrigger>
           </TabsList>
           <div className="flex-1 overflow-hidden p-3">
-            <TabsContent value="chat" className="mt-0 h-full flex flex-col">
+            <TabsContent value="chat" className="mt-0 flex h-full flex-col">
               <div className="flex-1 overflow-hidden">
                 <HubChatbot />
               </div>

@@ -41,7 +41,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
     <form
       ref={formRef}
       action={handleSubmit}
-      className="rounded-xl border border-slate-100 bg-white p-5 space-y-4 shadow-sm"
+      className="space-y-4 rounded-xl border border-slate-100 bg-white p-5 shadow-sm"
     >
       <input type="hidden" name="role_id" value={roleId} />
 
@@ -54,11 +54,13 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           <select
             name="type"
             required
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[var(--accent-ij)] focus:ring-2 focus:ring-[var(--accent-ij)] focus:outline-none"
           >
             <option value="">Select type…</option>
             {MEETING_TYPES.map((t) => (
-              <option key={t.value} value={t.value}>{t.label}</option>
+              <option key={t.value} value={t.value}>
+                {t.label}
+              </option>
             ))}
           </select>
         </div>
@@ -70,7 +72,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
             type="text"
             name="platform"
             placeholder="Zoom, Teams, phone…"
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--accent-ij)] focus:ring-2 focus:ring-[var(--accent-ij)] focus:outline-none"
           />
         </div>
 
@@ -80,7 +82,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           <input
             type="datetime-local"
             name="scheduled_at"
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[var(--accent-ij)] focus:ring-2 focus:ring-[var(--accent-ij)] focus:outline-none"
           />
         </div>
 
@@ -92,7 +94,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
             name="duration_minutes"
             placeholder="60"
             min={1}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)]"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--accent-ij)] focus:ring-2 focus:ring-[var(--accent-ij)] focus:outline-none"
           />
         </div>
       </div>
@@ -104,7 +106,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           name="prep_notes"
           rows={2}
           placeholder="What to research, how to prepare…"
-          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--accent-ij)] focus:border-[var(--accent-ij)] resize-none"
+          className="resize-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--accent-ij)] focus:ring-2 focus:ring-[var(--accent-ij)] focus:outline-none"
         />
       </div>
 
@@ -114,7 +116,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           variant="ghost"
           size="sm"
           onClick={onCancel}
-          className="text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+          className="text-slate-500 hover:bg-slate-50 hover:text-slate-900"
         >
           Cancel
         </Button>
@@ -122,7 +124,7 @@ export function AddMeetingForm({ roleId, onCancel }: AddMeetingFormProps) {
           type="submit"
           size="sm"
           disabled={isPending}
-          className="bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] text-white rounded-full px-5 font-semibold shadow-md shadow-[var(--accent-ij-glow-a)] border-0 hover:opacity-90 transition-opacity"
+          className="rounded-full border-0 bg-gradient-to-br from-[var(--accent-ij)] to-[var(--accent-ij-ink)] px-5 font-semibold text-white shadow-[var(--accent-ij-glow-a)] shadow-md transition-opacity hover:opacity-90"
         >
           {isPending ? 'Saving…' : 'Save meeting'}
         </Button>

@@ -4,7 +4,9 @@ import { revalidatePath } from 'next/cache'
 
 export async function acceptOffer(offerId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   await supabase
@@ -18,7 +20,9 @@ export async function acceptOffer(offerId: string) {
 
 export async function declineOffer(offerId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   await supabase

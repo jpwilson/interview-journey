@@ -18,7 +18,9 @@ export default async function DocumentsPage() {
     .order('created_at', { ascending: false })
 
   const documents = (data ?? []) as DocumentWithRole[]
-  const needsReview = documents.filter((d) => d.needs_review || d.classification_status === 'failed')
+  const needsReview = documents.filter(
+    (d) => d.needs_review || d.classification_status === 'failed'
+  )
 
   return (
     <PageShell>
@@ -83,11 +85,22 @@ export default async function DocumentsPage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
                     <FileText size={16} style={{ color: 'var(--status-warn)', flexShrink: 0 }} />
                     <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <p
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 500,
+                          color: 'var(--ink)',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
                         {doc.file_name}
                       </p>
                       {doc.extracted_summary && (
-                        <p style={{ fontSize: 11, color: 'var(--ink-4)' }}>{doc.extracted_summary}</p>
+                        <p style={{ fontSize: 11, color: 'var(--ink-4)' }}>
+                          {doc.extracted_summary}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -126,7 +139,14 @@ export default async function DocumentsPage() {
             }}
           >
             <FileText className="mb-3 h-10 w-10" style={{ color: 'var(--ink-5)' }} />
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 18, fontWeight: 500, color: 'var(--ink)' }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 18,
+                fontWeight: 500,
+                color: 'var(--ink)',
+              }}
+            >
               No documents yet
             </p>
             <p style={{ marginTop: 6, fontSize: 13, color: 'var(--ink-4)' }}>
@@ -154,23 +174,48 @@ export default async function DocumentsPage() {
                   gap: 12,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}
+                >
                   <FileText size={16} style={{ color: 'var(--ink-4)', flexShrink: 0 }} />
                   <div style={{ minWidth: 0 }}>
-                    <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <p
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: 'var(--ink)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
                       {doc.file_name}
                     </p>
                     {doc.role ? (
                       <Link
                         href={`/roles/${doc.role_id}`}
-                        style={{ fontSize: 11, color: 'var(--accent-ij-ink)', textDecoration: 'none', fontWeight: 500 }}
+                        style={{
+                          fontSize: 11,
+                          color: 'var(--accent-ij-ink)',
+                          textDecoration: 'none',
+                          fontWeight: 500,
+                        }}
                       >
                         {doc.role.role_title} @ {doc.role.company.name}
                       </Link>
                     ) : (
-                      <span style={{ fontSize: 11, color: 'var(--ink-5)' }}>Not linked to a role</span>
+                      <span style={{ fontSize: 11, color: 'var(--ink-5)' }}>
+                        Not linked to a role
+                      </span>
                     )}
-                    <p style={{ fontSize: 10, color: 'var(--ink-5)', fontFamily: 'var(--font-mono)', marginTop: 2 }}>
+                    <p
+                      style={{
+                        fontSize: 10,
+                        color: 'var(--ink-5)',
+                        fontFamily: 'var(--font-mono)',
+                        marginTop: 2,
+                      }}
+                    >
                       {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
                     </p>
                   </div>
