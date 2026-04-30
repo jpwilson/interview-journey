@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { TimelineTabs } from '@/components/timeline/TimelineTabs'
+import { ShareTimelineButton } from '@/components/timeline/ShareTimelineButton'
 import { getUserTier } from '@/lib/limits'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -42,6 +43,7 @@ export default async function TimelinePage() {
         kicker="Career Timeline"
         title="Your whole career on one axis"
         subtitle="River view shows each role flowing through time. Chronicle view is every event — interviews, offers, rejections — in one scrollable feed."
+        right={<ShareTimelineButton />}
       />
       <div style={{ padding: '22px 22px 80px', maxWidth: 1400, margin: '0 auto' }}>
         <TimelineTabs roles={roles} allEvents={allEvents} />
@@ -169,8 +171,8 @@ function TimelinePaywall() {
               Unlock the timeline with Pro
             </p>
             <p style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>
-              $12/month or $144/year. Cancel anytime. Includes unlimited roles, uploads, and AI
-              classifications.
+              $12/mo annual · $19/mo monthly · or $99 lifetime (first 500 founding members).
+              Includes unlimited roles, uploads, and AI classifications.
             </p>
           </div>
           <Link
